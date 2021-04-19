@@ -1,5 +1,0 @@
-{
-  "ext": ".ts,.js",
-  "exec": "next dev",
-  "watch": false
-}

@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app';
-import '../styles/globals.css';
+import 'src/styles/App.scss';
 
 function VoiceraApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
