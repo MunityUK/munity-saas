@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+
 import airtable from 'src/utils/airtable';
 
 const TABLE_NAME = 'Cases';

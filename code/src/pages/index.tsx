@@ -1,14 +1,15 @@
 import Record from 'airtable/lib/record';
 import { GetServerSideProps } from 'next';
+import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React from 'react';
 
-import GoogleMap from 'src/components/map';
 import { getCases } from 'src/pages/api/cases';
 import styles from 'src/styles/Home.module.scss';
 import { parse } from 'src/utils/helper';
 
 export default function Home({ records }: HomeProps) {
+  const VoiceMap = Dynamic(() => import('src/components/map'), { ssr: false });
   return (
     <div className={styles.container}>
       <Head>
@@ -20,7 +21,7 @@ export default function Home({ records }: HomeProps) {
         {records.map((record, key) => {
           return <div key={key}>{record.fields['Borough']}</div>;
         })}
-        <GoogleMap />
+        <VoiceMap />
       </main>
 
       <footer className={styles.footer}>
