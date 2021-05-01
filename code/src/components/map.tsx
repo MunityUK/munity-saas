@@ -1,9 +1,14 @@
-import { LatLng } from 'leaflet';
+import L, { LatLng } from 'leaflet';
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-export default function VoiceMap() {
+const icon = L.icon({
+  iconUrl: '/marker-icon.png',
+  shadowUrl: '/marker-shadow.png'
+});
+
+export default function VoiceraMap() {
   const position = new LatLng(51.45523, -2.59665);
   return (
     <MapContainer
@@ -15,7 +20,7 @@ export default function VoiceMap() {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position}>
+      <Marker position={position} icon={icon}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
