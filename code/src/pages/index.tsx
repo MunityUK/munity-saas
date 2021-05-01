@@ -5,7 +5,6 @@ import Head from 'next/head';
 import React from 'react';
 
 import { getCases } from 'src/pages/api/cases';
-import styles from 'src/styles/Home.module.scss';
 import { parse } from 'src/utils/helper';
 
 export default function Home({ records }: HomeProps) {
@@ -15,24 +14,25 @@ export default function Home({ records }: HomeProps) {
   });
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Voicera</title>
         <link rel={'icon'} href={'/favicon.ico'} />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         {records.map((record, key) => {
           return <div key={key}>{record.fields['Borough']}</div>;
         })}
-        <VoiceraMap />
+        <div className={'voicera-map'}>
+          <VoiceraMap />
+        </div>
       </main>
 
-      <footer className={styles.footer}>
+      <footer>
         <img
           src={'/voicera.svg'}
           alt={'Voicera Logo'}
-          className={styles.logo}
         />
       </footer>
     </div>
