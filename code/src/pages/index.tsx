@@ -30,10 +30,7 @@ export default function Home({ records }: HomeProps) {
       </main>
 
       <footer>
-        <img
-          src={'/voicera.svg'}
-          alt={'Voicera Logo'}
-        />
+        <img src={'/voicera.svg'} alt={'Voicera Logo'} />
       </footer>
     </div>
   );

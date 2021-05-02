@@ -15,13 +15,13 @@ export default function VoiceraMap() {
       center={position}
       zoom={13}
       scrollWheelZoom={false}
-      style={{ height: '90vh' }}>
+      className={'voicera-map__container'}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker position={position} icon={icon}>
-        <Popup>
+        <Popup closeButton={false}>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker>
