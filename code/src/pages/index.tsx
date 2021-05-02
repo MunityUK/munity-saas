@@ -1,36 +1,48 @@
-import { GetServerSideProps } from 'next';
-import Head from 'next/head';
-import styles from 'src/styles/Home.module.css';
-import { getCases } from 'src/pages/api/cases';
-
 import Record from 'airtable/lib/record';
+import { GetServerSideProps } from 'next';
+import Dynamic from 'next/dynamic';
+import Head from 'next/head';
+import React from 'react';
+
+import { getCases } from 'src/pages/api/cases';
 import { parse } from 'src/utils/helper';
 
 export default function Home({ records }: HomeProps) {
+  // Map needs not be affected by Next's server-side rendering.
+  const VoiceraMap = Dynamic(() => import('src/components/map'), {
+    ssr: false
+  });
+
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Voicera</title>
-        <link rel='icon' href='/favicon.ico' />
+        <link rel={'icon'} href={'/favicon.ico'} />
       </Head>
 
-      <main className={styles.main}>
-        {records.map((record) => {
-          return <div>{record.fields['Borough']}</div>;
+      <main>
+        {records.map((record, key) => {
+          return <div key={key}>{record.fields['Borough']}</div>;
         })}
+        <div className={'voicera-map'}>
+          <VoiceraMap />
+        </div>
       </main>
 
-      <footer className={styles.footer}>
-        <img src='/voicera.svg' alt='Voicera Logo' className={styles.logo} />
+      <footer>
+        <img
+          src={'/voicera.svg'}
+          alt={'Voicera Logo'}
+        />
       </footer>
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const records = await getCases();
   return {
-    props: { records: parse(records) },
+    props: { records: parse(records) }
   };
 };
 
