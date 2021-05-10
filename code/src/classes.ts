@@ -1,3 +1,4 @@
+import Record from 'airtable/lib/record';
 import * as faker from 'faker';
 
 export default class Complaint {
@@ -23,6 +24,17 @@ export default class Complaint {
   officerRace?: string;
   officerReligion?: string;
 
+  static parseComplaint(data: Record) {
+    const complaint: Complaint = {};
+
+    Object.entries(DatabaseField).forEach(([key, value]) => {
+      const field = value as string;
+      complaint[key as keyof Complaint] = data.fields[field];
+    });
+
+    return complaint;
+  }
+
   static random() {
     const complaint = new Complaint();
     complaint.reportId = faker.datatype
@@ -45,8 +57,8 @@ export default class Complaint {
     complaint.outcomeDescription = faker.lorem.sentence();
     complaint.city = 'Bristol';
     complaint.county = 'Avon';
-    complaint.latitude = parseFloat(faker.address.latitude(52, 51, 6));
-    complaint.longitude = parseFloat(faker.address.longitude(-3, -2, 6));
+    complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 5));
+    complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 5));
     complaint.victimAge = faker.datatype.number({ min: 18, max: 65 });
     complaint.victimGender = randomEnum(Gender);
     complaint.victimRace = randomEnum(Race);
@@ -61,7 +73,7 @@ export default class Complaint {
   }
 }
 
-export const DatabaseField: Record<keyof Complaint, string> = {
+export const DatabaseField: { [key: string]: string } = {
   reportId: 'Report ID',
   station: 'Station',
   startDate: 'Report Start Date',

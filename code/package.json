@@ -32,7 +32,6 @@
     "@zzavidd/eslint-config": "^0.2.8",
     "@zzavidd/prettier-config": "^0.2.8",
     "@zzavidd/stylelint-config": "^0.2.8",
-    "bottleneck": "^2.19.5",
     "dotenv": "^8.2.0",
     "eslint": "^7.24.0",
     "eslint-plugin-import": "^2.22.1",

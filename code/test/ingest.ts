@@ -4,7 +4,7 @@ dotenv.config();
 import Complaint, { DatabaseField } from '../src/classes';
 import airtable from '../src/utils/airtable';
 
-const NUM_OF_RECORDS = 500;
+const NUM_OF_RECORDS = 50;
 
 let recordCount = 0;
 

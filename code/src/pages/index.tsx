@@ -7,7 +7,7 @@ import React from 'react';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 
-export default function Home({ records }: HomeProps) {
+export default function Home({ complaints }: HomeProps) {
   // Map needs not be affected by Next's server-side rendering.
   const VoiceraMap = Dynamic(() => import('src/components/map'), {
     ssr: false
@@ -21,11 +21,8 @@ export default function Home({ records }: HomeProps) {
       </Head>
 
       <main>
-        {records.map((record, key) => {
-          return <div key={key}>{record.fields['Borough']}</div>;
-        })}
         <div className={'voicera-map'}>
-          <VoiceraMap />
+          <VoiceraMap complaints={complaints} />
         </div>
       </main>
 
@@ -37,12 +34,12 @@ export default function Home({ records }: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const records = await getComplaints();
+  const complaints = await getComplaints();
   return {
-    props: { records: parse(records) }
+    props: { complaints: parse(complaints) }
   };
 };
 
 type HomeProps = {
-  records: Array<Record>;
+  complaints: Array<Record>;
 };

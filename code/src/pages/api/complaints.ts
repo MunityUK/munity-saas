@@ -6,13 +6,17 @@ const TABLE_NAME = 'Complaints';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
-    if (req.method === 'GET') {
-      const records = await getComplaints();
-      res.status(200).json({ records });
-    } else if (req.method === 'POST') {
-      const { complaints } = JSON.parse(req.body);
-      const records = await createComplaints(complaints);
-      res.status(201).json({ records });
+    switch (req.method) {
+      case 'POST': {
+        const { complaints } = req.body;
+        const records = await createComplaints(complaints);
+        res.status(201).json({ complaints: records });
+        break;
+      }
+      default: {
+        const complaints = await getComplaints();
+        res.status(200).json({ complaints });
+      }
     }
   } catch (err) {
     const { message, statusCode } = err;

@@ -1,18 +1,22 @@
 import L, { LatLng } from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import Record from 'airtable/lib/record';
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+
+import Complaint from 'src/classes';
+
 
 const icon = L.icon({
   iconUrl: '/marker-icon.png',
   shadowUrl: '/marker-shadow.png'
 });
 
-export default function VoiceraMap() {
-  const position = new LatLng(51.45523, -2.59665);
+export default function VoiceraMap({ complaints }: VoiceraMapProps) {
+  const centerPosition = new LatLng(51.45523, -2.59665);
   return (
     <MapContainer
-      center={position}
+      center={centerPosition}
       zoom={13}
       scrollWheelZoom={false}
       className={'voicera-map__container'}>
@@ -20,11 +24,23 @@ export default function VoiceraMap() {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={position} icon={icon}>
-        <Popup closeButton={false}>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+      {complaints.map((data, key) => {
+        const complaint = Complaint.parseComplaint(data);
+        const position = new LatLng(complaint.latitude!, complaint.longitude!);
+        return (
+          <Marker position={position} icon={icon} key={key}>
+            <Popup closeButton={false}>
+              {complaint.reportId} • {complaint.incidentType}
+              <br />
+              {complaint.station}
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }
+
+type VoiceraMapProps = {
+  complaints: Array<Record>;
+};
