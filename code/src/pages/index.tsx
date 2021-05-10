@@ -4,7 +4,7 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React from 'react';
 
-import { getCases } from 'src/pages/api/cases';
+import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 
 export default function Home({ records }: HomeProps) {
@@ -37,7 +37,7 @@ export default function Home({ records }: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const records = await getCases();
+  const records = await getComplaints();
   return {
     props: { records: parse(records) }
   };

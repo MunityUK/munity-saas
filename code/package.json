@@ -13,7 +13,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest": "ts-node --project tsconfig.veto.json test/ingest"
+    "ingest": "ts-node --project test/tsconfig.json test/ingest"
   },
   "dependencies": {
     "airtable": "^0.10.1",
@@ -25,16 +25,19 @@
     "sass": "^1.32.10"
   },
   "devDependencies": {
+    "@types/faker": "^5.5.4",
     "@types/leaflet": "^1.7.0",
     "@types/react": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@zzavidd/eslint-config": "^0.2.2",
-    "@zzavidd/prettier-config": "^0.2.0",
-    "@zzavidd/stylelint-config": "^0.2.4",
+    "@zzavidd/eslint-config": "^0.2.8",
+    "@zzavidd/prettier-config": "^0.2.8",
+    "@zzavidd/stylelint-config": "^0.2.8",
+    "bottleneck": "^2.19.5",
     "dotenv": "^8.2.0",
     "eslint": "^7.24.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",
+    "faker": "^5.5.3",
     "prettier": "^2.2.1",
     "stylelint": "^13.12.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
