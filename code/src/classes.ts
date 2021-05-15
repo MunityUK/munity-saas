@@ -66,6 +66,20 @@ export enum Outcome {
   UNRESOLVED = 'Unresolved'
 }
 
+export enum Race {
+  BLACK = 'Black',
+  HISPANIC = 'Hispanic',
+  ASIAN = 'Asian',
+  WHITE = 'White'
+}
+
+export enum Sex {
+  UNKNOWN = '0',
+  MALE = '1',
+  FEMALE = '2',
+  INDETERMINATE = '9'
+}
+
 const PoliceStations = [
   'Avonmouth',
   'Bishopsworth',
@@ -78,13 +92,6 @@ const PoliceStations = [
   'Trinity Road'
 ];
 
-export enum Sex {
-  UNKNOWN = '0',
-  MALE = '1',
-  FEMALE = '2',
-  INDETERMINATE = '9'
-}
-
 const SexDistribution = [
   { sex: Sex.UNKNOWN, probability: 2 },
   { sex: Sex.MALE, probability: 49 },
@@ -93,13 +100,6 @@ const SexDistribution = [
 ].flatMap(({ sex, probability }) => {
   return Array(probability).fill(parseInt(sex));
 });
-
-export enum Race {
-  BLACK = 'Black',
-  HISPANIC = 'Hispanic',
-  ASIAN = 'Asian',
-  WHITE = 'White'
-}
 
 function randomEnum<T>(anEnum: T): T[keyof T] {
   return randomElement(Object.values(anEnum));
