@@ -1,11 +1,9 @@
 import L, { LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import Record from 'airtable/lib/record';
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
 import Complaint from 'src/classes';
-
 
 const icon = L.icon({
   iconUrl: '/marker-icon.png',
@@ -24,8 +22,7 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {complaints.map((data, key) => {
-        const complaint = Complaint.parseComplaint(data);
+      {complaints.map((complaint, key) => {
         const position = new LatLng(complaint.latitude!, complaint.longitude!);
         return (
           <Marker position={position} icon={icon} key={key}>
@@ -42,5 +39,5 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
 }
 
 type VoiceraMapProps = {
-  complaints: Array<Record>;
+  complaints: Array<Complaint>;
 };
