@@ -13,11 +13,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest": "ts-node --project test/tsconfig.json test/ingest"
+    "ingest": "ts-node --project test/tsconfig.json test/ingestion"
   },
   "dependencies": {
-    "airtable": "^0.10.1",
+    "knex": "^0.95.5",
     "leaflet": "^1.7.1",
+    "mysql2": "^2.2.5",
     "next": "10.1.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -1,11 +1,10 @@
-import Record from 'airtable/lib/record';
 import * as faker from 'faker';
 
 export default class Complaint {
   reportId?: string;
   station?: string;
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
   incidentType?: IncidentType;
   incidentDescription?: string;
   outcome?: Outcome;
@@ -15,25 +14,12 @@ export default class Complaint {
   latitude?: number;
   longitude?: number;
   victimAge?: number;
-  victimGender?: string;
   victimRace?: string;
-  victimReligion?: string;
+  victimSex?: Sex;
   officerId?: string | number;
   officerAge?: number;
-  officerGender?: string;
   officerRace?: string;
-  officerReligion?: string;
-
-  static parseComplaint(data: Record) {
-    const complaint: Complaint = {};
-
-    Object.entries(DatabaseField).forEach(([key, value]) => {
-      const field = value as string;
-      complaint[key as keyof Complaint] = data.fields[field];
-    });
-
-    return complaint;
-  }
+  officerSex?: Sex;
 
   static random() {
     const complaint = new Complaint();
@@ -43,12 +29,10 @@ export default class Complaint {
       .padStart(5, '0');
     complaint.station =
       PoliceStations[Math.floor(Math.random() * PoliceStations.length)];
-    complaint.startDate = faker.date.past().toISOString();
+    complaint.startDate = faker.date.past();
 
     if (faker.datatype.boolean()) {
-      complaint.endDate = faker.date
-        .past(undefined, complaint.startDate)
-        .toISOString();
+      complaint.endDate = faker.date.past(undefined, complaint.startDate);
     }
 
     complaint.incidentType = randomEnum(IncidentType);
@@ -57,45 +41,19 @@ export default class Complaint {
     complaint.outcomeDescription = faker.lorem.sentence();
     complaint.city = 'Bristol';
     complaint.county = 'Avon';
-    complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 5));
-    complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 5));
+    complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
+    complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
     complaint.victimAge = faker.datatype.number({ min: 18, max: 65 });
-    complaint.victimGender = randomEnum(Gender);
+    complaint.victimSex = randomElement(SexDistribution);
     complaint.victimRace = randomEnum(Race);
-    complaint.victimReligion = randomElement(Religions);
-    complaint.officerId = faker.datatype.number().toString();
+    complaint.officerId = 'OI' + faker.datatype.number().toString().padStart(5, '0');
     complaint.officerAge = faker.datatype.number({ min: 25, max: 55 });
-    complaint.officerGender = randomEnum(Gender);
+    complaint.officerSex = randomElement(SexDistribution);
     complaint.officerRace = randomEnum(Race);
-    complaint.officerReligion = randomElement(Religions);
 
     return complaint;
   }
 }
-
-export const DatabaseField: { [key: string]: string } = {
-  reportId: 'Report ID',
-  station: 'Station',
-  startDate: 'Report Start Date',
-  endDate: 'Report End Date',
-  incidentType: 'Incident Type',
-  incidentDescription: 'Incident Description',
-  outcome: 'Outcome',
-  outcomeDescription: 'Outcome Description',
-  city: 'City',
-  county: 'County',
-  latitude: 'Latitude',
-  longitude: 'Longitude',
-  victimAge: 'Victim Age',
-  victimGender: 'Victim Gender',
-  victimRace: 'Victim Race',
-  victimReligion: 'Victim Religion',
-  officerId: 'Officer ID',
-  officerAge: 'Officer Age',
-  officerGender: 'Officer Gender',
-  officerRace: 'Officer Race',
-  officerReligion: 'Officer Religion'
-};
 
 export enum IncidentType {
   ASSAULT = 'Assault',
@@ -120,11 +78,21 @@ const PoliceStations = [
   'Trinity Road'
 ];
 
-export enum Gender {
-  MALE = 'Male',
-  FEMALE = 'Female',
-  NEITHER = 'Neither'
+export enum Sex {
+  UNKNOWN = '0',
+  MALE = '1',
+  FEMALE = '2',
+  INDETERMINATE = '9'
 }
+
+const SexDistribution = [
+  { sex: Sex.UNKNOWN, probability: 2 },
+  { sex: Sex.MALE, probability: 49 },
+  { sex: Sex.FEMALE, probability: 48 },
+  { sex: Sex.INDETERMINATE, probability: 1 }
+].flatMap(({ sex, probability }) => {
+  return Array(probability).fill(parseInt(sex));
+});
 
 export enum Race {
   BLACK = 'Black',
@@ -132,18 +100,6 @@ export enum Race {
   ASIAN = 'Asian',
   WHITE = 'White'
 }
-
-const Religions = [
-  { name: 'Christian', probability: 47 },
-  { name: 'Muslim', probability: 5 },
-  { name: 'Buddhist', probability: 1 },
-  { name: 'Hindu', probability: 1 },
-  { name: 'Sikh', probability: 1 },
-  { name: 'Jewish', probability: 1 },
-  { name: 'None', probability: 45 }
-].flatMap(({ name, probability }) => {
-  return Array(probability).fill(name);
-});
 
 function randomEnum<T>(anEnum: T): T[keyof T] {
   return randomElement(Object.values(anEnum));

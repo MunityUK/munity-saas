@@ -1,9 +1,9 @@
-import Record from 'airtable/lib/record';
 import { GetServerSideProps } from 'next';
 import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React from 'react';
 
+import Complaint from 'src/classes';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 
@@ -41,5 +41,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 type HomeProps = {
-  complaints: Array<Record>;
+  complaints: Array<Complaint>;
 };

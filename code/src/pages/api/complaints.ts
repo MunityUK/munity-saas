@@ -1,23 +1,22 @@
+import Knex from 'knex';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import airtable from 'src/utils/airtable';
+const knex = Knex({
+  client: 'mysql2',
+  connection: {
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
+  }
+});
 
-const TABLE_NAME = 'Complaints';
+const TABLE_NAME = 'complaints';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
-    switch (req.method) {
-      case 'POST': {
-        const { complaints } = req.body;
-        const records = await createComplaints(complaints);
-        res.status(201).json({ complaints: records });
-        break;
-      }
-      default: {
-        const complaints = await getComplaints();
-        res.status(200).json({ complaints });
-      }
-    }
+    const complaints = await getComplaints();
+    res.status(200).json({ complaints });
   } catch (err) {
     const { message, statusCode } = err;
     res.status(statusCode).json({ message });
@@ -25,9 +24,5 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function getComplaints() {
-  return airtable(TABLE_NAME).select().all();
-}
-
-export async function createComplaints(complaints: any[]) {
-  return airtable(TABLE_NAME).create(complaints);
+  return knex(TABLE_NAME).select();
 }
