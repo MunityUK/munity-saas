@@ -16,6 +16,7 @@
     "ingest": "ts-node --project test/tsconfig.json test/ingestion"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.5.1",
     "knex": "^0.95.5",
     "leaflet": "^1.7.1",
     "mysql2": "^2.2.5",
@@ -23,6 +24,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.1.0",
+    "react-redux": "^7.2.4",
     "sass": "^1.32.10"
   },
   "devDependencies": {

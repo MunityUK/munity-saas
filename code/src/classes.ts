@@ -80,7 +80,7 @@ export enum Sex {
   INDETERMINATE = '9'
 }
 
-const PoliceStations = [
+export const PoliceStations = [
   'Avonmouth',
   'Bishopsworth',
   'Brislington',

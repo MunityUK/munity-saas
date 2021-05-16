@@ -1,17 +1,42 @@
 import { GetServerSideProps } from 'next';
 import Dynamic from 'next/dynamic';
 import Head from 'next/head';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import Complaint from 'src/classes';
+import Complaint, { IncidentType, Outcome, PoliceStations } from 'src/classes';
+import { Select } from 'src/components/form';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 
-export default function Home({ complaints }: HomeProps) {
+export default function Home({ allComplaints }: HomeProps) {
   // Map needs not be affected by Next's server-side rendering.
   const VoiceraMap = Dynamic(() => import('src/components/map'), {
     ssr: false
   });
+
+  const [complaints, setComplaints] = useState(allComplaints);
+  const [filters, setFilters] = useState({});
+
+  useEffect(() => {
+    const filteredComplaints = allComplaints.filter((complaint) => {
+      return Object.entries(filters).every(([property, value]) => {
+        if (!value) return true;
+        const key = property as keyof Complaint;
+        return complaint[key] === value;
+      });
+    });
+
+    setComplaints(filteredComplaints);
+  }, [JSON.stringify(filters)]);
+
+  /**
+   * Set a new filter on selection.
+   * @param e The change event.
+   */
+  const onFilterSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters((filters) => ({ ...filters, [name]: value }));
+  };
 
   return (
     <div>
@@ -21,14 +46,28 @@ export default function Home({ complaints }: HomeProps) {
       </Head>
 
       <main>
-        <div className={'voicera-map'}>
-          <VoiceraMap complaints={complaints} />
+        <div className={'filters'}>
+          <Select
+            name={'incidentType'}
+            onChange={onFilterSelect}
+            items={Object.values(IncidentType)}
+            placeholder={'All incident types'}
+          />
+          <Select
+            name={'station'}
+            onChange={onFilterSelect}
+            items={PoliceStations}
+            placeholder={'All stations'}
+          />
+          <Select
+            name={'outcome'}
+            onChange={onFilterSelect}
+            items={Object.values(Outcome)}
+            placeholder={'All outcomes'}
+          />
         </div>
+        <VoiceraMap complaints={complaints} />
       </main>
-
-      <footer>
-        <img src={'/voicera.svg'} alt={'Voicera Logo'} />
-      </footer>
     </div>
   );
 }
@@ -36,10 +75,10 @@ export default function Home({ complaints }: HomeProps) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const complaints = await getComplaints();
   return {
-    props: { complaints: parse(complaints) }
+    props: { allComplaints: parse(complaints) ?? [] }
   };
 };
 
 type HomeProps = {
-  complaints: Array<Complaint>;
+  allComplaints: Array<Complaint>;
 };

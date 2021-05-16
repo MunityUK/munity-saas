@@ -1,8 +1,19 @@
-.voicera-map {
+.map {
   width: 100%;
 }
 
-.voicera-map__container {
+.map__container {
   border-radius: 20px;
   height: 90vh;
+}
+
+.filters {
+  padding: 1em;
+}
+
+.select {
+  border-radius: 10px;
+  margin-right: 0.8em;
+  outline: none;
+  padding: 0.5em;
 }
