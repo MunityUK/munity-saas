@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 CONTAINER='voicera-db'
 IMAGE='mysql/mysql-server:8.0'
 
@@ -23,7 +25,7 @@ fi
 ## Pull the image from DockerHub if it isn't found locally.
 if [[ "$(docker images -q $IMAGE 2>/dev/null)" == "" ]]; then
   echo "Pulling $IMAGE image..."
-  docker pull $IMAGE >/dev/null
+  docker pull $IMAGE
 fi
 
 ## Create and start the container with MySQL environment variables bootstrapped.
