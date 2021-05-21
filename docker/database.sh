@@ -39,4 +39,4 @@ docker run --name=$CONTAINER \
   --publish 3306:3306 \
   $IMAGE >/dev/null
 
-echo "Container started."
+echo "Container starting..."

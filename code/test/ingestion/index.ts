@@ -1,22 +1,8 @@
-import dotenv from 'dotenv';
-import Knex from 'knex';
+import { DB_SCHEMA, DB_TABLE, knex } from './config';
 
 import Complaint from '../../src/classes';
 
-dotenv.config();
-const knex = Knex({
-  client: 'mysql2',
-  connection: {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-  }
-});
-
-const SCHEMA = 'voicera';
-const TABLE = 'complaints';
-const NUM_OF_RECORDS = 100;
+const NUM_OF_RECORDS = process.argv[2] || 100;
 
 (async () => {
   try {
@@ -34,9 +20,9 @@ const NUM_OF_RECORDS = 100;
 
 function createTables() {
   return knex.schema
-    .withSchema(SCHEMA)
-    .dropTableIfExists(TABLE)
-    .createTable(TABLE, (table) => {
+    .withSchema(DB_SCHEMA)
+    .dropTableIfExists(DB_TABLE)
+    .createTable(DB_TABLE, (table) => {
       table.increments('id', { primaryKey: true });
       table.string('reportId', 15);
       table.string('station', 100);
@@ -50,13 +36,13 @@ function createTables() {
       table.string('county', 50);
       table.decimal('latitude', 18, 15);
       table.decimal('longitude', 18, 15);
-      table.integer('victimAge', 2);
+      table.integer('victimAge', 2).unsigned();
       table.string('victimRace', 15);
-      table.integer('victimSex', 1);
+      table.integer('victimSex', 1).unsigned();
       table.string('officerId', 15);
-      table.integer('officerAge', 2);
+      table.integer('officerAge', 2).unsigned();
       table.string('officerRace', 15);
-      table.integer('officerSex', 1);
+      table.integer('officerSex', 1).unsigned();
       table.timestamp('createdAt').defaultTo(knex.fn.now());
     });
 }
@@ -70,5 +56,5 @@ function ingestData() {
     complaints.push(complaint);
   }
 
-  return knex(TABLE).insert(complaints);
+  return knex(DB_TABLE).insert(complaints);
 }
