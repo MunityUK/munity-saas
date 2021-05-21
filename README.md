@@ -2,7 +2,7 @@
 
 This is the source code repository of the Voicera web application in development.
 
-## Setup development environment
+## Set up development environment
 
 These setup instructions should help you get your development environment up and
 running.
@@ -18,7 +18,7 @@ Ensure you have the following prerequisites installed:
 - [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (optional), the
   GUI which provides a visual view of your database.
 
-#### 1. Set environment variables
+### 1. Set environment variables
 
 In the `code` directory:
 
@@ -26,7 +26,7 @@ In the `code` directory:
    simply called `.env`.
 2. Fill in the empty environment variables with whatever values you choose.
 
-#### 2. Install project dependencies
+### 2. Install project dependencies
 
 Still in the `code` directory, run the following to install project dependencies:
 
@@ -34,7 +34,7 @@ Still in the `code` directory, run the following to install project dependencies
 npm install
 ```
 
-#### 3. Set up database:
+### 3. Set up database:
 
 In the `docker` directory, run the database script to set up the database i.e.
 
@@ -44,7 +44,7 @@ In the `docker` directory, run the database script to set up the database i.e.
 You should have a new Docker container named `voicera-db` started. Wait a few
 seconds for it to bootstrap MySQL before running the next command.
 
-#### 4. Ingest example data
+### 4. Ingest example data
 
 Back in the `code` directory, run the command to ingest example data:
 
