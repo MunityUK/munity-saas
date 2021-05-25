@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
-import Complaint from 'src/classes';
+import Complaint from 'src/classes/complaint';
 import { useAppSelector } from 'src/utils/reducers';
 
 const icon = L.icon({

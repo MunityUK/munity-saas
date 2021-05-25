@@ -3,7 +3,7 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-import Complaint, { IncidentType, Outcome, PoliceStations } from 'src/classes';
+import Complaint, { IncidentType, ComplaintStatus, PoliceStations } from 'src/classes/complaint';
 import { Select } from 'src/components/form';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
@@ -62,7 +62,7 @@ export default function Home({ allComplaints }: HomeProps) {
           <Select
             name={'outcome'}
             onChange={onFilterSelect}
-            items={Object.values(Outcome)}
+            items={Object.values(ComplaintStatus)}
             placeholder={'All outcomes'}
           />
         </div>

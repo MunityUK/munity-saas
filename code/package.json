@@ -13,7 +13,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest": "ts-node --project test/tsconfig.json test/ingestion"
+    "ingest": "ts-node --project test/tsconfig.json test/ingestion",
+    "comrank": "ts-node --project test/tsconfig.json test/comrank"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.1",
