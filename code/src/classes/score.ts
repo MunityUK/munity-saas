@@ -1,6 +1,5 @@
-export default class ComplaintScore {
+export default class StationScore {
   numberOfComplaints?: number;
-  percentageResolved?: number;
-  avgTimeToAddress?: number;
-  avgTimeToResolve?: number;
+  percentageResolved?: string;
+  avgTimeToResolve?: string;
 }

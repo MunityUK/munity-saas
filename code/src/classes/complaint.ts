@@ -1,6 +1,7 @@
 import * as faker from 'faker';
 
 export default class Complaint {
+  id?: number;
   reportId?: string;
   station?: string;
   startDate?: Date;
