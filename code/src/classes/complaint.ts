@@ -1,21 +1,22 @@
 import * as faker from 'faker';
 
 export default class Complaint {
+  id?: number;
   reportId?: string;
   station?: string;
   startDate?: Date;
   endDate?: Date;
   incidentType?: IncidentType;
   incidentDescription?: string;
-  outcome?: Outcome;
-  outcomeDescription?: string;
+  status?: ComplaintStatus;
+  notes?: string;
   city?: string;
   county?: string;
   latitude?: number;
   longitude?: number;
-  victimAge?: number;
-  victimRace?: string;
-  victimSex?: Sex;
+  complainantAge?: number;
+  complainantRace?: string;
+  complainantSex?: Sex;
   officerId?: string | number;
   officerAge?: number;
   officerRace?: string;
@@ -29,27 +30,27 @@ export default class Complaint {
       .padStart(5, '0');
     complaint.station =
       PoliceStations[Math.floor(Math.random() * PoliceStations.length)];
-    complaint.startDate = faker.date.past();
-
-    if (faker.datatype.boolean()) {
-      complaint.endDate = faker.date.past(undefined, complaint.startDate);
-    }
-
     complaint.incidentType = randomEnum(IncidentType);
     complaint.incidentDescription = faker.lorem.sentence();
-    complaint.outcome = randomEnum(Outcome);
-    complaint.outcomeDescription = faker.lorem.sentence();
+    complaint.status = randomEnum(ComplaintStatus);
+    complaint.notes = faker.lorem.sentence();
     complaint.city = 'Bristol';
     complaint.county = 'Avon';
     complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
     complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
-    complaint.victimAge = faker.datatype.number({ min: 18, max: 65 });
-    complaint.victimSex = randomElement(SexDistribution);
-    complaint.victimRace = randomEnum(Race);
-    complaint.officerId = 'OI' + faker.datatype.number().toString().padStart(5, '0');
+    complaint.complainantAge = faker.datatype.number({ min: 18, max: 65 });
+    complaint.complainantSex = randomElement(SexDistribution);
+    complaint.complainantRace = randomEnum(Race);
+    complaint.officerId =
+      'OI' + faker.datatype.number().toString().padStart(5, '0');
     complaint.officerAge = faker.datatype.number({ min: 25, max: 55 });
     complaint.officerSex = randomElement(SexDistribution);
     complaint.officerRace = randomEnum(Race);
+    complaint.startDate = faker.date.past();
+
+    if (complaint.status === ComplaintStatus.RESOLVED) {
+      complaint.endDate = faker.date.past(undefined, complaint.startDate);
+    }
 
     return complaint;
   }
@@ -61,9 +62,10 @@ export enum IncidentType {
   MISCONDUCT = 'Misconduct'
 }
 
-export enum Outcome {
-  RESOLVED = 'Resolved',
-  UNRESOLVED = 'Unresolved'
+export enum ComplaintStatus {
+  UNADDRESSED = 'Unaddressed',
+  UNDER_INVEST = 'Under Investigation',
+  RESOLVED = 'Resolved'
 }
 
 export enum Race {

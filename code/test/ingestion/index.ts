@@ -1,6 +1,5 @@
-import { DB_SCHEMA, DB_TABLE, knex } from './config';
-
-import Complaint from '../../src/classes';
+import Complaint from '../../src/classes/complaint';
+import { DB_SCHEMA, DB_TABLE, knex } from '../config';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 
@@ -30,15 +29,15 @@ function createTables() {
       table.dateTime('endDate');
       table.string('incidentType', 20);
       table.text('incidentDescription');
-      table.string('outcome', 20);
-      table.text('outcomeDescription');
+      table.string('status', 20);
+      table.text('notes');
       table.string('city', 50);
       table.string('county', 50);
       table.decimal('latitude', 18, 15);
       table.decimal('longitude', 18, 15);
-      table.integer('victimAge', 2).unsigned();
-      table.string('victimRace', 15);
-      table.integer('victimSex', 1).unsigned();
+      table.integer('complainantAge', 2).unsigned();
+      table.string('complainantRace', 15);
+      table.integer('complainantSex', 1).unsigned();
       table.string('officerId', 15);
       table.integer('officerAge', 2).unsigned();
       table.string('officerRace', 15);

@@ -13,10 +13,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest": "ts-node --project test/tsconfig.json test/ingestion"
+    "ingest": "ts-node --project test/tsconfig.json test/ingestion",
+    "comrank": "ts-node --project test/tsconfig.json test/comrank"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.1",
+    "date-fns": "^2.21.3",
     "knex": "^0.95.5",
     "leaflet": "^1.7.1",
     "mysql2": "^2.2.5",
