@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: cimg/node:14
+      - image: cimg/node:15.1
     steps:
       - checkout
       - restore_cache:
@@ -21,6 +21,6 @@ jobs:
             - ~/.npm
 
 workflows:
-  orb-free-workflow:
+  build-app:
     jobs:
       - test
