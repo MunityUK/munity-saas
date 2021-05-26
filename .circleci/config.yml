@@ -12,7 +12,7 @@ jobs:
           working_directory: ./code
       - run:
           name: Build application
-          command: next build
+          command: npm run build
           working_directory: ./code
 
 workflows:
