@@ -6,8 +6,7 @@ import { DB_TABLE, knex } from '../config';
 
 (async () => {
   try {
-    const scores = await calculateStationScores();
-    printScores(scores);
+    main();
   } catch (err) {
     console.error(err);
   } finally {
@@ -15,6 +14,16 @@ import { DB_TABLE, knex } from '../config';
   }
 })();
 
+async function main() {
+  const scores = await calculateStationScores();
+  printScores(scores);
+}
+
+/**
+ * Calculates the ComRank score for each station among the total list of
+ * complaints.
+ * @returns The mapping of scores to station.
+ */
 async function calculateStationScores() {
   const complaintsByStation: StationComplaints = {};
   const stationScores: StationScores = {};
@@ -61,6 +70,10 @@ async function calculateStationScores() {
   return stationScores;
 }
 
+/**
+ * Prints the scores to the console in a user-friendly format.
+ * @param stationScores The mapping containing scores of each station.
+ */
 function printScores(stationScores: StationScores) {
   console.info('---');
   Object.entries(stationScores).forEach(([station, score], i) => {
