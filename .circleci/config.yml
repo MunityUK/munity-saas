@@ -6,6 +6,8 @@ jobs:
       - image: cimg/node:15.1
     steps:
       - checkout
+      - run:
+          command: cd code
       - restore_cache:
           keys:
             - node-deps-v1-{{ .Branch }}-{{checksum "package-lock.json"}}
