@@ -13,7 +13,7 @@ const knex = Knex({
 
 const TABLE_NAME = 'complaints';
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+export default async function (_: NextApiRequest, res: NextApiResponse) {
   try {
     const complaints = await getComplaints();
     res.status(200).json({ complaints });

@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 import Knex from 'knex';
 
 dotenv.config();
@@ -6,7 +7,7 @@ dotenv.config();
 export const DB_SCHEMA = 'voicera';
 export const DB_TABLE = 'complaints';
 
-export const knex = Knex({
+export default Knex({
   client: 'mysql2',
   connection: {
     host: process.env.MYSQL_HOST,

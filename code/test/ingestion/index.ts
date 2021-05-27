@@ -1,12 +1,12 @@
-import Complaint from '../../src/classes/complaint';
-import { DB_SCHEMA, DB_TABLE, knex } from '../config';
+import { Complaint } from '../../types';
+import knex, { DB_SCHEMA, DB_TABLE } from '../../utils/knex';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 
 (async () => {
   try {
     await createTables();
-    console.info('Table created.');
+    console.info('Table (re)created.');
 
     await ingestData();
     console.info(`${NUM_OF_RECORDS} records ingested.`);

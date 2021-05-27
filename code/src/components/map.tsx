@@ -3,8 +3,8 @@ import 'leaflet/dist/leaflet.css';
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
-import Complaint from 'src/classes/complaint';
 import { useAppSelector } from 'src/utils/reducers';
+import { Complaint } from 'types';
 
 const icon = L.icon({
   iconUrl: '/marker-icon.png',
@@ -13,7 +13,7 @@ const icon = L.icon({
 
 export default function VoiceraMap({ complaints }: VoiceraMapProps) {
   const centerPosition = new LatLng(51.45523, -2.59665);
-  const { mapZoom } = useAppSelector((state) => state); 
+  const { mapZoom } = useAppSelector((state) => state);
   return (
     <div className={'map'}>
       <MapContainer

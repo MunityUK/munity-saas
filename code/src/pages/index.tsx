@@ -3,10 +3,15 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-import Complaint, { IncidentType, ComplaintStatus, PoliceStations } from 'src/classes/complaint';
 import { Select } from 'src/components/form';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
+import {
+  Complaint,
+  ComplaintStatus,
+  IncidentType,
+  PoliceStations
+} from 'types';
 
 export default function Home({ allComplaints }: HomeProps) {
   // Map needs not be affected by Next's server-side rendering.

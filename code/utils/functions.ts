@@ -1,14 +1,19 @@
 import { differenceInDays, differenceInMilliseconds } from 'date-fns';
 
-import Complaint, { ComplaintStatus } from '../../src/classes/complaint';
-import StationScore from '../../src/classes/score';
+import {
+  Complaint,
+  ComplaintStatus,
+  StationComplaints,
+  StationScore,
+  StationScores
+} from '../types';
 
 /**
  * Calculates the ComRank score for each station among the total list of
  * complaints.
  * @returns The mapping of scores to station.
  */
- export async function calculateStationScores(complaints: Complaint[]) {
+export function calculateStationScores(complaints: Complaint[]) {
   const complaintsByStation: StationComplaints = {};
   const stationScores: StationScores = {};
 
@@ -51,11 +56,3 @@ import StationScore from '../../src/classes/score';
 
   return stationScores;
 }
-
-type StationComplaints = {
-  [key: string]: Complaint[];
-};
-
-type StationScores = {
-  [key: string]: StationScore;
-};

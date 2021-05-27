@@ -1,8 +1,6 @@
-import { calculateStationScores } from './utils';
-
-import Complaint from '../../src/classes/complaint';
-import StationScore from '../../src/classes/score';
-import { DB_TABLE, knex } from '../config';
+import { Complaint, StationScore } from '../../types';
+import { calculateStationScores } from '../../utils/functions';
+import knex, { DB_TABLE } from '../../utils/knex';
 
 (async () => {
   try {
@@ -16,7 +14,7 @@ import { DB_TABLE, knex } from '../config';
 
 async function main() {
   const complaints = await knex(DB_TABLE).select<Complaint[]>();
-  const scores = await calculateStationScores(complaints);
+  const scores = calculateStationScores(complaints);
   printScores(scores);
 }
 
