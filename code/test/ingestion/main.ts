@@ -1,21 +1,19 @@
+
 import { Complaint } from '../../types';
 import knex, { DB_SCHEMA, DB_TABLE } from '../../utils/knex';
+import { run } from '../utils';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 
-(async () => {
-  try {
-    await createTables();
-    console.info('Table (re)created.');
+run(main);
 
-    await ingestData();
-    console.info(`${NUM_OF_RECORDS} records ingested.`);
-  } catch (err) {
-    console.error(err);
-  } finally {
-    process.exit(0);
-  }
-})();
+async function main() {
+  await createTables();
+  console.info('Table (re)created.');
+
+  await ingestData();
+  console.info(`${NUM_OF_RECORDS} records ingested.`);
+}
 
 function createTables() {
   return knex.schema

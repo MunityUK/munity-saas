@@ -1,16 +1,9 @@
 import { Complaint, StationScore } from '../../types';
 import { calculateStationScores } from '../../utils/functions';
 import knex, { DB_TABLE } from '../../utils/knex';
+import { run } from '../utils';
 
-(async () => {
-  try {
-    await main();
-  } catch (err) {
-    console.error(err);
-  } finally {
-    process.exit(0);
-  }
-})();
+run(main);
 
 async function main() {
   const complaints = await knex(DB_TABLE).select<Complaint[]>();
