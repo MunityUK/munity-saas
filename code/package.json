@@ -13,6 +13,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "check": "tsc --noEmit",
     "test": "ts-mocha --project test/tsconfig.json --recursive --no-timeout test/index.ts",
     "ingest": "ts-node --project test/tsconfig.json test/ingestion/main",
     "comrank": "ts-node --project test/tsconfig.json test/comrank/main"
