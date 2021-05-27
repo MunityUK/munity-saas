@@ -13,6 +13,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "ts-mocha --project test/tsconfig.json --recursive --no-timeout test/index.ts",
     "ingest": "ts-node --project test/tsconfig.json test/ingestion/main",
     "comrank": "ts-node --project test/tsconfig.json test/comrank/main"
   },
@@ -30,22 +31,27 @@
     "sass": "^1.32.10"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.18",
     "@types/faker": "^5.5.4",
     "@types/leaflet": "^1.7.0",
+    "@types/mocha": "^8.2.2",
     "@types/node": "^15.6.1",
     "@types/react": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@zzavidd/eslint-config": "^0.2.8",
     "@zzavidd/prettier-config": "^0.2.8",
     "@zzavidd/stylelint-config": "^0.2.8",
+    "chai": "^4.3.4",
     "dotenv": "^8.2.0",
     "eslint": "^7.24.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",
     "faker": "^5.5.3",
+    "mocha": "^8.4.0",
     "prettier": "^2.2.1",
     "stylelint": "^13.12.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
+    "ts-mocha": "^8.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   }

@@ -1,4 +1,4 @@
-export function run(main: () => void) {
+export function run(main: () => Promise<void>) {
   return (async () => {
     try {
       await main();

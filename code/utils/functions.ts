@@ -56,3 +56,16 @@ export function calculateStationScores(complaints: Complaint[]) {
 
   return stationScores;
 }
+
+/**
+ * Rounds a float to the specified number of decimal places. Will leave out
+ * decimals if the number is an integer.
+ * @param number The number to round.
+ * @param precision The number of decimal places.
+ * @returns The rounded number.
+ */
+export function round(number: number, precision: number) {
+  if (!precision) return number;
+  const scale = 10 ^ precision;
+  return Math.round(number * scale) / scale;
+}
