@@ -4,7 +4,7 @@ jobs:
   build:
     docker:
       - image: node:14-alpine
-      - image: mysql/mysql-server:8.0
+      - image: circleci/mysql:8.0
         environment:
           - MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
           - MYSQL_HOST: $MYSQL_HOST
