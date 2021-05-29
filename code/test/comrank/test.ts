@@ -9,7 +9,7 @@ describe('ComRank Tests', function () {
     const expNumOfComplaints = 5;
     let numOfResolved = 0;
 
-    const complaints: Complaint[] = [Complaint.random()];
+    const complaints: Complaint[] = [];
 
     for (let i = 0; i < expNumOfComplaints; i++) {
       const complaint = Complaint.random();
@@ -23,11 +23,12 @@ describe('ComRank Tests', function () {
       }
     }
 
-    const expPctResolved = round(numOfResolved / expNumOfComplaints * 100, 1) + '%';
+    const expPctResolved =
+      round((numOfResolved / expNumOfComplaints) * 100, 1) + '%';
 
     const scores = calculateStationScores(complaints)[stationName];
     assert.strictEqual(scores.numberOfComplaints, expNumOfComplaints);
     assert.strictEqual(scores.percentageResolved, expPctResolved);
-    // TODO: Test for average days
+    assert.strictEqual(scores.avgTimeToResolve, '30 days');
   });
 });

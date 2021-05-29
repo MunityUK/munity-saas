@@ -49,7 +49,7 @@ export function calculateStationScores(complaints: Complaint[]) {
     const score = new StationScore();
     score.numberOfComplaints = complaintCount;
     score.percentageResolved = Math.round(percentageResolved * 10) / 10 + '%';
-    score.avgTimeToResolve = differenceInDays(avgTimeToResolve, 0) + ' days';
+    score.avgTimeToResolve = Math.abs(differenceInDays(avgTimeToResolve, 0)) + ' days';
 
     stationScores[station] = score;
   });
