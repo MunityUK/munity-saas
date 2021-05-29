@@ -1,4 +1,3 @@
-
 import { Complaint } from '../../types';
 import knex, { DB_SCHEMA, DB_TABLE } from '../../utils/knex';
 import { run } from '../utils';
