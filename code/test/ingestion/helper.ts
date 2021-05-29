@@ -1,24 +1,11 @@
 import { Complaint } from '../../types';
-import knex, { DB_SCHEMA, DB_TABLE } from '../../utils/knex';
-import { run } from '../utils';
+import knex, { DB_SCHEMA } from '../../utils/knex';
 
-const NUM_OF_RECORDS = process.argv[2] || 100;
-
-run(main);
-
-async function main() {
-  await createTables();
-  console.info('Table (re)created.');
-
-  await ingestData();
-  console.info(`${NUM_OF_RECORDS} records ingested.`);
-}
-
-function createTables() {
+export function createTable(dbTable: string) {
   return knex.schema
     .withSchema(DB_SCHEMA)
-    .dropTableIfExists(DB_TABLE)
-    .createTable(DB_TABLE, (table) => {
+    .dropTableIfExists(dbTable)
+    .createTable(dbTable, (table) => {
       table.increments('id', { primaryKey: true });
       table.string('reportId', 15);
       table.string('station', 100);
@@ -43,14 +30,6 @@ function createTables() {
     });
 }
 
-function ingestData() {
-  const complaints: Complaint[] = [];
-
-  for (let i = 1; i <= NUM_OF_RECORDS; i++) {
-    const complaint = Complaint.random();
-    complaint.reportId = 'COM' + i.toString().padStart(4, '0');
-    complaints.push(complaint);
-  }
-
-  return knex(DB_TABLE).insert(complaints);
+export function insertComplaints(table: string, complaints: Complaint[]) {
+  return knex(table).insert(complaints);
 }
