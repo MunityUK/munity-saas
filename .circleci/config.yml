@@ -24,10 +24,11 @@ jobs:
             done
             echo Failed waiting for MySQL && exit 1
       - run:
-          name: Install MySQL CLI; Import dummy data; run an example query
+          name: Install MySQL CLI
           command: |
             sudo apt-get update
             sudo apt-get install default-mysql-client
+            mysql -h 127.0.0.1 -u user -p $MYSQL_PASSWORD --execute="SELECT * FROM $MYSQL_DATABASE"
       - run:
           name: Install packages
           command: npm ci
