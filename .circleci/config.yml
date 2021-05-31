@@ -32,13 +32,14 @@ jobs:
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
       - run:
-        name: Run tests
-        command: npm test
-        working_directory: ./code
+          name: Run tests
+          command: npm test
+          working_directory: ./code
 
       - persist_to_workspace:
           root: ~/project
-          paths: code
+          paths:
+            - code
 
   build:
     executor: node
@@ -83,6 +84,6 @@ workflows:
       - check:
           requires:
             - dependencies
-      - test:
-          requires:
-            - dependencies
+      # - test:
+      #     requires:
+      #       - dependencies
