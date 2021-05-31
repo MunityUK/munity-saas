@@ -11,9 +11,9 @@ export const DB_TABLE_TEST = 'complaints_test';
 export default Knex({
   client: 'mysql2',
   connection: {
-    host: 'localhost',
-    user: 'voicera',
-    password: 'voicera',
-    database: 'voicera'
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
   }
 });
