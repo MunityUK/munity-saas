@@ -21,7 +21,7 @@ jobs:
           working_directory: ./code
       - save_cache:
           paths:
-            - ~/usr/local/lib/node_modules
+            - ~/project/code/node_modules
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
       - persist_to_workspace:
@@ -50,7 +50,6 @@ jobs:
 
   test:
     docker:
-      - image: cimg/node:14.0
       - image: mysql/mysql-server:8.0
         environment:
           MYSQL_ROOT_PASSWORD: root
