@@ -14,6 +14,6 @@ export default Knex({
     host: 'localhost',
     user: 'user',
     password: 'pwd',
-    database: 'database'
+    database: 'complaints_test'
   }
 });
