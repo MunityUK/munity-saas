@@ -1,19 +1,59 @@
 version: 2.1
 
-jobs:
-  build:
+executors:
+  node:
     docker:
-      - image: node:14-alpine
+      - image: cimg/node:14.0
+
+commands:
+  install_dependencies:
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - app-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - app-{{ .Branch }}-
+            - app-
       - run:
           name: Install packages
           command: npm ci
           working_directory: ./code
+      - save_cache:
+          paths:
+            - ~/project/code/node_modules
+          key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
+
+jobs:
+  build:
+    executor: node
+    steps:
+      - install_dependencies
       - run:
           name: Build application
           command: npm run build
           working_directory: ./code
+
+  check:
+    executor: node
+    steps:
+      - install_dependencies
+      - run:
+          name: Check code style
+          command: npm run check
+          working_directory: ./code
+
+  test:
+    docker:
+      - image: cimg/node:14.0
+      - image: mysql/mysql-server:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_HOST: localhost
+          MYSQL_USER: voicera
+          MYSQL_PASSWORD: voicera
+          MYSQL_DATABASE: voicera
+    steps:
+      - install_dependencies
       - run:
           name: Run tests
           command: npm test
@@ -23,3 +63,5 @@ workflows:
   build-app:
     jobs:
       - build
+      - check
+      - test
