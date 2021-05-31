@@ -49,10 +49,16 @@ jobs:
       #     name: Build application
       #     command: npm run build
       #     working_directory: ./code
+
       - run:
-          name: Run tests
-          command: npm test
+          name: Ingest example data
+          command: npm run ingest -- 10
           working_directory: ./code
+
+      # - run:
+      #     name: Run tests
+      #     command: npm test
+      #     working_directory: ./code
 
 workflows:
   build-app:
