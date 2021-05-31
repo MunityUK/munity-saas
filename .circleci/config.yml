@@ -25,10 +25,15 @@ jobs:
             - ~/usr/local/lib/node_modules
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
+      - persist_to_workspace:
+          root: code
+
   build:
     docker:
       - image: cimg/node:14.0
     steps:
+      - attach_workspace:
+          at: ./
       - run:
           name: Build application
           command: npm run build
