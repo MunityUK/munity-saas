@@ -12,8 +12,8 @@ export default Knex({
   client: 'mysql2',
   connection: {
     host: 'localhost',
-    user: 'user',
-    password: 'pwd',
+    user: 'root',
+    password: 'root',
     database: 'complaints_test'
   }
 });
