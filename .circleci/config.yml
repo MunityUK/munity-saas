@@ -5,23 +5,23 @@ jobs:
       - image: cimg/node:14.0
       - image: mysql/mysql-server:8.0
         environment:
-          - MYSQL_ROOT_PASSWORD: pwd
+          - MYSQL_ROOT_PASSWORD: root
           - MYSQL_HOST: localhost
           - MYSQL_USER: user
           - MYSQL_PASSWORD: pwd
           - MYSQL_DATABASE: complaints_test
     steps:
       - checkout
-      - run:
-          name: Waiting for MySQL to be ready
-          command: |
-            for i in `seq 1 10`;
-            do
-              nc -z 127.0.0.1 3306 && echo Success && exit 0
-              echo -n .
-              sleep 1
-            done
-            echo Failed waiting for MySQL && exit 1
+      # - run:
+      #     name: Waiting for MySQL to be ready
+      #     command: |
+      #       for i in `seq 1 10`;
+      #       do
+      #         nc -z 127.0.0.1 3306 && echo Success && exit 0
+      #         echo -n .
+      #         sleep 1
+      #       done
+      #       echo Failed waiting for MySQL && exit 1
       # - run:
       #     name: Install MySQL CLI
       #     command: |
@@ -51,14 +51,9 @@ jobs:
       #     working_directory: ./code
 
       - run:
-          name: Ingest example data
-          command: npm run ingest -- 10
+          name: Run tests
+          command: npm test
           working_directory: ./code
-
-      # - run:
-      #     name: Run tests
-      #     command: npm test
-      #     working_directory: ./code
 
 workflows:
   build-app:
