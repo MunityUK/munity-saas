@@ -43,6 +43,6 @@ workflows:
   build-app:
     jobs:
       - prep
-      - build
-        requires:
-          - prep
+      - build:
+          requires:
+            - prep
