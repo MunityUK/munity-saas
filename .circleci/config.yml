@@ -1,14 +1,13 @@
 version: 2.1
-jobs:
-  prep:
+
+executors:
+  node:
     docker:
       - image: cimg/node:14.0
-      - image: mysql/mysql-server:8.0
-        environment:
-          MYSQL_HOST: localhost
-          MYSQL_USER: voicera
-          MYSQL_PASSWORD: voicera
-          MYSQL_DATABASE: voicera
+
+jobs:
+  dependencies:
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -30,25 +29,51 @@ jobs:
           paths: code
 
   build:
-    docker:
-      - image: cimg/node:14.0
+    executor: node
+    working_directory: ./code
     steps:
       - attach_workspace:
           at: ~/project
       - run:
           name: Build application
           command: npm run build
-          working_directory: ./code
 
+  check:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Check code style
+          command: npm run check
+
+  test:
+    executor: node
+    docker:
+      - image: mysql/mysql-server:8.0
+        environment:
+          MYSQL_HOST: localhost
+          MYSQL_USER: voicera
+          MYSQL_PASSWORD: voicera
+          MYSQL_DATABASE: voicera
+    working_directory: ./code
+    steps:
+      - attach_workspace:
+          at: ~/project
       - run:
           name: Run tests
           command: npm test
-          working_directory: ./code
 
 workflows:
   build-app:
     jobs:
-      - prep
+      - dependencies
       - build:
           requires:
-            - prep
+            - dependencies
+      - check:
+          requires:
+            - dependencies
+      - test:
+          requires:
+            - dependencies
