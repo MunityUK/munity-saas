@@ -57,13 +57,13 @@ jobs:
           MYSQL_USER: voicera
           MYSQL_PASSWORD: voicera
           MYSQL_DATABASE: voicera
-    working_directory: ./code
     steps:
       - attach_workspace:
           at: ~/project
       - run:
           name: Run tests
           command: npm test
+          working_directory: ./code
 
 workflows:
   build-app:
