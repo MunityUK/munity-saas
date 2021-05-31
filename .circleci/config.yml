@@ -31,6 +31,11 @@ jobs:
             - ~/project/code/node_modules
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
+      - run:
+        name: Run tests
+        command: npm test
+        working_directory: ./code
+
       - persist_to_workspace:
           root: ~/project
           paths: code
@@ -55,18 +60,18 @@ jobs:
           name: Check code style
           command: npm run check
 
-  test:
-    executor: node
-    steps:
-      - attach_workspace:
-          at: ~/project
-      - run:
-          name: Check MySQL version
-          command: mysql -V
-      - run:
-          name: Run tests
-          command: npm test
-          working_directory: ./code
+  # test:
+  #   executor: node
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/project
+  #     - run:
+  #         name: Check MySQL version
+  #         command: mysql -V
+  #     - run:
+  #         name: Run tests
+  #         command: npm test
+  #         working_directory: ./code
 
 workflows:
   build-app:
