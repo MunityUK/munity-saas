@@ -7,9 +7,9 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_HOST: localhost
-          MYSQL_USER: user
-          MYSQL_PASSWORD: pwd
-          MYSQL_DATABASE: complaints_test
+          MYSQL_USER: voicera
+          MYSQL_PASSWORD: voicera
+          MYSQL_DATABASE: voicera
     steps:
       - checkout
       # - run:
