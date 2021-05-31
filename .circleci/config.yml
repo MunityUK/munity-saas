@@ -5,12 +5,11 @@ jobs:
       - image: cimg/node:14.0
       - image: circleci/mysql:8.0
         environment:
-          - MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-          # - MYSQL_HOST: $MYSQL_HOST
-          - MYSQL_ROOT_HOST: "%"
-          - MYSQL_USER: $MYSQL_USER
-          - MYSQL_PASSWORD: $MYSQL_PASSWORD
-          - MYSQL_DATABASE: $MYSQL_DATABASE
+          - MYSQL_ROOT_PASSWORD: pwd
+          - MYSQL_HOST: localhost
+          - MYSQL_USER: user
+          - MYSQL_PASSWORD: pwd
+          - MYSQL_DATABASE: database
     steps:
       - checkout
       - run:
