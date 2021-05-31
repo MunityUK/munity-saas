@@ -6,10 +6,10 @@ jobs:
       - image: mysql/mysql-server:8.0
         environment:
           MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-          MYSQL_HOST: $MYSQL_HOST
-          MYSQL_USER: $MYSQL_USER
-          MYSQL_PASSWORD: $MYSQL_PASSWORD
-          MYSQL_DATABASE: $MYSQL_DATABASE
+          MYSQL_HOST: localhost
+          MYSQL_USER: voicera
+          MYSQL_PASSWORD: voicera
+          MYSQL_DATABASE: voicera
     steps:
       - checkout
       - restore_cache:
