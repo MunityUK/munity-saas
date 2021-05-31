@@ -22,17 +22,11 @@ commands:
           paths:
             - ~/project/code/node_modules
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      # - persist_to_workspace:
-      #     root: ~/project
-      #     paths:
-      #       - code
 
 jobs:
   build:
     executor: node
     steps:
-      # - attach_workspace:
-      #     at: ~/project
       - install_dependencies
       - run:
           name: Build application
@@ -42,8 +36,6 @@ jobs:
   check:
     executor: node
     steps:
-      # - attach_workspace:
-      #     at: ~/project
       - install_dependencies
       - run:
           name: Check code style
@@ -61,8 +53,6 @@ jobs:
           MYSQL_PASSWORD: voicera
           MYSQL_DATABASE: voicera
     steps:
-      # - attach_workspace:
-      #     at: ~/project
       - install_dependencies
       - run:
           name: Run tests
