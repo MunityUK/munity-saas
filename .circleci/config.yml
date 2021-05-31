@@ -9,7 +9,7 @@ jobs:
           - MYSQL_HOST: localhost
           - MYSQL_USER: user
           - MYSQL_PASSWORD: pwd
-          - MYSQL_DATABASE: database
+          - MYSQL_DATABASE: voicera
     steps:
       - checkout
       - run:
