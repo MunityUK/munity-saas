@@ -6,7 +6,7 @@ jobs:
       - image: mysql/mysql-server:8.0
         environment:
           MYSQL_HOST: localhost
-          MYSQL_USER: hello
+          MYSQL_USER: voicera
           MYSQL_PASSWORD: voicera
           MYSQL_DATABASE: voicera
     steps:
@@ -26,10 +26,10 @@ jobs:
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
 
 
-      # - run:
-      #     name: Build application
-      #     command: npm run build
-      #     working_directory: ./code
+      - run:
+          name: Build application
+          command: npm run build
+          working_directory: ./code
 
       - run:
           name: Run tests
