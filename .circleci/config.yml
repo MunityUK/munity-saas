@@ -28,6 +28,21 @@ jobs:
           paths:
             - code
 
+  database:
+    docker:
+      - image: mysql/mysql-server:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_HOST: localhost
+          MYSQL_USER: voicera
+          MYSQL_PASSWORD: voicera
+          MYSQL_DATABASE: voicera
+    steps:
+      - run:
+          name: Check MySQL version
+          command: mysql -V
+
+
   build:
     executor: node
     working_directory: ./code
@@ -61,9 +76,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      # - run:
-      #     name: Check MySQL version
-      #     command: mysql -V
       - run:
           name: Run tests
           command: npm test
@@ -82,3 +94,4 @@ workflows:
       - test:
           requires:
             - dependencies
+            - database
