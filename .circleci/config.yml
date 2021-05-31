@@ -27,10 +27,24 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install default-mysql-client
+
+      - restore_cache:
+          keys:
+            - app-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - app-{{ .Branch }}-
+            - app-
+      
       - run:
           name: Install packages
           command: npm ci
           working_directory: ./code
+
+      - save_cache:
+          paths:
+            - ~/usr/local/lib/node_modules
+          key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
+
+
       # - run:
       #     name: Build application
       #     command: npm run build
