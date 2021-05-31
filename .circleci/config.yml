@@ -6,10 +6,10 @@ jobs:
       - image: circleci/mysql:8.0
         environment:
           - MYSQL_ROOT_PASSWORD: pwd
-          - MYSQL_HOST: '%'
+          - MYSQL_HOST: localhost
           - MYSQL_USER: user
           - MYSQL_PASSWORD: pwd
-          - MYSQL_DATABASE: voicera
+          - MYSQL_DATABASE: database
     steps:
       - checkout
       - run:
