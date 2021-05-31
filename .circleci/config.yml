@@ -5,9 +5,8 @@ executors:
     docker:
       - image: cimg/node:14.0
 
-jobs:
-  dependencies:
-    executor: node
+commands:
+  install_dependencies:
     steps:
       - checkout
       - restore_cache:
@@ -23,45 +22,33 @@ jobs:
           paths:
             - ~/project/code/node_modules
           key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - code
+      # - persist_to_workspace:
+      #     root: ~/project
+      #     paths:
+      #       - code
 
-  database:
-    docker:
-      - image: mysql/mysql-server:8.0
-        environment:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_HOST: localhost
-          MYSQL_USER: voicera
-          MYSQL_PASSWORD: voicera
-          MYSQL_DATABASE: voicera
-    steps:
-      - run:
-          name: Check MySQL version
-          command: mysql -V
-
-
+jobs:
   build:
     executor: node
-    working_directory: ./code
     steps:
-      - attach_workspace:
-          at: ~/project
+      # - attach_workspace:
+      #     at: ~/project
+      - install_dependencies
       - run:
           name: Build application
           command: npm run build
+          working_directory: ./code
 
   check:
     executor: node
-    working_directory: ./code
     steps:
-      - attach_workspace:
-          at: ~/project
+      # - attach_workspace:
+      #     at: ~/project
+      - install_dependencies
       - run:
           name: Check code style
           command: npm run check
+          working_directory: ./code
 
   test:
     docker:
@@ -74,8 +61,9 @@ jobs:
           MYSQL_PASSWORD: voicera
           MYSQL_DATABASE: voicera
     steps:
-      - attach_workspace:
-          at: ~/project
+      # - attach_workspace:
+      #     at: ~/project
+      - install_dependencies
       - run:
           name: Run tests
           command: npm test
@@ -84,15 +72,6 @@ jobs:
 workflows:
   build-app:
     jobs:
-      - dependencies
-      - database
-      - build:
-          requires:
-            - dependencies
-      - check:
-          requires:
-            - dependencies
-      - test:
-          requires:
-            - dependencies
-            - database
+      - build
+      - check
+      - test
