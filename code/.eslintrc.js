@@ -2,8 +2,8 @@ module.exports = {
   extends: '@zzavidd/eslint-config',
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json', './tsconfig.eslint.json'],
+    project: ['./tsconfig.eslint.json', './tsconfig.json'],
     tsconfigRootDir: __dirname
   },
-  ignorePatterns: ['.eslintrc.js']
+  ignorePatterns: ['**/*.js']
 };

@@ -26,9 +26,11 @@ In the `code` directory:
    simply called `.env`.
 2. Fill in the empty environment variables with whatever values you choose.
 
+Remain in this `code` directory for the subsequent steps.
+
 ### 2. Install project dependencies
 
-Still in the `code` directory, run the following to install project dependencies:
+Run the following to install project dependencies:
 
 ```
 npm install
@@ -36,17 +38,18 @@ npm install
 
 ### 3. Set up database:
 
-In the `docker` directory, run the database script to set up the database i.e.
+To launch the database initialisation scripts, run:
 
-- On Windows, run `database` or click on `database.cmd`.
-- On macOS, run `./database.sh`.
+```
+npm run init-db
+```
 
 You should have a new Docker container named `voicera-db` started. Wait a few
 seconds for it to bootstrap MySQL before running the next command.
 
 ### 4. Ingest example data
 
-Back in the `code` directory, run the command to ingest example data:
+Run the command to ingest example data:
 
 ```
 npm run ingest

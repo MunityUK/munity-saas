@@ -6,7 +6,7 @@ CONTAINER='voicera-db'
 IMAGE='mysql/mysql-server:8.0'
 
 ## Import environment variables from .env file.
-source ../code/.env
+source ../.env
 
 ## Ensure environment variables are set.
 for env in MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE; do

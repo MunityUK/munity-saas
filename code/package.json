@@ -12,6 +12,7 @@
     "start": "next start",
     "check": "tsc --noEmit",
     "test": "ts-mocha --project test/tsconfig.json --recursive --exit --no-timeout test/index.ts",
+    "init-db": "node scripts/database.js",
     "ingest": "ts-node --project test/tsconfig.json test/ingestion/main",
     "comrank": "ts-node --project test/tsconfig.json test/comrank/main",
     "eslint": "eslint --ext .ts,.tsx src/",
