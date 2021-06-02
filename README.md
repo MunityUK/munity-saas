@@ -41,7 +41,7 @@ npm install
 To launch the database initialisation scripts, run:
 
 ```
-npm run init-db
+npm run db:init
 ```
 
 You should have a new Docker container named `voicera-db` started. Wait a few
@@ -52,13 +52,13 @@ seconds for it to bootstrap MySQL before running the next command.
 Run the command to ingest example data:
 
 ```
-npm run ingest
+npm run db:ingest
 ```
 
 > Note: The default number of records ingested is 100. You can change this by
 > specifying a number preceded by two dashes e.g.
 > ```
-> npm run ingest -- 50
+> npm run db:ingest -- 50
 > ```
 
 ## Running the app:

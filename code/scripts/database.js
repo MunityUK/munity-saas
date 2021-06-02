@@ -14,13 +14,13 @@ switch (os.type()) {
 }
 
 function run(cmd) {
-  const process = exec(cmd, { cwd: __dirname, windowsHide: true });
+  const cp = exec(cmd, { cwd: __dirname, windowsHide: true });
 
-  process.stdout.on('data', (data) => {
+  cp.stdout.on('data', (data) => {
     console.info(data);
   });
 
-  process.stderr.on('data', (data) => {
+  cp.stderr.on('data', (data) => {
     console.error(data);
   });
 }
