@@ -9,6 +9,7 @@ export function createTable(dbTable: string) {
       table.increments('id', { primaryKey: true });
       table.string('reportId', 15);
       table.string('station', 100);
+      table.string('force', 50);
       table.dateTime('startDate');
       table.dateTime('endDate');
       table.string('incidentType', 20);

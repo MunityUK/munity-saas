@@ -4,6 +4,7 @@ export class Complaint {
   id?: number;
   reportId?: string;
   station?: string;
+  force?: string;
   startDate?: Date;
   endDate?: Date;
   incidentType?: IncidentType;
@@ -30,6 +31,7 @@ export class Complaint {
       .padStart(5, '0');
     complaint.station =
       PoliceStations[Math.floor(Math.random() * PoliceStations.length)];
+    complaint.force = 'Avon and Somerset Constabulary';
     complaint.incidentType = randomEnum(IncidentType);
     complaint.incidentDescription = faker.lorem.sentence();
     complaint.status = randomEnum(ComplaintStatus);
