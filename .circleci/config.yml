@@ -63,7 +63,7 @@ jobs:
           working_directory: ./code
 
 workflows:
-  build-app:
+  voicera/checks:
     jobs:
       - build
       - checkstyle
