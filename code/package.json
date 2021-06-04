@@ -15,7 +15,7 @@
     "db:init": "node scripts/database.js",
     "db:ingest": "ts-node --project test/tsconfig.json test/ingestion/main",
     "comrank": "ts-node --project test/tsconfig.json test/comrank/main",
-    "eslint": "eslint --ext .ts,.tsx src/",
+    "eslint": "eslint --ext .ts,.tsx .",
     "stylelint": "stylelint **/**/*.scss"
   },
   "dependencies": {
