@@ -1,5 +1,7 @@
 import * as faker from 'faker';
 
+const hello = "";
+
 export class Complaint {
   id?: number;
   reportId?: string;
