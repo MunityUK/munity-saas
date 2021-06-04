@@ -38,7 +38,7 @@ jobs:
       - install_dependencies
       - run:
           name: Run ESLint
-          command: npm run check
+          command: npm run eslint
           working_directory: ./code
 
   test:
