@@ -32,7 +32,7 @@ jobs:
           command: npm run build
           working_directory: ./code
 
-  checkstyle:
+  inspect:
     executor: node
     steps:
       - install_dependencies
@@ -63,8 +63,8 @@ jobs:
           working_directory: ./code
 
 workflows:
-  voicera/checks:
+  build-inspect-test:
     jobs:
       - build
-      - checkstyle
+      - inspect
       - test
