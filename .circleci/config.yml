@@ -33,12 +33,21 @@ jobs:
           command: npm run build
           working_directory: ./code
 
-  check:
+  inspect:
     executor: node
     steps:
       - install_dependencies
       - run:
-          name: Check code style
+          name: Inspect TypeScript code
+          command: npm run check
+          working_directory: ./code
+
+  checkstyle:
+    executor: node
+    steps:
+      - install_dependencies
+      - run:
+          name: Run ESLint
           command: npm run check
           working_directory: ./code
 
@@ -62,6 +71,9 @@ jobs:
 workflows:
   build-app:
     jobs:
-      - build
-      - check
+      - build:
+          requires:
+            - inspect
+      - inspect
+      - checkstyle
       - test
