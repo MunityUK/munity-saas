@@ -15,7 +15,7 @@ commands:
             - app-
       - run:
           name: Install packages
-          command: npm ci
+          command: npm install
           working_directory: ./code
       - save_cache:
           paths:
