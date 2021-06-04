@@ -11,8 +11,7 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - app-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - app-{{ .Branch }}-
+            - app-{{ checksum "package-lock.json" }}
             - app-
       - run:
           name: Install packages
@@ -21,7 +20,7 @@ commands:
       - save_cache:
           paths:
             - ~/project/code/node_modules
-          key: app-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: app-{{ checksum "package-lock.json" }}
 
 jobs:
   build:
@@ -31,15 +30,6 @@ jobs:
       - run:
           name: Build application
           command: npm run build
-          working_directory: ./code
-
-  inspect:
-    executor: node
-    steps:
-      - install_dependencies
-      - run:
-          name: Inspect TypeScript code
-          command: npm run check
           working_directory: ./code
 
   checkstyle:
@@ -71,9 +61,6 @@ jobs:
 workflows:
   build-app:
     jobs:
-      - build:
-          requires:
-            - inspect
-      - inspect
+      - build
       - checkstyle
       - test
