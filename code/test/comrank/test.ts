@@ -14,8 +14,9 @@ describe('ComRank Tests', function () {
     for (let i = 0; i < expNumOfComplaints; i++) {
       const complaint = Complaint.random();
       complaint.station = 'Station';
-      complaint.startDate = new Date(2000, 0, 1);
-      complaint.endDate = new Date(2000, 0, 31);
+      complaint.dateOfComplaint = new Date(2000, 0, 1);
+      complaint.dateOfAddressal = new Date(2000, 0, 15);
+      complaint.dateOfResolution = new Date(2000, 0, 31);
       complaints.push(complaint);
 
       if (complaint.status === ComplaintStatus.RESOLVED) {
@@ -29,6 +30,7 @@ describe('ComRank Tests', function () {
     const scores = calculateStationScores(complaints)[stationName];
     assert.strictEqual(scores.numberOfComplaints, expNumOfComplaints);
     assert.strictEqual(scores.percentageResolved, expPctResolved);
-    assert.strictEqual(scores.avgTimeToResolve, '30 days');
+    assert.strictEqual(scores.avgAddressalTime, '14 days');
+    assert.strictEqual(scores.avgResolutionTime, '30 days');
   });
 });

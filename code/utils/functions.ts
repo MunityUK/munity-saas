@@ -17,18 +17,26 @@ export function calculateStationScores(complaints: Complaint[]) {
   const complaintsByStation: StationComplaints = {};
   const stationScores: StationScores = {};
 
-  const timeDiffForComplaints: { [key: number]: number } = {};
+  const addressalTimeByComplaint: { [key: number]: number } = {};
+  const resolutionTimeByComplaint: { [key: number]: number } = {};
 
   complaints.forEach((complaint) => {
     const { station } = complaint;
-    const array = complaintsByStation[station!] ?? [];
-    array.push(complaint);
-    complaintsByStation[station!] = array;
+    const listOfComplaints = complaintsByStation[station!] ?? [];
+    listOfComplaints.push(complaint);
+    complaintsByStation[station!] = listOfComplaints;
 
-    if (complaint.endDate) {
-      timeDiffForComplaints[complaint.id!] = differenceInMilliseconds(
-        complaint.startDate!,
-        complaint.endDate
+    if (complaint.dateOfAddressal) {
+      addressalTimeByComplaint[complaint.id!] = differenceInMilliseconds(
+        complaint.dateOfComplaint!,
+        complaint.dateOfAddressal
+      );
+    }
+
+    if (complaint.dateOfResolution) {
+      resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
+        complaint.dateOfComplaint!,
+        complaint.dateOfResolution
       );
     }
   });
@@ -40,16 +48,16 @@ export function calculateStationScores(complaints: Complaint[]) {
     ).length;
     const percentageResolved = (resolvedCount / complaintCount) * 100;
 
-    const sum = complaints
-      .map((c) => timeDiffForComplaints[c.id!])
-      .filter((e) => e)
-      .reduce((a, b) => a + b, 0);
-    const avgTimeToResolve = sum / complaints.length;
+    const avgAddressalTime = averageTime(complaints, addressalTimeByComplaint);
+    const avgResolutionTime = averageTime(complaints, resolutionTimeByComplaint);
 
     const score = new StationScore();
     score.numberOfComplaints = complaintCount;
     score.percentageResolved = Math.round(percentageResolved * 10) / 10 + '%';
-    score.avgTimeToResolve = Math.abs(differenceInDays(avgTimeToResolve, 0)) + ' days';
+    score.avgAddressalTime =
+      Math.abs(differenceInDays(avgAddressalTime, 0)) + ' days';
+    score.avgResolutionTime =
+      Math.abs(differenceInDays(avgResolutionTime, 0)) + ' days';
 
     stationScores[station] = score;
   });
@@ -69,3 +77,20 @@ export function round(number: number, precision: number) {
   const scale = 10 ^ precision;
   return Math.round(number * scale) / scale;
 }
+
+/**
+ * Calculates the average time to address or resolve a list of complaints.
+ * @param complaints The list of complaints.
+ * @param timeByComplaint The mapping for times to complaints.
+ * @returns The average time taken in milliseconds.
+ */
+function averageTime(complaints: Complaint[], timeByComplaint: TimeByComplaint): number {
+  const total = complaints
+    .map((c) => timeByComplaint[c.id!])
+    .filter((e) => e)
+    .reduce((a, b) => a + b, 0);
+  const averageTime = total / complaints.length;
+  return averageTime;
+}
+
+type TimeByComplaint = { [key: number]: number };

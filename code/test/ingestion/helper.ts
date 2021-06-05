@@ -10,8 +10,9 @@ export function createTable(dbTable: string) {
       table.string('reportId', 15);
       table.string('station', 100);
       table.string('force', 50);
-      table.dateTime('startDate');
-      table.dateTime('endDate');
+      table.dateTime('dateOfComplaint');
+      table.dateTime('dateOfAddressal');
+      table.dateTime('dateOfResolution');
       table.string('incidentType', 20);
       table.text('incidentDescription');
       table.string('status', 20);

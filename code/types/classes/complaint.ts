@@ -5,8 +5,9 @@ export class Complaint {
   reportId?: string;
   station?: string;
   force?: string;
-  startDate?: Date;
-  endDate?: Date;
+  dateOfComplaint?: Date;
+  dateOfAddressal?: Date;
+  dateOfResolution?: Date;
   incidentType?: IncidentType;
   incidentDescription?: string;
   status?: ComplaintStatus;
@@ -48,10 +49,14 @@ export class Complaint {
     complaint.officerAge = faker.datatype.number({ min: 25, max: 55 });
     complaint.officerSex = randomElement(SexDistribution);
     complaint.officerRace = randomEnum(Race);
-    complaint.startDate = faker.date.past();
+    complaint.dateOfComplaint = faker.date.past();
+    
+    if (complaint.status !== ComplaintStatus.UNADDRESSED){
+      complaint.dateOfAddressal = faker.date.future(0.2, complaint.dateOfComplaint);
+    }
 
     if (complaint.status === ComplaintStatus.RESOLVED) {
-      complaint.endDate = faker.date.past(undefined, complaint.startDate);
+      complaint.dateOfResolution = faker.date.future(0.5, complaint.dateOfAddressal);
     }
 
     return complaint;
@@ -66,7 +71,7 @@ export enum IncidentType {
 
 export enum ComplaintStatus {
   UNADDRESSED = 'Unaddressed',
-  UNDER_INVEST = 'Under Investigation',
+  ADDRESSING = 'Addressing',
   RESOLVED = 'Resolved'
 }
 
