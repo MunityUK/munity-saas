@@ -43,20 +43,30 @@ export function calculateStationScores(complaints: Complaint[]) {
 
   Object.entries(complaintsByStation).forEach(([station, complaints]) => {
     const complaintCount = complaints.length;
-    const resolvedCount = complaints.filter(
-      (c) => c.status === ComplaintStatus.RESOLVED
-    ).length;
+    const addressedCount = getComplaintCountByStatus(complaints, [
+      ComplaintStatus.ADDRESSED,
+      ComplaintStatus.RESOLVED
+    ]);
+    const resolvedCount = getComplaintCountByStatus(complaints, [
+      ComplaintStatus.RESOLVED
+    ]);
+
+    const percentageAddressed = (addressedCount / complaintCount) * 100;
     const percentageResolved = (resolvedCount / complaintCount) * 100;
 
-    const avgAddressalTime = averageTime(complaints, addressalTimeByComplaint);
-    const avgResolutionTime = averageTime(
+    const avgAddressalTime = calcAverageTime(
+      complaints,
+      addressalTimeByComplaint
+    );
+    const avgResolutionTime = calcAverageTime(
       complaints,
       resolutionTimeByComplaint
     );
 
     const score = new StationScore();
     score.numberOfComplaints = complaintCount;
-    score.percentageResolved = Math.round(percentageResolved * 10) / 10 + '%';
+    score.percentageAddressed = round(percentageAddressed) + '%';
+    score.percentageResolved = round(percentageResolved) + '%';
     score.avgAddressalTime = avgAddressalTime + ' days';
     score.avgResolutionTime = avgResolutionTime + ' days';
 
@@ -73,7 +83,7 @@ export function calculateStationScores(complaints: Complaint[]) {
  * @param precision The number of decimal places.
  * @returns The rounded number.
  */
-export function round(number: number, precision: number) {
+export function round(number: number, precision = 1) {
   if (!precision) return number;
   const scale = 10 ^ precision;
   return Math.round(number * scale) / scale;
@@ -85,7 +95,7 @@ export function round(number: number, precision: number) {
  * @param timeByComplaint The mapping for times to complaints.
  * @returns The average time taken in milliseconds.
  */
-function averageTime(
+function calcAverageTime(
   complaints: Complaint[],
   timeByComplaint: TimeByComplaint
 ): number {
@@ -96,6 +106,20 @@ function averageTime(
   const average = total / complaints.length;
   const averageTime = Math.abs(differenceInDays(average, 0));
   return averageTime;
+}
+
+/**
+ * Retrieve the number of complaints which have a status matching the specified
+ * statuses.
+ * @param complaints The list of complaints.
+ * @param statuses The statuses a complaint must match.
+ * @returns The number of complaints with the specified statuses.
+ */
+function getComplaintCountByStatus(
+  complaints: Complaint[],
+  statuses: ComplaintStatus[]
+) {
+  return complaints.filter((c) => statuses.includes(c.status!)).length;
 }
 
 type TimeByComplaint = { [key: number]: number };

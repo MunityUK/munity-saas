@@ -71,7 +71,7 @@ export enum IncidentType {
 
 export enum ComplaintStatus {
   UNADDRESSED = 'Unaddressed',
-  ADDRESSING = 'Addressing',
+  ADDRESSED = 'Addressed',
   RESOLVED = 'Resolved'
 }
 
