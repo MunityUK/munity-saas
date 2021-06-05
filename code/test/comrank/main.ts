@@ -17,15 +17,16 @@ async function main() {
  */
 function printScores(stationScores: StationScores) {
   console.info('---');
-  Object.entries(stationScores).forEach(([station, score], i) => {
+  Object.entries(stationScores).forEach(([station, score], i, array) => {
     console.info(`Station #${i + 1}: ${station}`);
     console.info('* Number of Complaints: ' + score.numberOfComplaints);
     console.info('* Percentage Resolved: ' + score.percentageResolved);
     console.info('* Avg. Addressal Time: ' + score.avgAddressalTime);
     console.info('* Avg. Resolution Time: ' + score.avgResolutionTime);
-    console.info();
+
+    const isLastItem = i === array.length - 1;
+    console.info(isLastItem ? '---' : '');
   });
-  console.info('---');
 }
 
 type StationScores = {
