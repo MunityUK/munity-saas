@@ -67,8 +67,21 @@ export function calculateStationScores(complaints: Complaint[]) {
     score.numberOfComplaints = complaintCount;
     score.percentageAddressed = round(percentageAddressed) + '%';
     score.percentageResolved = round(percentageResolved) + '%';
-    score.avgAddressalTime = avgAddressalTime + ' days';
-    score.avgResolutionTime = avgResolutionTime + ' days';
+    score.averageAddressalTime = assignAverageTime(avgAddressalTime);
+    score.averageResolutionTime = assignAverageTime(avgResolutionTime);
+
+    const deductUnresolved = (100 - percentageResolved) * 0.2;
+    const deductUnaddressed = (100 - percentageAddressed) * 0.5;
+    const deductLongAddressTime = Math.max((avgAddressalTime - 60) * 0.8, 0);
+    const deductLongResolveTime = Math.max((avgResolutionTime - 30) * 0.4, 0);
+
+    score.finalScore = round(
+      100 -
+        deductUnaddressed -
+        deductUnresolved -
+        deductLongAddressTime -
+        deductLongResolveTime
+    );
 
     stationScores[station] = score;
   });
@@ -85,7 +98,7 @@ export function calculateStationScores(complaints: Complaint[]) {
  */
 export function round(number: number, precision = 1) {
   if (!precision) return number;
-  const scale = 10 ^ precision;
+  const scale = 10 ** precision;
   return Math.round(number * scale) / scale;
 }
 
@@ -103,9 +116,20 @@ function calcAverageTime(
     .map((c) => timeByComplaint[c.id!])
     .filter((e) => e)
     .reduce((a, b) => a + b, 0);
+
   const average = total / complaints.length;
   const averageTime = Math.abs(differenceInDays(average, 0));
   return averageTime;
+}
+
+/**
+ * Assigns a specified average time to a score.
+ * @param time The average time to assign.
+ * @returns The average time string with the unit suffix. Null if average time
+ * is zero.
+ */
+function assignAverageTime(time: number): string | null {
+  return time > 0 ? time + ' days' : null;
 }
 
 /**
