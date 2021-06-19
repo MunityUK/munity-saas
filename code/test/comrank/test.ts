@@ -5,9 +5,9 @@ import { Complaint, ComplaintStatus } from '../../types';
 import { calculateStationScores } from '../../utils/functions';
 
 const STATION_NAME = 'Station';
-const DATE_OF_COMPLAINT = new Date(2000, 0, 1, 12);
-const DATE_OF_ADDRESSAL = new Date(2000, 0, 15, 12);
-const DATE_OF_RESOLUTION = new Date(2000, 0, 31, 12);
+const DATE_OF_COMPLAINT = new Date(2000, 0, 1);
+const DATE_OF_ADDRESSAL = new Date(2000, 0, 15);
+const DATE_OF_RESOLUTION = new Date(2000, 0, 31);
 
 describe('ComRank Tests', function () {
   it('Given all complaints unaddressed', function () {
@@ -69,8 +69,8 @@ describe('ComRank Tests', function () {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: new Date(2000, 3, 1, 12),
-      dateOfResolution: new Date(2000, 5, 1, 12)
+      dateOfAddressal: new Date(2000, 3, 1),
+      dateOfResolution: new Date(2000, 5, 1)
     });
 
     const scores = calculateStationScores(complaints)[STATION_NAME];
