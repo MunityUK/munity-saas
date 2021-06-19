@@ -1,36 +1,143 @@
 import { assert } from 'chai';
+import { describe, it } from 'mocha';
 
 import { Complaint, ComplaintStatus } from '../../types';
-import { calculateStationScores, round } from '../../utils/functions';
+import { calculateStationScores } from '../../utils/functions';
+
+const STATION_NAME = 'Station';
+const DATE_OF_COMPLAINT = Date.UTC(2000, 0, 1);
+const DATE_OF_ADDRESSAL = Date.UTC(2000, 0, 15);
+const DATE_OF_RESOLUTION = Date.UTC(2000, 0, 31);
 
 describe('ComRank Tests', function () {
-  it('Calculate station scores', function () {
-    const stationName = 'Station';
-    const expNumOfComplaints = 5;
-    let numOfResolved = 0;
+  it('Given all complaints unaddressed', function () {
+    const complaints = createComplaints(5, {
+      station: STATION_NAME,
+      status: ComplaintStatus.UNADDRESSED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: undefined,
+      dateOfResolution: undefined
+    });
 
-    const complaints: Complaint[] = [];
+    const scores = calculateStationScores(complaints)[STATION_NAME];
+    assert.strictEqual(scores.percentageAddressed, '0%');
+    assert.strictEqual(scores.percentageResolved, '0%');
+    assert.isNull(scores.averageAddressalTime);
+    assert.isNull(scores.averageResolutionTime);
+    assert.isNull(scores.averageCaseDuration);
+    assert.strictEqual(scores.finalScore, 30);
+  });
 
-    for (let i = 0; i < expNumOfComplaints; i++) {
-      const complaint = Complaint.random();
-      complaint.station = 'Station';
-      complaint.dateOfComplaint = new Date(2000, 0, 1);
-      complaint.dateOfAddressal = new Date(2000, 0, 15);
-      complaint.dateOfResolution = new Date(2000, 0, 31);
-      complaints.push(complaint);
+  it('Given all complaints addressed', function () {
+    const complaints = createComplaints(5, {
+      station: STATION_NAME,
+      status: ComplaintStatus.ADDRESSED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: DATE_OF_ADDRESSAL,
+      dateOfResolution: undefined
+    });
 
-      if (complaint.status === ComplaintStatus.RESOLVED) {
-        numOfResolved++;
-      }
-    }
+    const scores = calculateStationScores(complaints)[STATION_NAME];
+    assert.strictEqual(scores.percentageAddressed, '100%');
+    assert.strictEqual(scores.percentageResolved, '0%');
+    assert.strictEqual(scores.averageAddressalTime, '14 days');
+    assert.isNull(scores.averageResolutionTime);
+    assert.isNull(scores.averageCaseDuration);
+    assert.strictEqual(scores.finalScore, 80);
+  });
 
-    const expPctResolved =
-      round((numOfResolved / expNumOfComplaints) * 100, 1) + '%';
+  it('Given all complaints resolved', function () {
+    const complaints = createComplaints(5, {
+      station: STATION_NAME,
+      status: ComplaintStatus.RESOLVED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: DATE_OF_ADDRESSAL,
+      dateOfResolution: DATE_OF_RESOLUTION
+    });
 
-    const scores = calculateStationScores(complaints)[stationName];
-    assert.strictEqual(scores.numberOfComplaints, expNumOfComplaints);
-    assert.strictEqual(scores.percentageResolved, expPctResolved);
-    assert.strictEqual(scores.avgAddressalTime, '14 days');
-    assert.strictEqual(scores.avgResolutionTime, '30 days');
+    const scores = calculateStationScores(complaints)[STATION_NAME];
+    assert.strictEqual(scores.percentageAddressed, '100%');
+    assert.strictEqual(scores.percentageResolved, '100%');
+    assert.strictEqual(scores.averageAddressalTime, '14 days');
+    assert.strictEqual(scores.averageResolutionTime, '16 days');
+    assert.strictEqual(scores.averageCaseDuration, '30 days');
+    assert.strictEqual(scores.finalScore, 100);
+  });
+
+  it('Given all complaints resolved with delay', function () {
+    const complaints = createComplaints(5, {
+      station: STATION_NAME,
+      status: ComplaintStatus.RESOLVED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: Date.UTC(2000, 3, 1),
+      dateOfResolution: Date.UTC(2000, 5, 1)
+    });
+
+    const scores = calculateStationScores(complaints)[STATION_NAME];
+    assert.strictEqual(scores.percentageAddressed, '100%');
+    assert.strictEqual(scores.percentageResolved, '100%');
+    assert.strictEqual(scores.averageAddressalTime, '91 days');
+    assert.strictEqual(scores.averageResolutionTime, '61 days');
+    assert.strictEqual(scores.averageCaseDuration, '152 days');
+    assert.strictEqual(scores.finalScore, 75.6);
+  });
+
+  it('Given a mix of complaint statuses', function () {
+    const complaintsUnaddressed = createComplaints(1, {
+      station: STATION_NAME,
+      status: ComplaintStatus.UNADDRESSED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: undefined,
+      dateOfResolution: undefined
+    });
+
+    const complaintsAddressed = createComplaints(2, {
+      station: STATION_NAME,
+      status: ComplaintStatus.ADDRESSED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: DATE_OF_ADDRESSAL,
+      dateOfResolution: undefined
+    });
+
+    const complaintsResolved = createComplaints(2, {
+      station: STATION_NAME,
+      status: ComplaintStatus.RESOLVED,
+      dateOfComplaint: DATE_OF_COMPLAINT,
+      dateOfAddressal: DATE_OF_ADDRESSAL,
+      dateOfResolution: DATE_OF_RESOLUTION
+    });
+
+    const complaints = [].concat(
+      complaintsUnaddressed,
+      complaintsAddressed,
+      complaintsResolved
+    );
+
+    const scores = calculateStationScores(complaints)[STATION_NAME];
+    assert.strictEqual(scores.percentageAddressed, '80%');
+    assert.strictEqual(scores.percentageResolved, '40%');
+    assert.strictEqual(scores.averageAddressalTime, '14 days');
+    assert.strictEqual(scores.averageResolutionTime, '16 days');
+    assert.strictEqual(scores.averageCaseDuration, '30 days');
+    assert.strictEqual(scores.finalScore, 78);
   });
 });
+
+/**
+ * Create a specified number of complaints.
+ * @param quantity The quantity of complaints to create.
+ * @param overrides The property overrides for each complaint.
+ * @returns A list of complaints.
+ */
+function createComplaints(quantity: number, overrides: ComplaintOverrides) {
+  const complaints: Complaint[] = [];
+
+  for (let i = 0; i < quantity; i++) {
+    const complaint = Object.assign(Complaint.random(), overrides);
+    complaints.push(complaint);
+  }
+
+  return complaints;
+}
+
+type ComplaintOverrides = { [key in keyof Complaint]: unknown };

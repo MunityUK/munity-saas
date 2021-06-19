@@ -35,6 +35,7 @@ export class Complaint {
     complaint.force = 'Avon and Somerset Constabulary';
     complaint.incidentType = randomEnum(IncidentType);
     complaint.incidentDescription = faker.lorem.sentence();
+
     complaint.status = randomEnum(ComplaintStatus);
     complaint.notes = faker.lorem.sentence();
     complaint.city = 'Bristol';
@@ -50,13 +51,19 @@ export class Complaint {
     complaint.officerSex = randomElement(SexDistribution);
     complaint.officerRace = randomEnum(Race);
     complaint.dateOfComplaint = faker.date.past();
-    
-    if (complaint.status !== ComplaintStatus.UNADDRESSED){
-      complaint.dateOfAddressal = faker.date.future(0.2, complaint.dateOfComplaint);
+
+    if (complaint.status !== ComplaintStatus.UNADDRESSED) {
+      complaint.dateOfAddressal = faker.date.future(
+        0.2,
+        complaint.dateOfComplaint
+      );
     }
 
     if (complaint.status === ComplaintStatus.RESOLVED) {
-      complaint.dateOfResolution = faker.date.future(0.5, complaint.dateOfAddressal);
+      complaint.dateOfResolution = faker.date.future(
+        0.5,
+        complaint.dateOfAddressal
+      );
     }
 
     return complaint;
@@ -71,7 +78,7 @@ export enum IncidentType {
 
 export enum ComplaintStatus {
   UNADDRESSED = 'Unaddressed',
-  ADDRESSING = 'Addressing',
+  ADDRESSED = 'Addressed',
   RESOLVED = 'Resolved'
 }
 

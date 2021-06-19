@@ -1,2 +1,2 @@
 import ('./comrank/test');
-import ('./ingestion/test');
+// import ('./ingestion/test');
