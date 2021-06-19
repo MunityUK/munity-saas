@@ -24,6 +24,7 @@ describe('ComRank Tests', function () {
     assert.strictEqual(scores.percentageResolved, '0%');
     assert.isNull(scores.averageAddressalTime);
     assert.isNull(scores.averageResolutionTime);
+    assert.isNull(scores.averageCaseDuration);
     assert.strictEqual(scores.finalScore, 30);
   });
 
@@ -41,6 +42,7 @@ describe('ComRank Tests', function () {
     assert.strictEqual(scores.percentageResolved, '0%');
     assert.strictEqual(scores.averageAddressalTime, '14 days');
     assert.isNull(scores.averageResolutionTime);
+    assert.isNull(scores.averageCaseDuration);
     assert.strictEqual(scores.finalScore, 80);
   });
 
@@ -58,6 +60,7 @@ describe('ComRank Tests', function () {
     assert.strictEqual(scores.percentageResolved, '100%');
     assert.strictEqual(scores.averageAddressalTime, '14 days');
     assert.strictEqual(scores.averageResolutionTime, '16 days');
+    assert.strictEqual(scores.averageCaseDuration, '30 days');
     assert.strictEqual(scores.finalScore, 100);
   });
 
@@ -75,6 +78,7 @@ describe('ComRank Tests', function () {
     assert.strictEqual(scores.percentageResolved, '100%');
     assert.strictEqual(scores.averageAddressalTime, '90 days');
     assert.strictEqual(scores.averageResolutionTime, '61 days');
+    assert.strictEqual(scores.averageCaseDuration, '151 days');
     assert.strictEqual(scores.finalScore, 75.6);
   });
 
@@ -114,6 +118,7 @@ describe('ComRank Tests', function () {
     assert.strictEqual(scores.percentageResolved, '40%');
     assert.strictEqual(scores.averageAddressalTime, '14 days');
     assert.strictEqual(scores.averageResolutionTime, '16 days');
+    assert.strictEqual(scores.averageCaseDuration, '30 days');
     assert.strictEqual(scores.finalScore, 78);
   });
 });
