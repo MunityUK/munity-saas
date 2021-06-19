@@ -19,6 +19,7 @@ export function calculateStationScores(complaints: Complaint[]) {
 
   const addressalTimeByComplaint: { [key: number]: number } = {};
   const resolutionTimeByComplaint: { [key: number]: number } = {};
+  const caseDurationByComplaint: { [key: number]: number } = {};
 
   complaints.forEach((complaint) => {
     const { station } = complaint;
@@ -36,6 +37,10 @@ export function calculateStationScores(complaints: Complaint[]) {
     if (complaint.dateOfResolution) {
       resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
         complaint.dateOfAddressal!,
+        complaint.dateOfResolution
+      );
+      caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
+        complaint.dateOfComplaint!,
         complaint.dateOfResolution
       );
     }
@@ -62,6 +67,10 @@ export function calculateStationScores(complaints: Complaint[]) {
       complaints,
       resolutionTimeByComplaint
     );
+    const avgCaseDuration = calcAverageTime(
+      complaints,
+      caseDurationByComplaint
+    );
 
     const score = new StationScore();
     score.numberOfComplaints = complaintCount;
@@ -69,6 +78,7 @@ export function calculateStationScores(complaints: Complaint[]) {
     score.percentageResolved = round(percentageResolved) + '%';
     score.averageAddressalTime = assignAverageTime(avgAddressalTime);
     score.averageResolutionTime = assignAverageTime(avgResolutionTime);
+    score.averageCaseDuration = assignAverageTime(avgCaseDuration);
 
     const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
     const penaltyUnaddressed = calcUnaddressedPenalty(percentageAddressed);

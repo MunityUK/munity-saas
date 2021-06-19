@@ -24,6 +24,7 @@ function printScores(stationScores: StationScores) {
     console.info('> Percentage Resolved: ' + score.percentageResolved);
     console.info('> Avg. Addressal Time: ' + score.averageAddressalTime);
     console.info('> Avg. Resolution Time: ' + score.averageResolutionTime);
+    console.info('> Avg. Case Duration: ' + score.averageCaseDuration);
     console.info('**** Score: ' + score.finalScore + ' / 100 ****');
 
     const isLastItem = i === array.length - 1;

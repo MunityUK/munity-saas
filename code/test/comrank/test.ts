@@ -14,7 +14,7 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateOfComplaint: new Date(2000, 0, 1),
+      dateOfComplaint: DATE_OF_COMPLAINT,
       dateOfAddressal: undefined,
       dateOfResolution: undefined
     });
