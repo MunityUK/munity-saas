@@ -35,7 +35,7 @@ export function calculateStationScores(complaints: Complaint[]) {
 
     if (complaint.dateOfResolution) {
       resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        complaint.dateOfComplaint!,
+        complaint.dateOfAddressal!,
         complaint.dateOfResolution
       );
     }
@@ -70,17 +70,18 @@ export function calculateStationScores(complaints: Complaint[]) {
     score.averageAddressalTime = assignAverageTime(avgAddressalTime);
     score.averageResolutionTime = assignAverageTime(avgResolutionTime);
 
-    const deductUnresolved = (100 - percentageResolved) * 0.2;
-    const deductUnaddressed = (100 - percentageAddressed) * 0.5;
-    const deductLongAddressTime = Math.max((avgAddressalTime - 60) * 0.8, 0);
-    const deductLongResolveTime = Math.max((avgResolutionTime - 30) * 0.4, 0);
+    const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
+    const penaltyUnaddressed = calcUnaddressedPenalty(percentageAddressed);
+    const penaltyLongAddressTime = calcLongAddressTimePenalty(avgAddressalTime);
+    const penaltyLongResolveTime = calcLongResolveTimePenalty(
+      avgResolutionTime
+    );
 
-    score.finalScore = round(
-      100 -
-        deductUnaddressed -
-        deductUnresolved -
-        deductLongAddressTime -
-        deductLongResolveTime
+    score.finalScore = calcFinalScore(
+      penaltyUnaddressed,
+      penaltyUnresolved,
+      penaltyLongAddressTime,
+      penaltyLongResolveTime
     );
 
     stationScores[station] = score;
@@ -100,6 +101,58 @@ export function round(number: number, precision = 1) {
   if (!precision) return number;
   const scale = 10 ** precision;
   return Math.round(number * scale) / scale;
+}
+
+/**
+ * Calculates the penalty incurred for unresolved complaints.
+ * @param percentageResolved The percentage of resolved complaints.
+ * @returns The calculated penalty to deduct from final score.
+ */
+function calcUnresolvedPenalty(percentageResolved: number) {
+  return (100 - percentageResolved) * 0.2;
+}
+
+/**
+ * Calculates the penalty incurred for unaddressed complaints.
+ * @param percentageAddressed The percentage of addressed complaints.
+ * @returns The calculated penalty to deduct from final score.
+ */
+function calcUnaddressedPenalty(percentageAddressed: number) {
+  return (100 - percentageAddressed) * 0.5;
+}
+
+/**
+ * Calculates the penalty incurred for a long average complaint addressal time.
+ * @param avgAddressalTime The average addressal time.
+ * @returns The calculated penalty to deduct from final score.
+ */
+function calcLongAddressTimePenalty(avgAddressalTime: number | null) {
+  if (avgAddressalTime === null) return 0;
+  const cappedPenalty = Math.min(avgAddressalTime - 30, 30);
+  return Math.max(cappedPenalty * 0.8, 0);
+}
+
+/**
+ * Calculates the penalty incurred for a long average complaint resolution time.
+ * @param avgResolutionTime The average resolution time.
+ * @returns The calculated penalty to deduct from final score.
+ */
+function calcLongResolveTimePenalty(avgResolutionTime: number | null) {
+  if (avgResolutionTime === null) return 0;
+  const cappedPenalty = Math.min(avgResolutionTime - 60, 30);
+  return Math.max(cappedPenalty * 0.4, 0);
+}
+
+/**
+ * Calculate the final score using the penalty deductions.
+ * @param pua The penalty for unaddressed complaints.
+ * @param pur The penalty for unresolved complaints
+ * @param plat The penalty for long average complaint addressal times.
+ * @param plrt The penalty for long average complaint resolution times.
+ * @returns The final score.
+ */
+function calcFinalScore(pua: number, pur: number, plat: number, plrt: number) {
+  return round(100 - pua - pur - plat - plrt);
 }
 
 /**

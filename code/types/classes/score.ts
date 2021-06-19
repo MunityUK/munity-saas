@@ -4,5 +4,6 @@ export class StationScore {
   percentageResolved?: string;
   averageAddressalTime?: string | null;
   averageResolutionTime?: string | null;
+  averageCaseDuration?: string | null;
   finalScore?: number;
 }
