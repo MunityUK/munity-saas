@@ -5,9 +5,9 @@ import { Complaint, ComplaintStatus } from '../../types';
 import { calculateStationScores } from '../../utils/functions';
 
 const STATION_NAME = 'Station';
-const DATE_OF_COMPLAINT = new Date(2000, 0, 1);
-const DATE_OF_ADDRESSAL = new Date(2000, 0, 15);
-const DATE_OF_RESOLUTION = new Date(2000, 0, 31);
+const DATE_OF_COMPLAINT = Date.UTC(2000, 0, 1);
+const DATE_OF_ADDRESSAL = Date.UTC(2000, 0, 15);
+const DATE_OF_RESOLUTION = Date.UTC(2000, 0, 31);
 
 describe('ComRank Tests', function () {
   it('Given all complaints unaddressed', function () {
@@ -69,16 +69,16 @@ describe('ComRank Tests', function () {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: new Date(2000, 3, 1),
-      dateOfResolution: new Date(2000, 5, 1)
+      dateOfAddressal: Date.UTC(2000, 3, 1),
+      dateOfResolution: Date.UTC(2000, 5, 1)
     });
 
     const scores = calculateStationScores(complaints)[STATION_NAME];
     assert.strictEqual(scores.percentageAddressed, '100%');
     assert.strictEqual(scores.percentageResolved, '100%');
-    assert.strictEqual(scores.averageAddressalTime, '90 days');
+    assert.strictEqual(scores.averageAddressalTime, '91 days');
     assert.strictEqual(scores.averageResolutionTime, '61 days');
-    assert.strictEqual(scores.averageCaseDuration, '151 days');
+    assert.strictEqual(scores.averageCaseDuration, '152 days');
     assert.strictEqual(scores.finalScore, 75.6);
   });
 
