@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
+import { MAP_ATTRIBUTION, MAP_URL } from 'src/utils/constants';
 import { useAppSelector } from 'src/utils/reducers';
 import { Complaint } from 'types';
 
@@ -22,8 +23,8 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
         scrollWheelZoom={true}
         className={'map__container'}>
         <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution={MAP_ATTRIBUTION}
+          url={MAP_URL}
         />
         {complaints.map((complaint, key) => {
           const position = new LatLng(
