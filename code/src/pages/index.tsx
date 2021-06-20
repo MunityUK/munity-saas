@@ -3,7 +3,7 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-import { Select } from 'src/components/form';
+import { Select, SelectProps } from 'src/components/form';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 import {
@@ -14,15 +14,15 @@ import {
 } from 'types';
 
 export default function Home({ allComplaints }: HomeProps) {
-  // Map needs not be affected by Next's server-side rendering.
-  const VoiceraMap = Dynamic(() => import('src/components/map'), {
-    ssr: false
-  });
-
   const [complaints, setComplaints] = useState(allComplaints);
   const [filters, setFilters] = useState({});
 
   useEffect(() => {
+    filterComplaints();
+  }, [JSON.stringify(filters)]);
+
+  /** Filter the list of complaints by specified property. */
+  const filterComplaints = () => {
     const filteredComplaints = allComplaints.filter((complaint) => {
       return Object.entries(filters).every(([property, value]) => {
         if (!value) return true;
@@ -32,7 +32,7 @@ export default function Home({ allComplaints }: HomeProps) {
     });
 
     setComplaints(filteredComplaints);
-  }, [JSON.stringify(filters)]);
+  };
 
   /**
    * Set a new filter on selection.
@@ -43,38 +43,48 @@ export default function Home({ allComplaints }: HomeProps) {
     setFilters((filters) => ({ ...filters, [name]: value }));
   };
 
+  // Map need not be affected by Next's server-side rendering.
+  const VoiceraMap = Dynamic(() => import('src/components/map'), {
+    ssr: false
+  });
+
   return (
-    <div>
+    <div className={'map-page'}>
       <Head>
         <title>Voicera</title>
         <link rel={'icon'} href={'/favicon.ico'} />
       </Head>
 
-      <main>
-        <div className={'filters'}>
-          <Select
+      <main className={'map-main'}>
+        <div className={'map-sidebar'}>
+          <MapFilter
             name={'incidentType'}
             onChange={onFilterSelect}
             items={Object.values(IncidentType)}
             placeholder={'All incident types'}
           />
-          <Select
+          <MapFilter
             name={'station'}
             onChange={onFilterSelect}
             items={PoliceStations}
             placeholder={'All stations'}
           />
-          <Select
-            name={'outcome'}
+          <MapFilter
+            name={'status'}
             onChange={onFilterSelect}
             items={Object.values(ComplaintStatus)}
-            placeholder={'All outcomes'}
+            placeholder={'All statuses'}
           />
         </div>
         <VoiceraMap complaints={complaints} />
       </main>
     </div>
   );
+}
+
+/** A dropdown menu to filter map markers by property. */
+function MapFilter(props: MapFilterProps) {
+  return <Select {...props} className={'map-sidebar-filter'} />;
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -84,6 +94,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
+interface MapFilterProps extends SelectProps {
+  /** The property of the field to filter on. */
+  name?: keyof Complaint;
+}
+
 type HomeProps = {
+  /** The full list of complaints from the server. */
   allComplaints: Array<Complaint>;
 };

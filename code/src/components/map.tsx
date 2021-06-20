@@ -16,12 +16,12 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
   const centerPosition = new LatLng(51.45523, -2.59665);
   const { mapZoom } = useAppSelector((state) => state);
   return (
-    <div className={'map'}>
+    <div className={'map-container-wrapper'}>
       <MapContainer
         center={centerPosition}
         zoom={mapZoom}
         scrollWheelZoom={true}
-        className={'map__container'}>
+        className={'map-container'}>
         <TileLayer
           attribution={MAP_ATTRIBUTION}
           url={MAP_URL}
@@ -47,5 +47,6 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
 }
 
 type VoiceraMapProps = {
+  /** The list of complaints to populate the map with. */
   complaints: Array<Complaint>;
 };
