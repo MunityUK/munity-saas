@@ -3,8 +3,9 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-import { Select, SelectProps } from 'src/components/form';
+import { Label, Select, SelectProps } from 'src/components/form';
 import { getComplaints } from 'src/pages/api/complaints';
+import { RACE_OPTIONS, SEX_OPTIONS } from 'src/utils/constants';
 import { parse } from 'src/utils/helper';
 import {
   Complaint,
@@ -27,7 +28,7 @@ export default function Home({ allComplaints }: HomeProps) {
       return Object.entries(filters).every(([property, value]) => {
         if (!value) return true;
         const key = property as keyof Complaint;
-        return complaint[key] === value;
+        return complaint[key] == value;
       });
     });
 
@@ -57,23 +58,54 @@ export default function Home({ allComplaints }: HomeProps) {
 
       <main className={'map-main'}>
         <div className={'map-sidebar'}>
-          <MapFilter
+          <MapFilterField
+            label={'Incident Type'}
             name={'incidentType'}
-            onChange={onFilterSelect}
             items={Object.values(IncidentType)}
             placeholder={'All incident types'}
-          />
-          <MapFilter
-            name={'station'}
             onChange={onFilterSelect}
+          />
+          <MapFilterField
+            label={'Station'}
+            name={'station'}
             items={PoliceStations}
             placeholder={'All stations'}
-          />
-          <MapFilter
-            name={'status'}
             onChange={onFilterSelect}
+          />
+          <MapFilterField
+            label={'Status'}
+            name={'status'}
             items={Object.values(ComplaintStatus)}
             placeholder={'All statuses'}
+            onChange={onFilterSelect}
+          />
+          <MapFilterField
+            label={'Officer Race'}
+            name={'officerRace'}
+            items={RACE_OPTIONS}
+            placeholder={'Any officer race'}
+            onChange={onFilterSelect}
+          />
+          <MapFilterField
+            label={'Officer Sex'}
+            name={'officerSex'}
+            items={SEX_OPTIONS}
+            placeholder={'Any officer sex'}
+            onChange={onFilterSelect}
+          />
+          <MapFilterField
+            label={'Complainant Race'}
+            name={'complainantRace'}
+            items={RACE_OPTIONS}
+            placeholder={'Any complainant race'}
+            onChange={onFilterSelect}
+          />
+          <MapFilterField
+            label={'Complainant Sex'}
+            name={'complainantSex'}
+            items={SEX_OPTIONS}
+            placeholder={'Any complainant sex'}
+            onChange={onFilterSelect}
           />
         </div>
         <VoiceraMap complaints={complaints} />
@@ -82,9 +114,21 @@ export default function Home({ allComplaints }: HomeProps) {
   );
 }
 
-/** A dropdown menu to filter map markers by property. */
-function MapFilter(props: MapFilterProps) {
-  return <Select {...props} className={'map-sidebar-filter'} />;
+/** A field for the dropdown menu to filter map markers by property. */
+function MapFilterField(props: MapFilterProps) {
+  const { label, name, onChange, items, placeholder } = props;
+  return (
+    <div className={'map-sidebar-field'}>
+      <Label className={'map-sidebar-field__label'}>{label}</Label>
+      <Select
+        name={name}
+        onChange={onChange}
+        items={items}
+        placeholder={placeholder}
+        className={'map-sidebar-field__select'}
+      />
+    </div>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -95,8 +139,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 interface MapFilterProps extends SelectProps {
+  /** The label text. */
+  label: string;
   /** The property of the field to filter on. */
-  name?: keyof Complaint;
+  name: keyof Complaint;
 }
 
 type HomeProps = {

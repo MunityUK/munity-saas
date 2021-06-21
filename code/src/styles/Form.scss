@@ -1,5 +1,11 @@
+.label {
+  display: block;
+  font-family: $font-family;
+}
+
 .select {
   border-radius: 10px;
+  font-family: $font-family;
   outline: none;
   padding: 0.5em;
 }

@@ -90,10 +90,10 @@ export enum Race {
 }
 
 export enum Sex {
-  UNKNOWN = '0',
   MALE = '1',
   FEMALE = '2',
-  INDETERMINATE = '9'
+  INDETERMINATE = '9',
+  UNKNOWN = '0'
 }
 
 export const PoliceStations = [

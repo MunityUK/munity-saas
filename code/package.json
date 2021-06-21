@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.1",
+    "capital-case": "^1.0.4",
     "classnames": "^2.3.1",
     "date-fns": "^2.21.3",
     "knex": "^0.95.5",
