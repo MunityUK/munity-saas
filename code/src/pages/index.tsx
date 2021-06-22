@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import { GetServerSideProps } from 'next';
 import Dynamic from 'next/dynamic';
 import Head from 'next/head';
@@ -15,8 +16,47 @@ import {
   Complaint,
   ComplaintStatus,
   IncidentType,
+  ListItem,
   PoliceStations
 } from 'types';
+
+const mapFilterFields: Array<MapFilterField> = [
+  {
+    label: 'Incident Type',
+    name: 'incidentType',
+    items: Object.values(IncidentType)
+  },
+  {
+    label: 'Station',
+    name: 'station',
+    items: PoliceStations
+  },
+  {
+    label: 'Status',
+    name: 'status',
+    items: Object.values(ComplaintStatus)
+  },
+  {
+    label: 'Officer Race',
+    name: 'officerRace',
+    items: RACE_OPTIONS
+  },
+  {
+    label: 'Officer Sex',
+    name: 'officerSex',
+    items: SEX_OPTIONS
+  },
+  {
+    label: 'Complainant Race',
+    name: 'complainantRace',
+    items: RACE_OPTIONS
+  },
+  {
+    label: 'Complainant Sex',
+    name: 'complainantSex',
+    items: SEX_OPTIONS
+  }
+];
 
 export default function Home({ allComplaints }: HomeProps) {
   const [complaints, setComplaints] = useState(allComplaints);
@@ -32,7 +72,7 @@ export default function Home({ allComplaints }: HomeProps) {
       return Object.entries(filters).every(([property, values]) => {
         if (!values || !values.length) return true;
         const key = property as keyof Complaint;
-        return values.includes(complaint[key] as string);
+        return values.includes(complaint[key]!.toString());
       });
     });
 
@@ -45,10 +85,13 @@ export default function Home({ allComplaints }: HomeProps) {
    */
   const onFilterCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
+
     setFilters((filters) => {
       const values = filters[name as keyof Complaint] || [];
       if (checked) {
-        values.push(value);
+        if (!values.includes(value)) {
+          values.push(value);
+        }
       } else {
         const index = values.indexOf(value);
         if (index > -1) {
@@ -64,17 +107,6 @@ export default function Home({ allComplaints }: HomeProps) {
     ssr: false
   });
 
-  /** A field for the dropdown menu to filter map markers by property. */
-  const MapFilterField = (props: MapFilterProps) => {
-    const { label, name, items } = props;
-    return (
-      <div className={'map-sidebar-field'}>
-        <Label className={'map-sidebar-field__label'}>{label}</Label>
-        <CheckboxGroup name={name} items={items} onChange={onFilterCheck} />
-      </div>
-    );
-  };
-
   return (
     <div className={'map-page'}>
       <Head>
@@ -84,54 +116,48 @@ export default function Home({ allComplaints }: HomeProps) {
 
       <main className={'map-main'}>
         <div className={'map-sidebar'}>
-          <MapFilterField
-            label={'Incident Type'}
-            name={'incidentType'}
-            items={Object.values(IncidentType)}
-            placeholder={'All incident types'}
-          />
-          <MapFilterField
-            label={'Station'}
-            name={'station'}
-            items={PoliceStations}
-            placeholder={'All stations'}
-          />
-          <MapFilterField
-            label={'Status'}
-            name={'status'}
-            items={Object.values(ComplaintStatus)}
-            placeholder={'All statuses'}
-          />
-          <MapFilterField
-            label={'Officer Race'}
-            name={'officerRace'}
-            items={RACE_OPTIONS}
-            placeholder={'Any officer race'}
-          />
-          <MapFilterField
-            label={'Officer Sex'}
-            name={'officerSex'}
-            items={SEX_OPTIONS}
-            placeholder={'Any officer sex'}
-          />
-          <MapFilterField
-            label={'Complainant Race'}
-            name={'complainantRace'}
-            items={RACE_OPTIONS}
-            placeholder={'Any complainant race'}
-          />
-          <MapFilterField
-            label={'Complainant Sex'}
-            name={'complainantSex'}
-            items={SEX_OPTIONS}
-            placeholder={'Any complainant sex'}
-          />
+          {mapFilterFields.map((props, key) => {
+            return (
+              <FilterField
+                {...props}
+                checkedValues={filters[props.name]!}
+                onChange={onFilterCheck}
+                key={key}
+              />
+            );
+          })}
         </div>
         <VoiceraMap complaints={complaints} />
       </main>
     </div>
   );
 }
+
+/** A field for the dropdown menu to filter map markers by property. */
+const FilterField = (props: MapFilterProps) => {
+  const { label, name, items, onChange, checkedValues } = props;
+  const [isFolded, setFolded] = useState(true);
+
+  const classes = classnames('map-sidebar-field-checkboxes', {
+    'map-sidebar-field-checkboxes--visible': !isFolded
+  });
+  return (
+    <div className={'map-sidebar-field'}>
+      <Label
+        className={'map-sidebar-field__label'}
+        onClick={() => setFolded(!isFolded)}>
+        {label}
+      </Label>
+      <CheckboxGroup
+        name={name}
+        items={items}
+        onChange={onChange}
+        checkedValues={checkedValues}
+        className={classes}
+      />
+    </div>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const complaints = await getComplaints();
@@ -140,6 +166,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
+interface HomeProps {
+  /** The full list of complaints from the server. */
+  allComplaints: Array<Complaint>;
+}
+
 interface MapFilterProps extends CheckboxGroupProps {
   /** The label text. */
   label: string;
@@ -147,11 +178,12 @@ interface MapFilterProps extends CheckboxGroupProps {
   name: keyof Complaint;
 }
 
-interface HomeProps {
-  /** The full list of complaints from the server. */
-  allComplaints: Array<Complaint>;
-}
-
 type MapFilters = {
   [key in keyof Complaint]: Array<string>;
+};
+
+type MapFilterField = {
+  label: string;
+  name: keyof Complaint;
+  items: Array<ListItem>;
 };

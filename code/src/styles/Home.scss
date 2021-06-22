@@ -19,7 +19,61 @@
 }
 
 .map-sidebar-field__label {
+  cursor: pointer;
   font-size: 1em;
+  padding: 0.4em 0;
+}
+
+.map-sidebar-field-checkboxes {
+  animation: collapse 0.5s;
+  animation-fill-mode: both;
+
+  &--visible {
+    animation: expand 0.5s;
+    animation-fill-mode: both;
+  }
+
+  @keyframes expand {
+    0% {
+      height: 0;
+      opacity: 0;
+      visibility: hidden;
+      z-index: -1;
+    }
+
+    1% {
+      visibility: visible;
+      z-index: 1;
+    }
+
+    100% {
+      height: fit-content;
+      opacity: 1;
+      visibility: visible;
+      z-index: 1;
+    }
+  }
+
+  @keyframes collapse {
+    0% {
+      height: fit-content;
+      opacity: 1;
+      visibility: visible;
+      z-index: 1;
+    }
+
+    99% {
+      visibility: hidden;
+      z-index: -1;
+    }
+
+    100% {
+      height: 0;
+      opacity: 0;
+      visibility: hidden;
+      z-index: -1;
+    }
+  }
 }
 
 .map-container-wrapper {
