@@ -4,7 +4,7 @@ import Knex from 'knex';
 
 dotenv.config();
 
-export const DB_SCHEMA = 'voicera';
+export const DB_SCHEMA = process.env.MYSQL_DATABASE!;
 export const DB_TABLE = 'complaints';
 export const DB_TABLE_TEST = 'complaints_test';
 
@@ -14,6 +14,6 @@ export default Knex({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
+    database: DB_SCHEMA
   }
 });
