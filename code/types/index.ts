@@ -11,3 +11,10 @@ export type StationComplaints = {
 export type StationScores = {
   [key: string]: StationScore;
 };
+
+export type ListItem =
+  | string
+  | {
+      label: string;
+      value: string | number;
+    };

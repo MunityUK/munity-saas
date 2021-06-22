@@ -3,7 +3,11 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-import { Label, Select, SelectProps } from 'src/components/form';
+import { Label } from 'src/components/form';
+import {
+  CheckboxGroup,
+  CheckboxGroupProps
+} from 'src/components/form/lib/checkbox';
 import { getComplaints } from 'src/pages/api/complaints';
 import { RACE_OPTIONS, SEX_OPTIONS } from 'src/utils/constants';
 import { parse } from 'src/utils/helper';
@@ -16,7 +20,7 @@ import {
 
 export default function Home({ allComplaints }: HomeProps) {
   const [complaints, setComplaints] = useState(allComplaints);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState<MapFilters>({});
 
   useEffect(() => {
     filterComplaints();
@@ -25,10 +29,10 @@ export default function Home({ allComplaints }: HomeProps) {
   /** Filter the list of complaints by specified property. */
   const filterComplaints = () => {
     const filteredComplaints = allComplaints.filter((complaint) => {
-      return Object.entries(filters).every(([property, value]) => {
-        if (!value) return true;
+      return Object.entries(filters).every(([property, values]) => {
+        if (!values || !values.length) return true;
         const key = property as keyof Complaint;
-        return complaint[key] == value;
+        return values.includes(complaint[key] as string);
       });
     });
 
@@ -36,18 +40,40 @@ export default function Home({ allComplaints }: HomeProps) {
   };
 
   /**
-   * Set a new filter on selection.
+   * Set a new filter on check.
    * @param e The change event.
    */
-  const onFilterSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFilters((filters) => ({ ...filters, [name]: value }));
+  const onFilterCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, checked } = e.target;
+    setFilters((filters) => {
+      const values = filters[name as keyof Complaint] || [];
+      if (checked) {
+        values.push(value);
+      } else {
+        const index = values.indexOf(value);
+        if (index > -1) {
+          values.splice(index, 1);
+        }
+      }
+      return { ...filters, [name]: values };
+    });
   };
 
   // Map need not be affected by Next's server-side rendering.
   const VoiceraMap = Dynamic(() => import('src/components/map'), {
     ssr: false
   });
+
+  /** A field for the dropdown menu to filter map markers by property. */
+  const MapFilterField = (props: MapFilterProps) => {
+    const { label, name, items } = props;
+    return (
+      <div className={'map-sidebar-field'}>
+        <Label className={'map-sidebar-field__label'}>{label}</Label>
+        <CheckboxGroup name={name} items={items} onChange={onFilterCheck} />
+      </div>
+    );
+  };
 
   return (
     <div className={'map-page'}>
@@ -63,70 +89,46 @@ export default function Home({ allComplaints }: HomeProps) {
             name={'incidentType'}
             items={Object.values(IncidentType)}
             placeholder={'All incident types'}
-            onChange={onFilterSelect}
           />
           <MapFilterField
             label={'Station'}
             name={'station'}
             items={PoliceStations}
             placeholder={'All stations'}
-            onChange={onFilterSelect}
           />
           <MapFilterField
             label={'Status'}
             name={'status'}
             items={Object.values(ComplaintStatus)}
             placeholder={'All statuses'}
-            onChange={onFilterSelect}
           />
           <MapFilterField
             label={'Officer Race'}
             name={'officerRace'}
             items={RACE_OPTIONS}
             placeholder={'Any officer race'}
-            onChange={onFilterSelect}
           />
           <MapFilterField
             label={'Officer Sex'}
             name={'officerSex'}
             items={SEX_OPTIONS}
             placeholder={'Any officer sex'}
-            onChange={onFilterSelect}
           />
           <MapFilterField
             label={'Complainant Race'}
             name={'complainantRace'}
             items={RACE_OPTIONS}
             placeholder={'Any complainant race'}
-            onChange={onFilterSelect}
           />
           <MapFilterField
             label={'Complainant Sex'}
             name={'complainantSex'}
             items={SEX_OPTIONS}
             placeholder={'Any complainant sex'}
-            onChange={onFilterSelect}
           />
         </div>
         <VoiceraMap complaints={complaints} />
       </main>
-    </div>
-  );
-}
-
-/** A field for the dropdown menu to filter map markers by property. */
-function MapFilterField(props: MapFilterProps) {
-  const { label, name, onChange, items, placeholder } = props;
-  return (
-    <div className={'map-sidebar-field'}>
-      <Label className={'map-sidebar-field__label'}>{label}</Label>
-      <Select
-        name={name}
-        onChange={onChange}
-        items={items}
-        placeholder={placeholder}
-        className={'map-sidebar-field__select'}
-      />
     </div>
   );
 }
@@ -138,14 +140,18 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-interface MapFilterProps extends SelectProps {
+interface MapFilterProps extends CheckboxGroupProps {
   /** The label text. */
   label: string;
   /** The property of the field to filter on. */
   name: keyof Complaint;
 }
 
-type HomeProps = {
+interface HomeProps {
   /** The full list of complaints from the server. */
   allComplaints: Array<Complaint>;
+}
+
+type MapFilters = {
+  [key in keyof Complaint]: Array<string>;
 };
