@@ -20,43 +20,9 @@ import {
   PoliceStations
 } from 'types';
 
-const mapFilterFields: Array<MapFilterField> = [
-  {
-    label: 'Incident Type',
-    name: 'incidentType',
-    items: Object.values(IncidentType)
-  },
-  {
-    label: 'Station',
-    name: 'station',
-    items: PoliceStations
-  },
-  {
-    label: 'Status',
-    name: 'status',
-    items: Object.values(ComplaintStatus)
-  },
-  {
-    label: 'Officer Race',
-    name: 'officerRace',
-    items: RACE_OPTIONS
-  },
-  {
-    label: 'Officer Sex',
-    name: 'officerSex',
-    items: SEX_OPTIONS
-  },
-  {
-    label: 'Complainant Race',
-    name: 'complainantRace',
-    items: RACE_OPTIONS
-  },
-  {
-    label: 'Complainant Sex',
-    name: 'complainantSex',
-    items: SEX_OPTIONS
-  }
-];
+const VoiceraMap = Dynamic(() => import('src/components/map'), {
+  ssr: false
+});
 
 export default function Home({ allComplaints }: HomeProps) {
   const [complaints, setComplaints] = useState(allComplaints);
@@ -102,11 +68,6 @@ export default function Home({ allComplaints }: HomeProps) {
     });
   };
 
-  // Map need not be affected by Next's server-side rendering.
-  const VoiceraMap = Dynamic(() => import('src/components/map'), {
-    ssr: false
-  });
-
   return (
     <div className={'map-page'}>
       <Head>
@@ -116,7 +77,7 @@ export default function Home({ allComplaints }: HomeProps) {
 
       <main className={'map-main'}>
         <div className={'map-sidebar'}>
-          {mapFilterFields.map((props, key) => {
+          {MAP_FILTER_FIELDS.map((props, key) => {
             return (
               <FilterField
                 {...props}
@@ -147,6 +108,7 @@ const FilterField = (props: MapFilterProps) => {
         className={'map-sidebar-field__label'}
         onClick={() => setFolded(!isFolded)}>
         {label}
+        {isFolded && <span className={'map-sidebar-field__label-drop'}>&#8964;</span>}
       </Label>
       <CheckboxGroup
         name={name}
@@ -165,6 +127,44 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: { allComplaints: parse(complaints) ?? [] }
   };
 };
+
+const MAP_FILTER_FIELDS: Array<MapFilterField> = [
+  {
+    label: 'Incident Type',
+    name: 'incidentType',
+    items: Object.values(IncidentType)
+  },
+  {
+    label: 'Station',
+    name: 'station',
+    items: PoliceStations
+  },
+  {
+    label: 'Status',
+    name: 'status',
+    items: Object.values(ComplaintStatus)
+  },
+  {
+    label: 'Officer Race',
+    name: 'officerRace',
+    items: RACE_OPTIONS
+  },
+  {
+    label: 'Officer Sex',
+    name: 'officerSex',
+    items: SEX_OPTIONS
+  },
+  {
+    label: 'Complainant Race',
+    name: 'complainantRace',
+    items: RACE_OPTIONS
+  },
+  {
+    label: 'Complainant Sex',
+    name: 'complainantSex',
+    items: SEX_OPTIONS
+  }
+];
 
 interface HomeProps {
   /** The full list of complaints from the server. */

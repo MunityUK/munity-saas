@@ -15,13 +15,25 @@
 }
 
 .map-sidebar-field {
+  border-bottom: 1px solid #000;
   margin: 0.4em 0;
+  padding-bottom: 0.7em;
 }
 
 .map-sidebar-field__label {
   cursor: pointer;
   font-size: 1em;
+  opacity: 0.8;
   padding: 0.4em 0;
+  position: relative;
+
+  &-drop {
+    font-size: 2em;
+    margin-top: -13px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 }
 
 .map-sidebar-field-checkboxes {
