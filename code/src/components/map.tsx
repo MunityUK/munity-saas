@@ -8,8 +8,8 @@ import { useAppSelector } from 'src/utils/reducers';
 import { Complaint } from 'types';
 
 const ICON = L.icon({
-  iconUrl: '/marker-icon.png',
-  shadowUrl: '/marker-shadow.png'
+  iconUrl: '/marker.svg',
+  className: 'map-marker'
 });
 
 const CENTER_POSITION = new LatLng(51.45523, -2.59665);
@@ -36,7 +36,7 @@ export default function VoiceraMap(props: VoiceraMapProps) {
 function IMapMarker({ complaint }: MapMarkerProps) {
   const position = new LatLng(complaint.latitude!, complaint.longitude!);
   return (
-    <Marker position={position} icon={ICON}>
+    <Marker position={position} icon={ICON} riseOnHover={true}>
       <Popup closeButton={false}>
         {complaint.reportId} • {complaint.incidentType}
         <br />

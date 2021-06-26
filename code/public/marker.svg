@@ -1,0 +1,10 @@
+<svg width="22" height="35" xmlns="http://www.w3.org/2000/svg">
+  <filter id="dropshadow" width="130%" height="130%">
+    <feDropShadow dx="1" dy="0.5" stdDeviation="1" flood-color="#000" flood-opacity="0.8" />
+  </filter>
+  <g filter="url(#dropshadow)">
+    <circle cx="9.5" cy="9.5" r="9" fill="#7d0188" />
+    <polygon fill="#7d0188" points="1.2,13 9.5,35 17.8,13" />
+  </g>
+  <circle cx="9.5" cy="9.5" r="2" fill="#fff" />
+</svg>

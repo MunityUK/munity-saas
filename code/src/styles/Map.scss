@@ -94,4 +94,10 @@
 
 .map-container {
   height: 100%;
+  position: relative;
+}
+
+.map-marker {
+  margin-left: -15px;
+  margin-top: -15px;
 }
