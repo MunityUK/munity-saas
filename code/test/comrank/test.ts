@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Complaint, ComplaintStatus } from '../../types';
+import { Complaint, ComplaintStatus, StationScore } from '../../types';
 import { calculateStationScores } from '../../utils/functions';
 
 const STATION_NAME = 'Station';
@@ -19,13 +19,24 @@ describe('ComRank Tests', function () {
       dateOfResolution: undefined
     });
 
-    const scores = calculateStationScores(complaints)[STATION_NAME];
-    assert.strictEqual(scores.percentageAddressed, '0%');
-    assert.strictEqual(scores.percentageResolved, '0%');
-    assert.isNull(scores.averageAddressalTime);
-    assert.isNull(scores.averageResolutionTime);
-    assert.isNull(scores.averageCaseDuration);
-    assert.strictEqual(scores.finalScore, 30);
+    const score = calculateStationScores(complaints)[STATION_NAME];
+
+    const assertions: Assertions = [
+      [ScoreProp.totalNumberOfComplaints, 5],
+      [ScoreProp.numberOfComplaintsUnaddressed, 5],
+      [ScoreProp.numberOfComplaintsAddressed, 0],
+      [ScoreProp.numberOfComplaintsResolved, 0],
+      [ScoreProp.percentageUnaddressed, '100%'],
+      [ScoreProp.percentageAddressed, '0%'],
+      [ScoreProp.percentageResolved, '0%'],
+      [ScoreProp.percentageProgressed, '0%'],
+      [ScoreProp.averageAddressalTime, null],
+      [ScoreProp.averageResolutionTime, null],
+      [ScoreProp.averageCaseDuration, null],
+      [ScoreProp.finalScore, 30]
+    ];
+
+    runAssertions(score, assertions);
   });
 
   it('Given all complaints addressed', function () {
@@ -37,13 +48,24 @@ describe('ComRank Tests', function () {
       dateOfResolution: undefined
     });
 
-    const scores = calculateStationScores(complaints)[STATION_NAME];
-    assert.strictEqual(scores.percentageAddressed, '100%');
-    assert.strictEqual(scores.percentageResolved, '0%');
-    assert.strictEqual(scores.averageAddressalTime, '14 days');
-    assert.isNull(scores.averageResolutionTime);
-    assert.isNull(scores.averageCaseDuration);
-    assert.strictEqual(scores.finalScore, 80);
+    const score = calculateStationScores(complaints)[STATION_NAME];
+
+    const assertions: Assertions = [
+      [ScoreProp.totalNumberOfComplaints, 5],
+      [ScoreProp.numberOfComplaintsUnaddressed, 0],
+      [ScoreProp.numberOfComplaintsAddressed, 5],
+      [ScoreProp.numberOfComplaintsResolved, 0],
+      [ScoreProp.percentageUnaddressed, '0%'],
+      [ScoreProp.percentageAddressed, '100%'],
+      [ScoreProp.percentageResolved, '0%'],
+      [ScoreProp.percentageProgressed, '100%'],
+      [ScoreProp.averageAddressalTime, '14 days'],
+      [ScoreProp.averageResolutionTime, null],
+      [ScoreProp.averageCaseDuration, null],
+      [ScoreProp.finalScore, 80]
+    ];
+
+    runAssertions(score, assertions);
   });
 
   it('Given all complaints resolved', function () {
@@ -55,13 +77,24 @@ describe('ComRank Tests', function () {
       dateOfResolution: DATE_OF_RESOLUTION
     });
 
-    const scores = calculateStationScores(complaints)[STATION_NAME];
-    assert.strictEqual(scores.percentageAddressed, '100%');
-    assert.strictEqual(scores.percentageResolved, '100%');
-    assert.strictEqual(scores.averageAddressalTime, '14 days');
-    assert.strictEqual(scores.averageResolutionTime, '16 days');
-    assert.strictEqual(scores.averageCaseDuration, '30 days');
-    assert.strictEqual(scores.finalScore, 100);
+    const score = calculateStationScores(complaints)[STATION_NAME];
+
+    const assertions: Assertions = [
+      [ScoreProp.totalNumberOfComplaints, 5],
+      [ScoreProp.numberOfComplaintsUnaddressed, 0],
+      [ScoreProp.numberOfComplaintsAddressed, 0],
+      [ScoreProp.numberOfComplaintsResolved, 5],
+      [ScoreProp.percentageUnaddressed, '0%'],
+      [ScoreProp.percentageAddressed, '0%'],
+      [ScoreProp.percentageResolved, '100%'],
+      [ScoreProp.percentageProgressed, '100%'],
+      [ScoreProp.averageAddressalTime, '14 days'],
+      [ScoreProp.averageResolutionTime, '16 days'],
+      [ScoreProp.averageCaseDuration, '30 days'],
+      [ScoreProp.finalScore, 100]
+    ];
+
+    runAssertions(score, assertions);
   });
 
   it('Given all complaints resolved with delay', function () {
@@ -73,13 +106,24 @@ describe('ComRank Tests', function () {
       dateOfResolution: Date.UTC(2000, 5, 1)
     });
 
-    const scores = calculateStationScores(complaints)[STATION_NAME];
-    assert.strictEqual(scores.percentageAddressed, '100%');
-    assert.strictEqual(scores.percentageResolved, '100%');
-    assert.strictEqual(scores.averageAddressalTime, '91 days');
-    assert.strictEqual(scores.averageResolutionTime, '61 days');
-    assert.strictEqual(scores.averageCaseDuration, '152 days');
-    assert.strictEqual(scores.finalScore, 75.6);
+    const score = calculateStationScores(complaints)[STATION_NAME];
+
+    const assertions: Assertions = [
+      [ScoreProp.totalNumberOfComplaints, 5],
+      [ScoreProp.numberOfComplaintsUnaddressed, 0],
+      [ScoreProp.numberOfComplaintsAddressed, 0],
+      [ScoreProp.numberOfComplaintsResolved, 5],
+      [ScoreProp.percentageUnaddressed, '0%'],
+      [ScoreProp.percentageAddressed, '0%'],
+      [ScoreProp.percentageResolved, '100%'],
+      [ScoreProp.percentageProgressed, '100%'],
+      [ScoreProp.averageAddressalTime, '91 days'],
+      [ScoreProp.averageResolutionTime, '61 days'],
+      [ScoreProp.averageCaseDuration, '152 days'],
+      [ScoreProp.finalScore, 75.6]
+    ];
+
+    runAssertions(score, assertions);
   });
 
   it('Given a mix of complaint statuses', function () {
@@ -113,13 +157,24 @@ describe('ComRank Tests', function () {
       complaintsResolved
     );
 
-    const scores = calculateStationScores(complaints)[STATION_NAME];
-    assert.strictEqual(scores.percentageAddressed, '80%');
-    assert.strictEqual(scores.percentageResolved, '40%');
-    assert.strictEqual(scores.averageAddressalTime, '14 days');
-    assert.strictEqual(scores.averageResolutionTime, '16 days');
-    assert.strictEqual(scores.averageCaseDuration, '30 days');
-    assert.strictEqual(scores.finalScore, 78);
+    const score = calculateStationScores(complaints)[STATION_NAME];
+
+    const assertions: Assertions = [
+      [ScoreProp.totalNumberOfComplaints, 5],
+      [ScoreProp.numberOfComplaintsUnaddressed, 1],
+      [ScoreProp.numberOfComplaintsAddressed, 2],
+      [ScoreProp.numberOfComplaintsResolved, 2],
+      [ScoreProp.percentageUnaddressed, '20%'],
+      [ScoreProp.percentageAddressed, '40%'],
+      [ScoreProp.percentageResolved, '40%'],
+      [ScoreProp.percentageProgressed, '80%'],
+      [ScoreProp.averageAddressalTime, '14 days'],
+      [ScoreProp.averageResolutionTime, '16 days'],
+      [ScoreProp.averageCaseDuration, '30 days'],
+      [ScoreProp.finalScore, 78]
+    ];
+
+    runAssertions(score, assertions);
   });
 });
 
@@ -140,4 +195,42 @@ function createComplaints(quantity: number, overrides: ComplaintOverrides) {
   return complaints;
 }
 
+/**
+ * Runs the constructed score assertions.
+ * @param score The station score.
+ * @param assertions The list of assertions.
+ */
+function runAssertions(score: StationScore, assertions: Assertions) {
+  assertions.forEach(([field, actual]) => {
+    assertThat(score[field], actual, field);
+  });
+}
+
+/**
+ * Asserts that given values are strictly equal.
+ * @param actual The actual value.
+ * @param expected The expected value.
+ * @param fieldName The name of the score field to assert.
+ */
+function assertThat<T>(actual: T, expected: T, fieldName: string) {
+  const message = `Expected ${fieldName} to equal '${expected}' but was '${actual}'.`;
+  assert.strictEqual(actual, expected, message);
+}
+
+const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
+  totalNumberOfComplaints: 'totalNumberOfComplaints',
+  numberOfComplaintsUnaddressed: 'numberOfComplaintsUnaddressed',
+  numberOfComplaintsAddressed: 'numberOfComplaintsAddressed',
+  numberOfComplaintsResolved: 'numberOfComplaintsResolved',
+  percentageUnaddressed: 'percentageUnaddressed',
+  percentageAddressed: 'percentageAddressed',
+  percentageResolved: 'percentageResolved',
+  percentageProgressed: 'percentageProgressed',
+  averageAddressalTime: 'averageAddressalTime',
+  averageResolutionTime: 'averageResolutionTime',
+  averageCaseDuration: 'averageCaseDuration',
+  finalScore: 'finalScore'
+};
+
+type Assertions = Array<[keyof StationScore, unknown]>;
 type ComplaintOverrides = { [key in keyof Complaint]: unknown };

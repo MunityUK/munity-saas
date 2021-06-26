@@ -21,6 +21,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.1",
     "capital-case": "^1.0.4",
+    "chart.js": "^3.3.2",
     "classnames": "^2.3.1",
     "date-fns": "^2.21.3",
     "knex": "^0.95.5",
@@ -28,6 +29,7 @@
     "mysql2": "^2.2.5",
     "next": "^11.0.0",
     "react": "^17.0.2",
+    "react-chartjs-2": "^3.0.3",
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.1.0",
     "react-redux": "^7.2.4",

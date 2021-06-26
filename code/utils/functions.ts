@@ -13,7 +13,7 @@ import {
  * complaints.
  * @returns The mapping of scores to station.
  */
-export function calculateStationScores(complaints: Complaint[]) {
+export function calculateStationScores(complaints: Complaint[]): StationScores {
   const complaintsByStation: StationComplaints = {};
   const stationScores: StationScores = {};
 
@@ -21,6 +21,7 @@ export function calculateStationScores(complaints: Complaint[]) {
   const resolutionTimeByComplaint: { [key: number]: number } = {};
   const caseDurationByComplaint: { [key: number]: number } = {};
 
+  // Accumulate times by complaint.
   complaints.forEach((complaint) => {
     const { station } = complaint;
     const listOfComplaints = complaintsByStation[station!] ?? [];
@@ -47,18 +48,23 @@ export function calculateStationScores(complaints: Complaint[]) {
   });
 
   Object.entries(complaintsByStation).forEach(([station, complaints]) => {
+    // Calculate counts.
     const complaintCount = complaints.length;
     const addressedCount = getComplaintCountByStatus(complaints, [
-      ComplaintStatus.ADDRESSED,
-      ComplaintStatus.RESOLVED
+      ComplaintStatus.ADDRESSED
     ]);
     const resolvedCount = getComplaintCountByStatus(complaints, [
       ComplaintStatus.RESOLVED
     ]);
+    const unaddressedCount = complaints.length - addressedCount - resolvedCount;
 
+    // Calculate percentages.
+    const percentageUnaddressed = (unaddressedCount / complaintCount) * 100;
     const percentageAddressed = (addressedCount / complaintCount) * 100;
     const percentageResolved = (resolvedCount / complaintCount) * 100;
+    const percentageProgressed = percentageResolved + percentageAddressed;
 
+    // Calculate average times.
     const avgAddressalTime = calcAverageTime(
       complaints,
       addressalTimeByComplaint
@@ -72,16 +78,23 @@ export function calculateStationScores(complaints: Complaint[]) {
       caseDurationByComplaint
     );
 
+    // Marshal values to score object.
     const score = new StationScore();
-    score.numberOfComplaints = complaintCount;
+    score.totalNumberOfComplaints = complaintCount;
+    score.numberOfComplaintsResolved = resolvedCount;
+    score.numberOfComplaintsAddressed = addressedCount;
+    score.numberOfComplaintsUnaddressed = unaddressedCount;
+
+    score.percentageUnaddressed = round(percentageUnaddressed) + '%';
     score.percentageAddressed = round(percentageAddressed) + '%';
     score.percentageResolved = round(percentageResolved) + '%';
+    score.percentageProgressed = round(percentageProgressed) + '%';
     score.averageAddressalTime = assignAverageTime(avgAddressalTime);
     score.averageResolutionTime = assignAverageTime(avgResolutionTime);
     score.averageCaseDuration = assignAverageTime(avgCaseDuration);
 
     const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
-    const penaltyUnaddressed = calcUnaddressedPenalty(percentageAddressed);
+    const penaltyUnaddressed = calcUnaddressedPenalty(percentageProgressed);
     const penaltyLongAddressTime = calcLongAddressTimePenalty(avgAddressalTime);
     const penaltyLongResolveTime = calcLongResolveTimePenalty(
       avgResolutionTime
@@ -124,11 +137,12 @@ function calcUnresolvedPenalty(percentageResolved: number) {
 
 /**
  * Calculates the penalty incurred for unaddressed complaints.
- * @param percentageAddressed The percentage of addressed complaints.
+ * @param percentageProgressed The percentage of addressed and resolved
+ * complaints collectively.
  * @returns The calculated penalty to deduct from final score.
  */
-function calcUnaddressedPenalty(percentageAddressed: number) {
-  return (100 - percentageAddressed) * 0.5;
+function calcUnaddressedPenalty(percentageProgressed: number) {
+  return (100 - percentageProgressed) * 0.5;
 }
 
 /**

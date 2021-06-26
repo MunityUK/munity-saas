@@ -90,14 +90,40 @@
 
 .map-container-wrapper {
   flex: 1 0 auto;
+  position: relative;
 }
 
 .map-container {
   height: 100%;
-  position: relative;
 }
 
 .map-marker {
   margin-left: -15px;
   margin-top: -15px;
+}
+
+.map-metrics {
+  background-color: #fff;
+  border-radius: 10px;
+  max-width: 200px;
+  padding: 2em;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 500;
+}
+
+.map-metrics-legend {
+  margin-top: 1em;
+
+  &__key {
+    display: grid;
+    font-size: 0.8em;
+    grid-template-columns: 15px 1fr 30px;
+
+    &-number {
+      text-align: right;
+      width: 100%;
+    }
+  }
 }
