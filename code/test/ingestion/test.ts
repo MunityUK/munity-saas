@@ -11,6 +11,6 @@ describe('Ingestion Tests', function () {
     const tableExists = await knex.schema
       .withSchema(DB_SCHEMA)
       .hasTable(DB_TABLE_TEST);
-    assert.isTrue(tableExists);
+    assert.isTrue(tableExists, `Expected table '${DB_TABLE_TEST}' to exist.`);
   });
 });
