@@ -1,4 +1,4 @@
-import L, { LatLng } from 'leaflet';
+import L, { LatLng, Point } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { SetStateAction } from 'react';
 import { Marker, Popup } from 'react-leaflet';
@@ -7,8 +7,7 @@ import { Complaint } from 'types';
 
 const ICON = L.icon({
   iconUrl: '/marker.svg',
-  shadowUrl: '/marker-shadow.png',
-  className: 'map-marker'
+  iconSize: new Point(21, 36)
 });
 
 /**
