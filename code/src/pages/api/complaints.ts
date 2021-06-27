@@ -1,6 +1,8 @@
 import Knex from 'knex';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { Complaint } from 'types';
+
 const knex = Knex({
   client: 'mysql2',
   connection: {
@@ -24,5 +26,5 @@ export default async function (_: NextApiRequest, res: NextApiResponse) {
 }
 
 export async function getComplaints() {
-  return knex(TABLE_NAME).select();
+  return knex(TABLE_NAME).select<Array<Complaint>>();
 }

@@ -30,19 +30,19 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
 
     if (complaint.dateOfAddressal) {
       addressalTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        complaint.dateOfComplaint!,
-        complaint.dateOfAddressal
+        new Date(complaint.dateOfComplaint!),
+        new Date(complaint.dateOfAddressal)
       );
     }
 
     if (complaint.dateOfResolution) {
       resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        complaint.dateOfAddressal!,
-        complaint.dateOfResolution
+        new Date(complaint.dateOfAddressal!),
+        new Date(complaint.dateOfResolution)
       );
       caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
-        complaint.dateOfComplaint!,
-        complaint.dateOfResolution
+        new Date(complaint.dateOfComplaint!),
+        new Date(complaint.dateOfResolution)
       );
     }
   });
