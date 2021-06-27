@@ -24,19 +24,21 @@ export class Complaint {
   officerRace?: string;
   officerSex?: Sex;
 
+  /**
+   * Generates a random {@link Complaint}.
+   * @returns The generated complaint.
+   */
   static random() {
     const complaint = new Complaint();
     complaint.reportId = faker.datatype
       .number(10000)
       .toString()
       .padStart(5, '0');
-    complaint.station =
-      PoliceStations[Math.floor(Math.random() * PoliceStations.length)];
+    complaint.station = randomElement(BristolPoliceStations, 2);
     complaint.force = 'Avon and Somerset Constabulary';
-    complaint.incidentType = randomEnum(IncidentType);
+    complaint.incidentType = randomEnumValue(IncidentType);
     complaint.incidentDescription = faker.lorem.sentence();
-
-    complaint.status = randomEnum(ComplaintStatus);
+    complaint.status = randomEnumValue(ComplaintStatus, 2);
     complaint.notes = faker.lorem.sentence();
     complaint.city = 'Bristol';
     complaint.county = 'Avon';
@@ -44,12 +46,12 @@ export class Complaint {
     complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
     complaint.complainantAge = faker.datatype.number({ min: 18, max: 65 });
     complaint.complainantSex = randomElement(SexDistribution);
-    complaint.complainantRace = randomEnum(Race);
+    complaint.complainantRace = randomEnumValue(Race, 3);
     complaint.officerId =
       'OI' + faker.datatype.number().toString().padStart(5, '0');
     complaint.officerAge = faker.datatype.number({ min: 25, max: 55 });
     complaint.officerSex = randomElement(SexDistribution);
-    complaint.officerRace = randomEnum(Race);
+    complaint.officerRace = randomEnumValue(Race, 2);
     complaint.dateOfComplaint = faker.date.past();
 
     if (complaint.status !== ComplaintStatus.UNADDRESSED) {
@@ -96,7 +98,7 @@ export enum Sex {
   UNKNOWN = '0'
 }
 
-export const PoliceStations = [
+export const BristolPoliceStations = [
   'Avonmouth',
   'Bishopsworth',
   'Brislington',
@@ -117,10 +119,25 @@ const SexDistribution = [
   return Array(probability).fill(parseInt(sex));
 });
 
-function randomEnum<T>(anEnum: T): T[keyof T] {
-  return randomElement(Object.values(anEnum));
+/**
+ * Produces a random value from an enum.
+ * @param enumeration The enum.
+ * @param randSum The number of times random is summed.
+ * @returns The random enum value.
+ */
+function randomEnumValue<T>(enumeration: T, randSum = 1): T[keyof T] {
+  return randomElement(Object.values(enumeration), randSum);
 }
 
-function randomElement<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
+/**
+ * Produces a random element from an array. Uses Gaussian randomness.
+ * @param array The array.
+ * @param randSum The number of times random is summed.
+ * @returns The random element.
+ */
+function randomElement<T>(array: T[], randSum = 1): T {
+  let r = 0;
+  for (let i = randSum; i > 0; i--) r += Math.random();
+  const randomness = r / randSum;
+  return array[Math.floor(randomness * array.length)];
 }

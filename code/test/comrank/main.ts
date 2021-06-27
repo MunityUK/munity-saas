@@ -19,7 +19,11 @@ function printScores(stationScores: StationScores) {
   console.info('---');
   Object.entries(stationScores).forEach(([station, score], i, array) => {
     console.info(`**** Station #${i + 1}: ${station}`);
-    console.info('> Number of Complaints: ' + score.totalNumberOfComplaints);
+    console.info('> Total Number of Complaints: ' + score.totalNumberOfComplaints);
+    console.info('> Number of Complaints Unaddressed: ' + score.numberOfComplaintsUnaddressed);
+    console.info('> Number of Complaints Addressed: ' + score.numberOfComplaintsAddressed);
+    console.info('> Number of Complaints Resolved: ' + score.numberOfComplaintsResolved);
+    console.info('> Percentage Unaddressed: ' + score.percentageUnaddressed);
     console.info('> Percentage Addressed: ' + score.percentageAddressed);
     console.info('> Percentage Resolved: ' + score.percentageResolved);
     console.info('> Avg. Addressal Time: ' + score.averageAddressalTime);

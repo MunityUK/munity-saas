@@ -17,7 +17,7 @@ import {
   ComplaintStatus,
   IncidentType,
   ListItem,
-  PoliceStations
+  BristolPoliceStations
 } from 'types';
 
 const VoiceraMap = Dynamic(() => import('src/components/map'), {
@@ -137,7 +137,7 @@ const MAP_FILTER_FIELDS: Array<MapFilterField> = [
   {
     label: 'Station',
     name: 'station',
-    items: PoliceStations
+    items: BristolPoliceStations
   },
   {
     label: 'Status',
