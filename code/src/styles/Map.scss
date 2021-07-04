@@ -88,6 +88,22 @@
   }
 }
 
+.map-marker--selected {
+  animation: pulse 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  z-index: 1000 !important;
+
+  @keyframes pulse {
+    50% {
+      height: 50px;
+      margin-left: -15px;
+      margin-top: -30px;
+      width: 30px;
+    }
+  }
+}
+
 .map-container-wrapper {
   flex: 1 0 auto;
   position: relative;
@@ -98,6 +114,8 @@
 }
 
 .map-metrics {
+  animation: fade-out 0.5s;
+  animation-fill-mode: both;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 6px 1px #909090;
@@ -105,8 +123,45 @@
   position: absolute;
   right: 20px;
   top: 20px;
+  visibility: hidden;
   width: 225px;
-  z-index: 500;
+
+  &--visible {
+    animation: fade-in 0.3s;
+    animation-fill-mode: both;
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      z-index: -1;
+    }
+
+    1% {
+      z-index: 500;
+    }
+
+    100% {
+      opacity: 1;
+      z-index: 500;
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+      z-index: 500;
+    }
+
+    99% {
+      z-index: 500;
+    }
+
+    100% {
+      opacity: 0;
+      z-index: -1;
+    }
+  }
 }
 
 .map-metrics-tabs {
@@ -132,7 +187,7 @@
   overflow-y: scroll;
 
   &--complaint {
-    font-size: 0.8em;
+    font-size: 0.9em;
     padding: 1em;
   }
 

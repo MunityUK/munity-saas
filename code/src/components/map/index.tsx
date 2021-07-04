@@ -1,6 +1,6 @@
 import { LatLng } from 'leaflet';
 import React, { SetStateAction, useEffect, useState } from 'react';
-import { MapContainer, TileLayer, useMapEvent } from 'react-leaflet';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 
 import { MAP_ATTRIBUTION, MAP_URL } from 'src/utils/constants';
@@ -24,7 +24,10 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
 
   return (
     <div className={'map-container-wrapper'}>
-      <MapLayout complaints={complaints} setSelectedComplaint={setSelectedComplaint} />
+      <MapLayout
+        complaints={complaints}
+        selectedComplaintHook={[selectedComplaint, setSelectedComplaint]}
+      />
       <MapMetrics complaint={selectedComplaint!} scores={scoresByStation!} />
     </div>
   );
@@ -33,20 +36,22 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
 /**
  * The Leaflet map interface.
  */
-function MapLayout({ complaints, setSelectedComplaint }: MapLayoutProps) {
+function MapLayout({ complaints, selectedComplaintHook }: MapLayoutProps) {
   const { mapZoom } = useAppSelector((state) => state);
+  const [selectedComplaint, setSelectedComplaint] = selectedComplaintHook;
   return (
     <MapContainer
       center={CENTER_POSITION}
       zoom={mapZoom}
       scrollWheelZoom={true}
       className={'map-container'}>
-      <MapAssist />
+      <MapAssist setSelectedComplaint={setSelectedComplaint} />
       {complaints.map((complaint, key) => {
         return (
           <MapMarker
             complaint={complaint}
             setSelectedComplaint={setSelectedComplaint}
+            isSelected={selectedComplaint?.id === complaint.id}
             key={key}
           />
         );
@@ -58,13 +63,19 @@ function MapLayout({ complaints, setSelectedComplaint }: MapLayoutProps) {
 /**
  * Handles map events and displays attribution.
  */
-function MapAssist() {
+function MapAssist({ setSelectedComplaint }: MapAssistProps) {
   const dispatch = useDispatch();
 
-  // Save the new zoom value on each zoom.
-  const map = useMapEvent('zoomend', () => {
-    const zoomValue = map.getZoom();
-    dispatch(setMapZoom(zoomValue));
+  const map = useMapEvents({
+    // Reset selected complaint on map click.
+    click: () => {
+      setSelectedComplaint(undefined);
+    },
+    // Save the new zoom value on each zoom.
+    zoomend: () => {
+      const zoomValue = map.getZoom();
+      dispatch(setMapZoom(zoomValue));
+    }
   });
 
   return <TileLayer attribution={MAP_ATTRIBUTION} url={MAP_URL} />;
@@ -74,7 +85,14 @@ type VoiceraMapProps = {
   complaints: Array<Complaint>;
 };
 
+type MapAssistProps = {
+  setSelectedComplaint: React.Dispatch<SetStateAction<Complaint | undefined>>;
+};
+
 type MapLayoutProps = {
   complaints: Array<Complaint>;
-  setSelectedComplaint: React.Dispatch<SetStateAction<Complaint | undefined>>;
+  selectedComplaintHook: [
+    Complaint | undefined,
+    React.Dispatch<SetStateAction<Complaint | undefined>>
+  ];
 };

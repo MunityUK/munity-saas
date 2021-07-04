@@ -6,21 +6,22 @@ import { Complaint, SexLookup } from 'types';
 export default function MetricComplaintInfo({
   complaint
 }: MetricStationProfileProps) {
+  if (!complaint) return null;
   const [fields, setFields] = useState<Array<ComplaintField>>([]);
 
   useEffect(() => {
     collateFields();
-  }, []);
+  }, [complaint.id]);
 
   /**
    * Builds the list of fields to display.
    */
   const collateFields = () => {
     const fields = [
-      { label: 'ID', value: complaint.id },
       { label: 'Report ID', value: complaint.reportId },
       { label: 'Station', value: complaint.station },
       { label: 'Police Force', value: complaint.force },
+      { label: 'Status', value: complaint.status },
       {
         label: 'Date of Complaint',
         value: formatDate(complaint.dateOfComplaint!)
@@ -35,7 +36,6 @@ export default function MetricComplaintInfo({
       },
       { label: 'Incident Type', value: complaint.incidentType },
       { label: 'Incident Description', value: complaint.incidentDescription },
-      { label: 'Status', value: complaint.status },
       { label: 'City', value: complaint.city },
       { label: 'County', value: complaint.county },
       { label: 'Latitude', value: complaint.latitude },

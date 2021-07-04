@@ -10,6 +10,8 @@ export default function MetricStationProfile({
   complaint,
   scores
 }: MetricComplaintInfoProps) {
+  if (!complaint) return null;
+  
   const [chartData, setChartData] = useState<ChartDataModel>();
   const [fields, setFields] = useState<Array<ScoreField>>([]);
   const [metrics, setMetrics] = useState<Array<MapMetric>>([]);

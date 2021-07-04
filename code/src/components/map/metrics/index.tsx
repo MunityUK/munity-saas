@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { Complaint, StationScores } from 'types';
 
@@ -23,10 +23,29 @@ const METRIC_TABS = [
 export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
   const [selectedTab, setSelectedTab] = useState(METRIC_TABS[0].value);
 
-  if (!complaint) return null;
+  const metricsRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    preloadMetrics();
+  }, []);
+
+  /**
+   * Set the metrics pane to visible on load to avoid initial flash of content.
+   */
+  const preloadMetrics = () => {
+    const metrics = metricsRef.current;
+    if (metrics) {
+      setTimeout(() => {
+        metrics.style.visibility = 'visible';
+      }, 500);
+    }
+  };
+
+  const classes = classnames('map-metrics', {
+    'map-metrics--visible': !!complaint
+  });
   return (
-    <div className={'map-metrics'}>
+    <div className={classes} ref={metricsRef}>
       <MetricTabs tabHook={[selectedTab, setSelectedTab]} />
       <div className={'map-metrics-content'}>
         {selectedTab === 'complaint' ? (
