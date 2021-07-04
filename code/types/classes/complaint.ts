@@ -86,9 +86,10 @@ export enum ComplaintStatus {
 
 export enum Race {
   BLACK = 'Black',
-  HISPANIC = 'Hispanic',
+  MIXED = 'Mixed',
   ASIAN = 'Asian',
-  WHITE = 'White'
+  WHITE = 'White',
+  OTHER = 'Other'
 }
 
 export enum Sex {
