@@ -23,11 +23,11 @@ function IMapMarker({ complaint, setSelectedComplaint }: MapMarkerProps) {
       eventHandlers={{
         click: () => setSelectedComplaint(complaint)
       }}>
-      <Popup closeButton={false}>
+      {/* <Popup closeButton={false}>
         {complaint.reportId} • {complaint.incidentType}
         <br />
         {complaint.station}
-      </Popup>
+      </Popup> */}
     </Marker>
   );
 }

@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvent } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 
@@ -14,8 +14,6 @@ import MapMetrics from './metrics';
 const CENTER_POSITION = new LatLng(51.45523, -2.59665);
 
 export default function VoiceraMap({ complaints }: VoiceraMapProps) {
-  const { mapZoom } = useAppSelector((state) => state);
-
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint>();
   const [scoresByStation, setScoresByStation] = useState<StationScores>();
 
@@ -26,29 +24,39 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
 
   return (
     <div className={'map-container-wrapper'}>
-      <MapContainer
-        center={CENTER_POSITION}
-        zoom={mapZoom}
-        scrollWheelZoom={true}
-        className={'map-container'}>
-        <MapAssist />
-        {complaints.map((complaint, key) => {
-          return (
-            <MapMarker
-              complaint={complaint}
-              setSelectedComplaint={setSelectedComplaint}
-              key={key}
-            />
-          );
-        })}
-      </MapContainer>
+      <MapLayout complaints={complaints} setSelectedComplaint={setSelectedComplaint} />
       <MapMetrics complaint={selectedComplaint!} scores={scoresByStation!} />
     </div>
   );
 }
 
 /**
- * Uses access to map object as child to performs map functions.
+ * The Leaflet map interface.
+ */
+function MapLayout({ complaints, setSelectedComplaint }: MapLayoutProps) {
+  const { mapZoom } = useAppSelector((state) => state);
+  return (
+    <MapContainer
+      center={CENTER_POSITION}
+      zoom={mapZoom}
+      scrollWheelZoom={true}
+      className={'map-container'}>
+      <MapAssist />
+      {complaints.map((complaint, key) => {
+        return (
+          <MapMarker
+            complaint={complaint}
+            setSelectedComplaint={setSelectedComplaint}
+            key={key}
+          />
+        );
+      })}
+    </MapContainer>
+  );
+}
+
+/**
+ * Handles map events and displays attribution.
  */
 function MapAssist() {
   const dispatch = useDispatch();
@@ -64,4 +72,9 @@ function MapAssist() {
 
 type VoiceraMapProps = {
   complaints: Array<Complaint>;
+};
+
+type MapLayoutProps = {
+  complaints: Array<Complaint>;
+  setSelectedComplaint: React.Dispatch<SetStateAction<Complaint | undefined>>;
 };

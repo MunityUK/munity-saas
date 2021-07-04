@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
-import { Complaint, ComplaintStatus, StationScores } from 'types';
+import { Complaint, ComplaintStatus, StationScore, StationScores } from 'types';
 
 /**
  * The content of the complaint information metric tab.
@@ -11,19 +11,22 @@ export default function MetricStationProfile({
   scores
 }: MetricComplaintInfoProps) {
   const [chartData, setChartData] = useState<ChartDataModel>();
+  const [fields, setFields] = useState<Array<ScoreField>>([]);
   const [metrics, setMetrics] = useState<Array<MapMetric>>([]);
 
   useEffect(() => {
-    calculateMetrics();
+    const score = scores[complaint.station!];
+    calculateMetrics(score);
+    collateFields(score);
   }, [complaint?.id]);
 
   /**
    * Calculate the metrics for the complaint's station and sets the chart data.
+   * @param score The station score.
    */
-  const calculateMetrics = () => {
+  const calculateMetrics = (score: StationScore) => {
     if (!complaint) return;
 
-    const score = scores[complaint.station!];
     const metrics = [
       {
         color: '#0f007d',
@@ -58,6 +61,25 @@ export default function MetricStationProfile({
     setChartData({ datasets: [dataset], labels });
   };
 
+  /**
+   * Builds the list of fields to display.
+   * @param score The station score.
+   */
+  const collateFields = (score: StationScore) => {
+    const fields = [
+      { label: 'Station', value: complaint.station },
+      { label: 'Score', value: score.finalScore },
+      {
+        label: 'Total Number of Complaints',
+        value: score.totalNumberOfComplaints
+      },
+      { label: 'Avg. Addressal Time', value: score.averageAddressalTime },
+      { label: 'Avg. Resolution Time', value: score.averageResolutionTime },
+      { label: 'Avg. Case Duration', value: score.averageCaseDuration }
+    ];
+    setFields(fields);
+  };
+
   return (
     <div className={'map-metrics-content--station'}>
       <Doughnut
@@ -71,21 +93,38 @@ export default function MetricStationProfile({
           }
         }}
       />
-      <div className={'map-metrics-legend'}>
-        {metrics.map(({ color, label, number }, key) => {
-          return (
-            <div className={'map-metrics-legend__key'} key={key}>
-              <span>
-                <svg width={10} height={10}>
-                  <circle cx={5} cy={5} r={5} fill={color} />
-                </svg>
-              </span>
-              <span>{label}</span>
-              <span className={'map-metrics-legend__key-number'}>{number}</span>
-            </div>
-          );
-        })}
-      </div>
+      <ChartKey metrics={metrics} />
+      {fields.map(({ label, value }, key) => {
+        return (
+          <div className={'complaint-field'} key={key}>
+            <label>{label}:</label>
+            <div>{value}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * The key for the doughnut chart.
+ */
+function ChartKey({ metrics }: ChartKeyProps) {
+  return (
+    <div className={'map-metrics-legend'}>
+      {metrics.map(({ color, label, number }, key) => {
+        return (
+          <div className={'map-metrics-legend__key'} key={key}>
+            <span>
+              <svg width={10} height={10}>
+                <circle cx={5} cy={5} r={5} fill={color} />
+              </svg>
+            </span>
+            <span>{label}</span>
+            <span className={'map-metrics-legend__key-number'}>{number}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -106,9 +145,18 @@ interface ChartDatasetModel {
   backgroundColor: Array<string>;
 }
 
+interface ScoreField {
+  label: string;
+  value: ReactNode;
+}
+
 interface MapMetricsProps {
   complaint: Complaint;
   scores: StationScores;
+}
+
+interface ChartKeyProps {
+  metrics: Array<MapMetric>;
 }
 
 type MetricComplaintInfoProps = MapMetricsProps;
