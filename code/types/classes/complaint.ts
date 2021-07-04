@@ -98,6 +98,13 @@ export enum Sex {
   UNKNOWN = '0'
 }
 
+export const SexLookup = {
+  '1': 'Male',
+  '2': 'Female',
+  '9': 'Indeterminate',
+  '0': 'Unknown'
+};
+
 export const BristolPoliceStations = [
   'Avonmouth',
   'Bishopsworth',

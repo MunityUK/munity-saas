@@ -100,12 +100,53 @@
 .map-metrics {
   background-color: #fff;
   border-radius: 10px;
-  max-width: 200px;
-  padding: 2em;
+  box-shadow: 0 0 6px 1px #909090;
+  overflow: hidden;
   position: absolute;
   right: 20px;
   top: 20px;
+  width: 200px;
   z-index: 500;
+}
+
+.map-metrics-tabs {
+  display: flex;
+}
+
+.map-metrics-tabs__button {
+  background: rgb(208, 208, 208);
+  cursor: pointer;
+  display: block;
+  font-size: 0.7em;
+  padding: 1em;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  &--active {
+    background: #fff;
+  }
+}
+
+.map-metrics-content {
+  height: 450px;
+  overflow-y: scroll;
+
+  &--complaint {
+    font-size: 0.8em;
+    padding: 1em;
+  }
+
+  &--station {
+    padding: 1.5em;
+  }
+}
+
+.complaint-field {
+  padding: 0.5em 0;
+
+  label {
+    font-weight: bold;
+  }
 }
 
 .map-metrics-legend {

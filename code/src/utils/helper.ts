@@ -1,7 +1,14 @@
+import { format } from 'date-fns';
+
 import { ListItem } from 'types';
 
 export function parse(value: unknown) {
   return JSON.parse(JSON.stringify(value));
+}
+
+export function formatDate(date: Date): string {
+  if (!date) return 'N/A';
+  return format(new Date(date!), 'HH:mm, E do MMMM yyyy');
 }
 
 /**

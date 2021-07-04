@@ -1,5 +1,4 @@
 import { LatLng } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvent } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
@@ -43,7 +42,7 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
           );
         })}
       </MapContainer>
-      <MapMetrics complaint={selectedComplaint} scores={scoresByStation!} />
+      <MapMetrics complaint={selectedComplaint!} scores={scoresByStation!} />
     </div>
   );
 }

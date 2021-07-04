@@ -1,13 +1,128 @@
-import 'leaflet/dist/leaflet.css';
-import React, { useEffect, useState } from 'react';
+import classnames from 'classnames';
+import React, { ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
-import { Complaint, ComplaintStatus, StationScores } from 'types';
+import { formatDate } from 'src/utils/helper';
+import { Complaint, ComplaintStatus, SexLookup, StationScores } from 'types';
+
+const METRIC_TABS = [
+  {
+    title: 'Complaint Info',
+    value: 'complaint'
+  },
+  {
+    title: 'Station Profile',
+    value: 'station'
+  }
+];
 
 /**
  * The pane showing metrics for a complaint.
  */
 export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
+  const [selectedTab, setSelectedTab] = useState(METRIC_TABS[0].value);
+
+  if (!complaint) return null;
+
+  return (
+    <div className={'map-metrics'}>
+      <MetricTabs tabHook={[selectedTab, setSelectedTab]} />
+      <div className={'map-metrics-content'}>
+        {selectedTab === 'complaint' ? (
+          <MetricComplaintInfo complaint={complaint} />
+        ) : (
+          <MetricStationProfile complaint={complaint} scores={scores} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The tabs for switching between map metric content.
+ */
+function MetricTabs({ tabHook }: MetricTabsProps) {
+  const [selectedTab, setSelectedTab] = tabHook;
+  return (
+    <div className={'map-metrics-tabs'}>
+      {METRIC_TABS.map(({ title, value }, key) => {
+        const isActive = selectedTab === value;
+        const classes = classnames('map-metrics-tabs__button', {
+          'map-metrics-tabs__button--active': isActive
+        });
+        return (
+          <label className={classes} key={key}>
+            <input
+              type={'checkbox'}
+              name={'metric-tab'}
+              value={value}
+              onChange={() => setSelectedTab(value)}
+              checked={isActive}
+              hidden={true}
+            />
+            <span className={'map-metrics-tabs__button-text'}>{title}</span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+function MetricComplaintInfo({ complaint }: MetricStationProfileProps) {
+  const fields: Array<ComplaintField> = [
+    { label: 'ID', value: complaint.id },
+    { label: 'Report ID', value: complaint.reportId },
+    { label: 'Station', value: complaint.station },
+    { label: 'Police Force', value: complaint.force },
+    {
+      label: 'Date of Complaint',
+      value: formatDate(complaint.dateOfComplaint!)
+    },
+    {
+      label: 'Date of Addressal',
+      value: formatDate(complaint.dateOfAddressal!)
+    },
+    {
+      label: 'Date of Resolution',
+      value: formatDate(complaint.dateOfResolution!)
+    },
+    { label: 'Incident Type', value: complaint.incidentType },
+    { label: 'Incident Description', value: complaint.incidentDescription },
+    { label: 'Status', value: complaint.status },
+    { label: 'City', value: complaint.city },
+    { label: 'County', value: complaint.county },
+    { label: 'Latitude', value: complaint.latitude },
+    { label: 'Longitude', value: complaint.longitude },
+    {
+      label: 'Complainant Age',
+      value: `${complaint.complainantAge} years old`
+    },
+    { label: 'Complainant Race', value: complaint.complainantRace },
+    { label: 'Complainant Sex', value: SexLookup[complaint.complainantSex!] },
+    { label: 'Officer ID', value: complaint.officerId },
+    { label: 'Officer Age', value: `${complaint.officerAge} years old` },
+    { label: 'Officer Race', value: complaint.officerRace },
+    { label: 'Officer Sex', value: SexLookup[complaint.officerSex!] },
+    { label: 'Notes', value: complaint.notes }
+  ];
+  return (
+    <div className={'map-metrics-content--complaint'}>
+      {fields.map(({ label, value }, key) => {
+        return (
+          <div className={'complaint-field'} key={key}>
+            <label>{label}:</label>
+            <div>{value}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * The content of the complaint information metric tab.
+ */
+function MetricStationProfile({ complaint, scores }: MetricComplaintInfoProps) {
   const [chartData, setChartData] = useState<ChartDataModel>();
   const [metrics, setMetrics] = useState<Array<MapMetric>>([]);
 
@@ -56,10 +171,8 @@ export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
     setChartData({ datasets: [dataset], labels });
   };
 
-  if (!complaint) return null;
-
   return (
-    <div className={'map-metrics'}>
+    <div className={'map-metrics-content--station'}>
       <Doughnut
         type={'doughnut'}
         data={chartData}
@@ -106,7 +219,22 @@ interface ChartDatasetModel {
   backgroundColor: Array<string>;
 }
 
-type MapMetricsProps = {
-  complaint?: Complaint;
+interface MetricTabsProps {
+  tabHook: [string, React.Dispatch<SetStateAction<string>>];
+}
+
+interface MapMetricsProps {
+  complaint: Complaint;
   scores: StationScores;
-};
+}
+
+interface MetricStationProfileProps {
+  complaint: Complaint;
+}
+
+type MetricComplaintInfoProps = MapMetricsProps;
+
+interface ComplaintField {
+  label: string;
+  value: ReactNode;
+}
