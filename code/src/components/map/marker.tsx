@@ -1,7 +1,7 @@
 import L, { LatLng, Point } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { SetStateAction } from 'react';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker } from 'react-leaflet';
 
 import { Complaint } from 'types';
 
