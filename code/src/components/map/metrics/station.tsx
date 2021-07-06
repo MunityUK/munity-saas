@@ -11,7 +11,7 @@ export default function MetricStationProfile({
   scores
 }: MetricComplaintInfoProps) {
   if (!complaint) return null;
-  
+
   const [chartData, setChartData] = useState<ChartDataModel>();
   const [fields, setFields] = useState<Array<ScoreField>>([]);
   const [metrics, setMetrics] = useState<Array<MapMetric>>([]);
@@ -69,21 +69,27 @@ export default function MetricStationProfile({
    */
   const collateFields = (score: StationScore) => {
     const fields = [
-      { label: 'Station', value: complaint.station },
       { label: 'Score', value: score.finalScore },
       {
         label: 'Total Number of Complaints',
         value: score.totalNumberOfComplaints
       },
-      { label: 'Avg. Addressal Time', value: score.averageAddressalTime },
-      { label: 'Avg. Resolution Time', value: score.averageResolutionTime },
-      { label: 'Avg. Case Duration', value: score.averageCaseDuration }
+      {
+        label: 'Avg. Addressal Time',
+        value: score.averageAddressalTime ?? 'N/A'
+      },
+      {
+        label: 'Avg. Resolution Time',
+        value: score.averageResolutionTime ?? 'N/A'
+      },
+      { label: 'Avg. Case Duration', value: score.averageCaseDuration ?? 'N/A' }
     ];
     setFields(fields);
   };
 
   return (
     <div className={'map-metrics-content--station'}>
+      <div className={'map-metrics-content--station__name'}>{complaint.station}</div>
       <Doughnut
         type={'doughnut'}
         data={chartData}
