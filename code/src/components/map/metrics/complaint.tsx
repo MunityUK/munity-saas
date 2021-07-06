@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 
+import { ARCGIS_BASE_URL } from 'src/utils/constants';
 import { formatDate } from 'src/utils/helper';
 import { Complaint, SexLookup } from 'types';
 
@@ -10,15 +11,27 @@ export default function MetricComplaintInfo({
   const [fields, setFields] = useState<Array<ComplaintField>>([]);
 
   useEffect(() => {
-    collateFields();
+    reverseGeocodeCoordinates(complaint, collateFields);
   }, [complaint.id]);
 
   /**
    * Builds the list of fields to display.
+   * @param address The address of the complaint.
    */
-  const collateFields = () => {
+  const collateFields = (address: any) => {
+    const complaintAddress = (
+      <div>
+        {address['Address']}
+        <br />
+        {address['District']}
+        <br />
+        {address['Postal']}
+      </div>
+    );
+
     const fields = [
       { label: 'Report ID', value: complaint.reportId },
+      { label: 'Address', value: complaintAddress },
       { label: 'Station', value: complaint.station },
       { label: 'Police Force', value: complaint.force },
       { label: 'Status', value: complaint.status },
@@ -36,10 +49,7 @@ export default function MetricComplaintInfo({
       },
       { label: 'Incident Type', value: complaint.incidentType },
       { label: 'Incident Description', value: complaint.incidentDescription },
-      { label: 'City', value: complaint.city },
       { label: 'County', value: complaint.county },
-      { label: 'Latitude', value: complaint.latitude },
-      { label: 'Longitude', value: complaint.longitude },
       {
         label: 'Complainant Age',
         value: `${complaint.complainantAge} years old`
@@ -67,6 +77,30 @@ export default function MetricComplaintInfo({
       })}
     </div>
   );
+}
+
+/**
+ * Reverse geocodes a complaint's location using its latitude and longtude.
+ * @param complaint The complaint.
+ * @param callback The function to be called on the response.
+ */
+function reverseGeocodeCoordinates(
+  complaint: Complaint,
+  callback: (address: string) => void
+) {
+  const url = new URL(`${ARCGIS_BASE_URL}/reverseGeocode`);
+  url.searchParams.append('f', 'pjson');
+  url.searchParams.append('langCode', 'EN');
+  url.searchParams.append(
+    'location',
+    `${complaint.longitude},${complaint.latitude}`
+  );
+
+  fetch(url.href)
+    .then((res) => res.json())
+    .then((response) => {
+      callback(response.address);
+    });
 }
 
 interface MetricStationProfileProps {
