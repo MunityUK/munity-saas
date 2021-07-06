@@ -34,7 +34,7 @@ export default function MetricComplaintInfo({
       { label: 'Address', value: complaintAddress },
       { label: 'Station', value: complaint.station },
       { label: 'Police Force', value: complaint.force },
-      { label: 'Status', value: complaint.status },
+      { label: 'Status', value: complaint.status?.toUpperCase() },
       {
         label: 'Date of Complaint',
         value: formatDate(complaint.dateOfComplaint!)
