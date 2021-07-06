@@ -3,7 +3,7 @@
   height: 100%;
 }
 
-.map-sidebar {
+.map-filters {
   background: #fff;
   display: flex;
   flex: 0 1 auto;
@@ -14,13 +14,13 @@
   width: 100%;
 }
 
-.map-sidebar-field {
+.map-filters-field {
   border-bottom: 1px solid #000;
   margin: 0.4em 0;
   padding-bottom: 0.7em;
 }
 
-.map-sidebar-field__label {
+.map-filters-field__label {
   cursor: pointer;
   font-size: 1em;
   opacity: 0.8;
@@ -33,54 +33,22 @@
     position: absolute;
     right: 0;
     top: 0;
+    transition: all 0.2s ease-in-out;
+
+    &--open {
+      margin-top: 2px;
+      transform: rotate(180deg);
+    }
   }
 }
 
-.map-sidebar-field-checkboxes {
-  animation: collapse 0.5s;
-  animation-fill-mode: both;
+.map-filters-field-checkboxes {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
 
   &--visible {
-    animation: expand 0.5s;
-    animation-fill-mode: both;
-  }
-
-  @keyframes expand {
-    0% {
-      height: 0;
-      opacity: 0;
-      z-index: -1;
-    }
-
-    1% {
-      height: 100%;
-      z-index: 1;
-    }
-
-    100% {
-      height: 100%;
-      opacity: 1;
-      z-index: 1;
-    }
-  }
-
-  @keyframes collapse {
-    0% {
-      height: 100%;
-      opacity: 1;
-      z-index: 1;
-    }
-
-    99% {
-      height: 100%;
-      z-index: 1;
-    }
-
-    100% {
-      height: 0;
-      opacity: 0;
-      z-index: -1;
-    }
+    max-height: 100vh;
   }
 }
 
@@ -110,53 +78,22 @@
 }
 
 .map-metrics {
-  animation: fade-out 0.5s;
-  animation-fill-mode: both;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 6px 1px #909090;
+  opacity: 0;
   overflow: hidden;
   position: absolute;
   right: 20px;
   top: 20px;
-  visibility: hidden;
+  transition: opacity 0.8s ease, z-index 1s step-end;
   width: 225px;
+  z-index: -1;
 
   &--visible {
-    animation: fade-in 0.3s;
-    animation-fill-mode: both;
-  }
-
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-      z-index: -1;
-    }
-
-    1% {
-      z-index: 500;
-    }
-
-    100% {
-      opacity: 1;
-      z-index: 500;
-    }
-  }
-
-  @keyframes fade-out {
-    0% {
-      opacity: 1;
-      z-index: 500;
-    }
-
-    99% {
-      z-index: 500;
-    }
-
-    100% {
-      opacity: 0;
-      z-index: -1;
-    }
+    opacity: 1;
+    transition: opacity 0.5s ease, z-index 1s step-start;
+    z-index: 500;
   }
 }
 

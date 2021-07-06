@@ -57,7 +57,7 @@ export default function MapFilters({
   };
 
   return (
-    <div className={'map-sidebar'}>
+    <div className={'map-filters'}>
       {FILTER_FIELDS.map((props, key) => {
         return (
           <FilterField
@@ -77,18 +77,16 @@ const FilterField = (props: FilterFieldProps) => {
   const { label, name, items, onChange, checkedValues } = props;
   const [isFolded, setFolded] = useState(true);
 
-  const classes = classnames('map-sidebar-field-checkboxes', {
-    'map-sidebar-field-checkboxes--visible': !isFolded
+  const classes = classnames('map-filters-field-checkboxes', {
+    'map-filters-field-checkboxes--visible': !isFolded
   });
   return (
-    <div className={'map-sidebar-field'}>
+    <div className={'map-filters-field'}>
       <Label
-        className={'map-sidebar-field__label'}
+        className={'map-filters-field__label'}
         onClick={() => setFolded(!isFolded)}>
-        {label}
-        {isFolded && (
-          <span className={'map-sidebar-field__label-drop'}>&#8964;</span>
-        )}
+        <span>{label}</span>
+        <DropButton isFolded={isFolded} />
       </Label>
       <CheckboxGroup
         name={name}
@@ -101,6 +99,13 @@ const FilterField = (props: FilterFieldProps) => {
   );
 };
 
+const DropButton = ({ isFolded }: DropButtonProps) => {
+  const classes = classnames('map-filters-field__label-drop', {
+    'map-filters-field__label-drop--open': !isFolded
+  });
+  return <span className={classes}>&#8964;</span>;
+};
+
 interface MapFiltersProps {
   allComplaints: Array<Complaint>;
   setComplaints: React.Dispatch<SetStateAction<Array<Complaint>>>;
@@ -109,6 +114,10 @@ interface MapFiltersProps {
 interface FilterFieldProps extends CheckboxGroupProps {
   label: string;
   name: keyof Complaint;
+}
+
+interface DropButtonProps {
+  isFolded: boolean;
 }
 
 type MapFilters = {
