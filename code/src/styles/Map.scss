@@ -15,23 +15,10 @@
 }
 
 .map-filters-field {
-  animation: expand 5s;
-  animation-delay: 0.2s;
-  animation-fill-mode: both;
   border-bottom: 1px solid #000;
   margin: 0.4em 0;
   overflow: hidden;
   padding-bottom: 0.7em;
-
-  @keyframes expand {
-    from {
-      max-height: 0;
-    }
-
-    to {
-      max-height: 100vh;
-    }
-  }
 }
 
 .map-filters-field__label {
