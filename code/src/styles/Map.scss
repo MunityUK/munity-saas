@@ -15,9 +15,23 @@
 }
 
 .map-filters-field {
+  animation: expand 5s;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
   border-bottom: 1px solid #000;
   margin: 0.4em 0;
+  overflow: hidden;
   padding-bottom: 0.7em;
+
+  @keyframes expand {
+    from {
+      max-height: 0;
+    }
+
+    to {
+      max-height: 100vh;
+    }
+  }
 }
 
 .map-filters-field__label {
@@ -45,10 +59,27 @@
 .map-filters-field-checkboxes {
   max-height: 0;
   overflow: hidden;
-  transition: all 0.3s ease-in-out;
+  transition: max-height 0.3s ease-in-out;
 
   &--visible {
     max-height: 100vh;
+  }
+}
+
+.map-marker {
+  animation: zoom-in 0.5s;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+  overflow: hidden;
+
+  @keyframes zoom-in {
+    from {
+      max-height: 0;
+    }
+
+    to {
+      max-height: 50px;
+    }
   }
 }
 
@@ -120,7 +151,7 @@
   overflow-y: scroll;
 
   &--complaint {
-    font-size: 0.9em;
+    font-size: 0.95em;
     padding: 1em;
   }
 
@@ -130,10 +161,22 @@
 }
 
 .complaint-field {
+  animation: fade-in 0.4s;
+  animation-fill-mode: both;
   padding: 0.5em 0;
 
   label {
     font-weight: bold;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 }
 

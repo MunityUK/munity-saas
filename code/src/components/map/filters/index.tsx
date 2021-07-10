@@ -81,7 +81,9 @@ const FilterField = (props: FilterFieldProps) => {
     'map-filters-field-checkboxes--visible': !isFolded
   });
   return (
-    <div className={'map-filters-field'}>
+    <div
+      className={'map-filters-field'}
+      >
       <Label
         className={'map-filters-field__label'}
         onClick={() => setFolded(!isFolded)}>

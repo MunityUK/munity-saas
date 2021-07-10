@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import React, { SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 
 import { Complaint, StationScores } from 'types';
 
