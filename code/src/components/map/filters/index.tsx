@@ -178,6 +178,7 @@ const FilterDateField = (props: FilterDateFieldProps) => {
           placeholderText={'Select start date...'}
           onChange={(date) => onChange(date, startInputName)}
           maxDate={endDate}
+          className={'map-filters__datepicker'}
         />
         <DatePicker
           name={endInputName}
@@ -186,12 +187,14 @@ const FilterDateField = (props: FilterDateFieldProps) => {
           onChange={(date) => onChange(date, endInputName)}
           minDate={startDate}
           maxDate={new Date()}
+          className={'map-filters__datepicker'}
         />
       </Collapsible>
     </div>
   );
 };
 
+/** TODO: Rename to CollapsibleIcon and put with {@link Collapsible} */
 const DropButton = ({ isCollapsed }: DropButtonProps) => {
   const classes = classnames('map-filters-field__label-drop', {
     'map-filters-field__label-drop--open': !isCollapsed

@@ -3,6 +3,7 @@ import ReactDatePicker from 'react-datepicker';
 
 export function DatePicker({
   name,
+  className,
   onChange,
   value,
   minDate,
@@ -11,7 +12,9 @@ export function DatePicker({
 }: DatePickerProps) {
   return (
     <ReactDatePicker
+      autoComplete={'off'}
       calendarStartDay={1}
+      className={className}
       dateFormat={'dd/MM/yyyy'}
       dropdownMode={'select'}
       formatWeekDay={(weekday) => weekday.substr(0, 3)}
@@ -35,4 +38,5 @@ interface DatePickerProps {
   maxDate: Date | undefined;
   placeholderText: string;
   onChange: (date: Date) => void;
+  className?: string;
 }

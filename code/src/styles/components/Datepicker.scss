@@ -4,13 +4,18 @@
     font-family: $font-family;
   }
 
+  &-wrapper {
+    width: 100%;
+  }
+
   // The input field for the datepicker.
   &__input-container input {
     border: 1px solid #000;
     border-radius: 10px;
     font-family: $font-family;
+    margin: 0.5em 0;
     outline: none;
-    padding: 0.5em;
+    padding: 0.8em;
   }
 
   // The close button.
@@ -20,11 +25,11 @@
     &::after {
       background: none;
       border-radius: 50%;
-      color: #000;
+      color: #4a4a4a;
       content: '×';
       cursor: pointer;
-      font-size: 17px;
-      padding: 2px;
+      font-size: 21px;
+      padding: 6px;
     }
   }
 
