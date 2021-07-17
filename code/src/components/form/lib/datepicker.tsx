@@ -15,7 +15,7 @@ export function DatePicker({
       autoComplete={'off'}
       calendarStartDay={1}
       className={className}
-      dateFormat={'dd/MM/yyyy'}
+      dateFormat={'E do MMMM yyyy'}
       dropdownMode={'select'}
       formatWeekDay={(weekday) => weekday.substr(0, 3)}
       isClearable={true}
