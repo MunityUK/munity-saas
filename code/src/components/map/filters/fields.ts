@@ -13,6 +13,14 @@ const FILTER_FIELDS: Array<FilterField> = [
     name: 'dateOfComplaint'
   },
   {
+    label: 'Date of Addressal',
+    name: 'dateOfAddressal'
+  },
+  {
+    label: 'Date of Resolution',
+    name: 'dateOfResolution'
+  },
+  {
     label: 'Incident Type',
     name: 'incidentType',
     items: Object.values(IncidentType)
