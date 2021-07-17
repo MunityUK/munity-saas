@@ -1,14 +1,16 @@
 import classnames from 'classnames';
 import React, { SetStateAction, useEffect, useState } from 'react';
 
-import { Label } from 'src/components/form';
 import {
   CheckboxGroup,
-  CheckboxGroupProps
-} from 'src/components/form/lib/checkbox';
+  CheckboxGroupProps,
+  Label,
+  DatePicker,
+  Collapsible
+} from 'src/components/form';
 import { Complaint } from 'types';
 
-import FILTER_FIELDS from './fields';
+import FILTER_FIELDS, { FilterType } from './fields';
 
 export default function MapFilters({
   allComplaints,
@@ -56,14 +58,28 @@ export default function MapFilters({
     });
   };
 
+  const onDateChange = () => {
+    // hello
+  };
+
   return (
     <div className={'map-filters'}>
-      {FILTER_FIELDS.map((props, key) => {
-        return (
-          <FilterField
-            {...props}
-            checkedValues={filters[props.name]!}
+      {FILTER_FIELDS.map(({ label, name, items, type }, key) => {
+        const isCheckboxFilter = type === FilterType.CHECKBOXES;
+        return isCheckboxFilter ? (
+          <FilterCheckboxField
+            label={label}
+            name={name}
+            items={items!}
+            checkedValues={filters[name]!}
             onChange={onFilterCheck}
+            key={key}
+          />
+        ) : (
+          <FilterDateField
+            label={label}
+            name={name}
+            onChange={onDateChange}
             key={key}
           />
         );
@@ -73,37 +89,54 @@ export default function MapFilters({
 }
 
 /** A field for the dropdown menu to filter map markers by property. */
-const FilterField = (props: FilterFieldProps) => {
+const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
   const { label, name, items, onChange, checkedValues } = props;
-  const [isFolded, setFolded] = useState(true);
+  const [isCollapsed, setCollapsed] = useState(true);
 
-  const classes = classnames('map-filters-field-checkboxes', {
-    'map-filters-field-checkboxes--visible': !isFolded
-  });
   return (
-    <div
-      className={'map-filters-field'}
-      >
+    <div className={'map-filters-field'}>
       <Label
         className={'map-filters-field__label'}
-        onClick={() => setFolded(!isFolded)}>
+        onClick={() => setCollapsed(!isCollapsed)}>
         <span>{label}</span>
-        <DropButton isFolded={isFolded} />
+        <DropButton isCollapsed={isCollapsed} />
       </Label>
-      <CheckboxGroup
-        name={name}
-        items={items}
-        onChange={onChange}
-        checkedValues={checkedValues}
-        className={classes}
-      />
+      <Collapsible isCollapsed={isCollapsed}>
+        <CheckboxGroup
+          name={name}
+          items={items!}
+          onChange={onChange}
+          checkedValues={checkedValues}
+        />
+      </Collapsible>
     </div>
   );
 };
 
-const DropButton = ({ isFolded }: DropButtonProps) => {
+/** A field for the date ranges to filter map markers by date properties. */
+const FilterDateField = (props: FilterDateFieldProps) => {
+  const { label } = props;
+  const [isCollapsed, setCollapsed] = useState(true);
+
+  return (
+    <div className={'map-filters-field'}>
+      <Label
+        className={'map-filters-field__label'}
+        onClick={() => setCollapsed(!isCollapsed)}>
+        <span>{label}</span>
+        <DropButton isCollapsed={isCollapsed} />
+      </Label>
+      <Collapsible isCollapsed={isCollapsed}>
+        <DatePicker placeholderText={'Select start date...'} />
+        <DatePicker placeholderText={'Select end date...'} />
+      </Collapsible>
+    </div>
+  );
+};
+
+const DropButton = ({ isCollapsed }: DropButtonProps) => {
   const classes = classnames('map-filters-field__label-drop', {
-    'map-filters-field__label-drop--open': !isFolded
+    'map-filters-field__label-drop--open': !isCollapsed
   });
   return <span className={classes}>&#8964;</span>;
 };
@@ -113,13 +146,19 @@ interface MapFiltersProps {
   setComplaints: React.Dispatch<SetStateAction<Array<Complaint>>>;
 }
 
-interface FilterFieldProps extends CheckboxGroupProps {
+interface FilterCheckboxFieldProps extends CheckboxGroupProps {
+  label: string;
+  name: keyof Complaint;
+}
+
+interface FilterDateFieldProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: keyof Complaint;
 }
 
 interface DropButtonProps {
-  isFolded: boolean;
+  isCollapsed: boolean;
 }
 
 type MapFilters = {

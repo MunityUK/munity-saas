@@ -7,48 +7,66 @@ import {
   ListItem
 } from 'types';
 
-const FILTER_FIELDS: Array<MapFilterField> = [
+export enum FilterType {
+  CHECKBOXES = 'checkboxes',
+  DATEPICKER = 'datepicker'
+}
+
+const FILTER_FIELDS: Array<FilterField> = [
+  {
+    label: 'Date of Complaint',
+    name: 'dateOfComplaint',
+    type: FilterType.DATEPICKER
+  },
   {
     label: 'Incident Type',
     name: 'incidentType',
-    items: Object.values(IncidentType)
+    items: Object.values(IncidentType),
+    type: FilterType.CHECKBOXES
   },
   {
     label: 'Station',
     name: 'station',
-    items: BristolPoliceStations
+    items: BristolPoliceStations,
+    type: FilterType.CHECKBOXES
   },
   {
     label: 'Status',
     name: 'status',
-    items: Object.values(ComplaintStatus)
+    items: Object.values(ComplaintStatus),
+    type: FilterType.CHECKBOXES
   },
   {
     label: 'Officer Race',
     name: 'officerRace',
-    items: RACE_OPTIONS
+    items: RACE_OPTIONS,
+    type: FilterType.CHECKBOXES
   },
   {
     label: 'Officer Sex',
     name: 'officerSex',
-    items: SEX_OPTIONS
+    items: SEX_OPTIONS,
+    type: FilterType.CHECKBOXES
   },
   {
     label: 'Complainant Race',
     name: 'complainantRace',
-    items: RACE_OPTIONS
+    items: RACE_OPTIONS,
+    type: FilterType.CHECKBOXES
   },
   {
     label: 'Complainant Sex',
     name: 'complainantSex',
-    items: SEX_OPTIONS
+    items: SEX_OPTIONS,
+    type: FilterType.CHECKBOXES
   }
 ];
 
 export default FILTER_FIELDS;
 
-type MapFilterField = {
+type FilterField = {
   label: string;
   name: keyof Complaint;
-  items: Array<ListItem>;
+  type: FilterType;
+  items?: Array<ListItem>;
 };

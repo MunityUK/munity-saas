@@ -14,3 +14,13 @@
   display: block;
   font-size: 0.9em;
 }
+
+.collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+
+  &--visible {
+    max-height: 100vh;
+  }
+}
