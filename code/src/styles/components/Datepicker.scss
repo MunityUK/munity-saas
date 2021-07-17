@@ -34,6 +34,11 @@
     z-index: 1000;
   }
 
+  // The month navigation buttons.
+  &__navigation {
+    top: 13px;
+  }
+
   // The header of the datepicker.
   &__header {
     background: #fff;
@@ -65,6 +70,6 @@
 
   // The day values showing which are outside of the current month.
   &__day--outside-month {
-    visibility: hidden;
+    color: #dedede;
   }
 }
