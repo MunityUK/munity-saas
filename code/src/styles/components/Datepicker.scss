@@ -1,5 +1,4 @@
 .react-datepicker {
-
   // All datepicker sub elements.
   &* {
     font-family: $font-family;
@@ -58,6 +57,10 @@
   // The day names appearing above the calender.
   &__day-names {
     margin-top: 1em;
+
+    div {
+      font-size: 80%;
+    }
   }
 
   // The day values showing which are outside of the current month.
