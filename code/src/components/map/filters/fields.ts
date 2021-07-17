@@ -7,58 +7,45 @@ import {
   ListItem
 } from 'types';
 
-export enum FilterType {
-  CHECKBOXES = 'checkboxes',
-  DATEPICKER = 'datepicker'
-}
-
 const FILTER_FIELDS: Array<FilterField> = [
   {
     label: 'Date of Complaint',
-    name: 'dateOfComplaint',
-    type: FilterType.DATEPICKER
+    name: 'dateOfComplaint'
   },
   {
     label: 'Incident Type',
     name: 'incidentType',
-    items: Object.values(IncidentType),
-    type: FilterType.CHECKBOXES
+    items: Object.values(IncidentType)
   },
   {
     label: 'Station',
     name: 'station',
-    items: BristolPoliceStations,
-    type: FilterType.CHECKBOXES
+    items: BristolPoliceStations
   },
   {
     label: 'Status',
     name: 'status',
-    items: Object.values(ComplaintStatus),
-    type: FilterType.CHECKBOXES
+    items: Object.values(ComplaintStatus)
   },
   {
     label: 'Officer Race',
     name: 'officerRace',
-    items: RACE_OPTIONS,
-    type: FilterType.CHECKBOXES
+    items: RACE_OPTIONS
   },
   {
     label: 'Officer Sex',
     name: 'officerSex',
-    items: SEX_OPTIONS,
-    type: FilterType.CHECKBOXES
+    items: SEX_OPTIONS
   },
   {
     label: 'Complainant Race',
     name: 'complainantRace',
-    items: RACE_OPTIONS,
-    type: FilterType.CHECKBOXES
+    items: RACE_OPTIONS
   },
   {
     label: 'Complainant Sex',
     name: 'complainantSex',
-    items: SEX_OPTIONS,
-    type: FilterType.CHECKBOXES
+    items: SEX_OPTIONS
   }
 ];
 
@@ -67,6 +54,5 @@ export default FILTER_FIELDS;
 type FilterField = {
   label: string;
   name: keyof Complaint;
-  type: FilterType;
   items?: Array<ListItem>;
 };

@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactDatePicker from 'react-datepicker';
 
-export function DatePicker({ placeholderText }: DatePickerProps) {
-  const [startDate, setStartDate] = useState<any>(new Date());
+export function DatePicker({
+  name,
+  onChange,
+  value,
+  minDate,
+  maxDate,
+  placeholderText
+}: DatePickerProps) {
   return (
     <ReactDatePicker
       calendarStartDay={1}
       dateFormat={'dd/MM/yyyy'}
       dropdownMode={'select'}
-      formatWeekDay={(day) => day.substr(0, 3)}
+      formatWeekDay={(weekday) => weekday.substr(0, 3)}
       isClearable={true}
-      maxDate={new Date()}
-      onChange={(date) => setStartDate(date)}
+      minDate={minDate}
+      maxDate={maxDate}
+      name={name}
+      onChange={onChange}
       placeholderText={placeholderText}
-      selected={startDate}
+      selected={value}
       showMonthDropdown={true}
       showYearDropdown={true}
     />
@@ -21,5 +29,10 @@ export function DatePicker({ placeholderText }: DatePickerProps) {
 }
 
 interface DatePickerProps {
+  name: string;
+  value: Date | undefined;
+  minDate?: Date | undefined;
+  maxDate: Date | undefined;
   placeholderText: string;
+  onChange: (date: Date) => void;
 }

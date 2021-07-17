@@ -11,11 +11,11 @@ export function Label(props: React.LabelHTMLAttributes<HTMLLabelElement>) {
 }
 
 export function Collapsible(props: CollapsibleProps) {
-  const { className, isCollapsed } = props;
+  const { className, children, isCollapsed } = props;
   const classes = classnames('collapsible', className, {
     'collapsible--visible': !isCollapsed
   });
-  return <div {...props} className={classes} />;
+  return <div className={classes}>{children}</div>;
 }
 
 interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement> {
