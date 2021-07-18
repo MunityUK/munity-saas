@@ -177,7 +177,7 @@ const FilterDateField = (props: FilterDateFieldProps) => {
           value={startDate}
           placeholderText={'Select start date...'}
           onChange={(date) => onChange(date, startInputName)}
-          maxDate={endDate}
+          maxDate={endDate || new Date()}
           className={'map-filters__datepicker'}
         />
         <DatePicker
