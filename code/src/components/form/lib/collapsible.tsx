@@ -20,7 +20,6 @@ interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
 }
 
-
 interface CollapsibleIconProps {
   isCollapsed: boolean;
 }
