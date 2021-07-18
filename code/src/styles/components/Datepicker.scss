@@ -1,0 +1,80 @@
+.react-datepicker {
+  // All datepicker sub elements.
+  * {
+    font-family: $font-family;
+  }
+
+  &-wrapper {
+    width: 100%;
+  }
+
+  // The input field for the datepicker.
+  &__input-container input {
+    border: 1px solid #000;
+    border-radius: 10px;
+    font-family: $font-family;
+    margin: 0.5em 0;
+    outline: none;
+    padding: 0.8em;
+  }
+
+  // The close button.
+  &__close-icon {
+    padding: 0;
+
+    &::after {
+      background: none;
+      border-radius: 50%;
+      color: #4a4a4a;
+      content: '×';
+      cursor: pointer;
+      font-size: 21px;
+      padding: 6px;
+    }
+  }
+
+  // The datepicker popup.
+  &-popper {
+    font-family: $font-family;
+    z-index: 1000;
+  }
+
+  // The month navigation buttons.
+  &__navigation {
+    top: 13px;
+  }
+
+  // The header of the datepicker.
+  &__header {
+    background: #fff;
+  }
+
+  // The dropdowns in the header.
+  &__header select {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #000;
+    outline: none;
+    padding: 0.5em;
+    user-select: none;
+  }
+
+  // The current month shown in the header.
+  &__current-month {
+    display: none;
+  }
+
+  // The day names appearing above the calender.
+  &__day-names {
+    margin-top: 1em;
+
+    div {
+      font-size: 80%;
+    }
+  }
+
+  // The day values showing which are outside of the current month.
+  &__day--outside-month {
+    color: #dedede;
+  }
+}

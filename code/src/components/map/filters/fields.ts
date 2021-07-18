@@ -7,7 +7,19 @@ import {
   ListItem
 } from 'types';
 
-const FILTER_FIELDS: Array<MapFilterField> = [
+const FILTER_FIELDS: Array<FilterField> = [
+  {
+    label: 'Date of Complaint',
+    name: 'dateOfComplaint'
+  },
+  {
+    label: 'Date of Addressal',
+    name: 'dateOfAddressal'
+  },
+  {
+    label: 'Date of Resolution',
+    name: 'dateOfResolution'
+  },
   {
     label: 'Incident Type',
     name: 'incidentType',
@@ -47,8 +59,8 @@ const FILTER_FIELDS: Array<MapFilterField> = [
 
 export default FILTER_FIELDS;
 
-type MapFilterField = {
+type FilterField = {
   label: string;
   name: keyof Complaint;
-  items: Array<ListItem>;
+  items?: Array<ListItem>;
 };

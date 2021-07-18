@@ -11,6 +11,19 @@
 }
 
 .checkbox {
-  display: block;
+  align-items: center;
+  column-gap: 0.3em;
+  display: flex;
   font-size: 0.9em;
+}
+
+.collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+
+  &--visible {
+    max-height: 100vh;
+    transition: max-height 0.5s ease-in;
+  }
 }
