@@ -3,7 +3,7 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useState } from 'react';
 
-import MapFilters from 'src/components/map/filters';
+import MapFiltersBar from 'src/components/map/filters';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 import { Complaint } from 'types';
@@ -23,7 +23,7 @@ export default function Home({ allComplaints }: HomeProps) {
       </Head>
 
       <main className={'map-main'}>
-        <MapFilters
+        <MapFiltersBar
           allComplaints={allComplaints}
           setComplaints={setComplaints}
         />
@@ -44,6 +44,6 @@ interface HomeProps {
   allComplaints: Array<Complaint>;
 }
 
-type MapFilters = {
+type MapFiltersBar = {
   [key in keyof Complaint]: Array<string>;
 };

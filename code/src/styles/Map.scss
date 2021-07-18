@@ -24,21 +24,6 @@
   opacity: 0.8;
   padding: 0.4em 0;
   position: relative;
-
-  &-drop {
-    font-size: 2em;
-    margin-top: -13px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transition: all 0.2s ease-in-out 0.2s;
-
-    &--open {
-      margin-top: 2px;
-      transform: rotate(180deg);
-      transition-delay: 0s;
-    }
-  }
 }
 
 .map-filters__datepicker {

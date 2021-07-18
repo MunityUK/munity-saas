@@ -24,9 +24,6 @@ export function Select(props: SelectProps) {
 
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  /** The name of the field. */
   name?: string;
-
-  /** The list of options to select from. */
   items: Array<ListItem>;
 }

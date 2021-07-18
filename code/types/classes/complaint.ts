@@ -1,5 +1,7 @@
 import * as faker from 'faker';
 
+import { MapFiltersDateValues, MapFiltersValues } from 'types';
+
 export class Complaint {
   id?: number;
   reportId?: string;
@@ -25,7 +27,7 @@ export class Complaint {
   officerSex?: Sex;
 
   /**
-   * Generates a random {@link Complaint}.
+   * Generates a random complaint.
    * @returns The generated complaint.
    */
   static random() {
@@ -69,6 +71,22 @@ export class Complaint {
     }
 
     return complaint;
+  }
+  /**
+   * A type guard which verifies if the property is a Date type.
+   * @param key The property to verify.
+   * @param _values The values to determine types for.
+   * @returns True if the property is a date type.
+   */
+  static isDateProperty(
+    key: keyof Complaint,
+    _values?: MapFiltersValues
+  ): _values is MapFiltersDateValues {
+    return (
+      key === 'dateOfAddressal' ||
+      key === 'dateOfComplaint' ||
+      key === 'dateOfResolution'
+    );
   }
 }
 

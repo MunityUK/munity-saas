@@ -1,36 +1,26 @@
-import classnames from 'classnames';
-import { compareAsc } from 'date-fns';
 import React, { SetStateAction, useEffect, useState } from 'react';
 
 import {
   CheckboxGroup,
   CheckboxGroupProps,
   Collapsible,
+  CollapsibleIcon,
   DatePicker,
   Label
 } from 'src/components/form';
-import { Complaint } from 'types';
+import {
+  Complaint,
+  ComplaintFilters,
+  FilterFields,
+  MapFilters,
+  MapFiltersDateValues
+} from 'types';
 
-import FILTER_FIELDS from './fields';
-
-export default function MapFilters({
+export default function MapFiltersBar({
   allComplaints,
   setComplaints
 }: MapFiltersProps) {
-  const [filters, setFilters] = useState<MapFilters>(() => {
-    const mapFilters: MapFilters = {};
-    FILTER_FIELDS.forEach(({ name }) => {
-      if (isDateProperty(name)) {
-        mapFilters[name] = {
-          startDate: undefined,
-          endDate: undefined
-        };
-      } else {
-        mapFilters[name] = [];
-      }
-    });
-    return mapFilters;
-  });
+  const [filters, setFilters] = useState<MapFilters>(new ComplaintFilters());
 
   useEffect(() => {
     filterComplaints();
@@ -38,23 +28,7 @@ export default function MapFilters({
 
   /** Filter the list of complaints by specified property. */
   const filterComplaints = () => {
-    const filteredComplaints = allComplaints.filter((complaint) => {
-      return Object.entries(filters).every(([property, values]) => {
-        const key = property as keyof Complaint;
-        if (isDateProperty(key, values)) {
-          const { startDate, endDate } = values;
-
-          const date = new Date(complaint[key]!);
-          const isAfterStart = !startDate || compareAsc(date, startDate!) === 1;
-          const isBeforeEnd = !endDate || compareAsc(date, endDate!) === -1;
-          return isAfterStart && isBeforeEnd;
-        } else {
-          if (!values || !values.length) return true;
-          return values.includes(complaint[key]!.toString());
-        }
-      });
-    });
-
+    const filteredComplaints = ComplaintFilters.filter(allComplaints, filters);
     setComplaints(filteredComplaints);
   };
 
@@ -82,6 +56,11 @@ export default function MapFilters({
     });
   };
 
+  /**
+   * Handle selection on dates from datepicker.
+   * @param selectedDate The selected date.
+   * @param name The name of the input.
+   */
   const onDateChange = (selectedDate: Date, name: string) => {
     const [, property, position] = name.match(/(\w+)-(\w+)/)!;
     const key = property as keyof Complaint;
@@ -100,9 +79,9 @@ export default function MapFilters({
 
   return (
     <div className={'map-filters'}>
-      {FILTER_FIELDS.map(({ label, name, items }, key) => {
+      {FilterFields.map(({ label, name, items }, key) => {
         const filterValues = filters[name];
-        if (isDateProperty(name, filterValues)) {
+        if (Complaint.isDateProperty(name, filterValues)) {
           return (
             <FilterDateField
               label={label}
@@ -140,7 +119,7 @@ const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
         className={'map-filters-field__label'}
         onClick={() => setCollapsed(!isCollapsed)}>
         <span>{label}</span>
-        <DropButton isCollapsed={isCollapsed} />
+        <CollapsibleIcon isCollapsed={isCollapsed} />
       </Label>
       <Collapsible isCollapsed={isCollapsed}>
         <CheckboxGroup
@@ -169,7 +148,7 @@ const FilterDateField = (props: FilterDateFieldProps) => {
         className={'map-filters-field__label'}
         onClick={() => setCollapsed(!isCollapsed)}>
         <span>{label}</span>
-        <DropButton isCollapsed={isCollapsed} />
+        <CollapsibleIcon isCollapsed={isCollapsed} />
       </Label>
       <Collapsible isCollapsed={isCollapsed}>
         <DatePicker
@@ -194,31 +173,6 @@ const FilterDateField = (props: FilterDateFieldProps) => {
   );
 };
 
-/** TODO: Rename to CollapsibleIcon and put with {@link Collapsible} */
-const DropButton = ({ isCollapsed }: DropButtonProps) => {
-  const classes = classnames('map-filters-field__label-drop', {
-    'map-filters-field__label-drop--open': !isCollapsed
-  });
-  return <span className={classes}>&#8964;</span>;
-};
-
-/**
- * A type guard which verifies if the property is a Date type.
- * @param key The property to verify.
- * @param _values The values to determine types for.
- * @returns True if the property is a date type.
- */
-function isDateProperty(
-  key: keyof Complaint,
-  _values?: MapFiltersValues
-): _values is MapFiltersDateValues {
-  return (
-    key === 'dateOfAddressal' ||
-    key === 'dateOfComplaint' ||
-    key === 'dateOfResolution'
-  );
-}
-
 interface MapFiltersProps {
   allComplaints: Array<Complaint>;
   setComplaints: React.Dispatch<SetStateAction<Array<Complaint>>>;
@@ -235,18 +189,3 @@ interface FilterDateFieldProps {
   dates: MapFiltersDateValues;
   onChange: (date: Date, name: string) => void;
 }
-
-interface DropButtonProps {
-  isCollapsed: boolean;
-}
-
-type MapFilters = {
-  [key in keyof Complaint]: MapFiltersValues;
-};
-
-type MapFiltersValues = Array<string> | MapFiltersDateValues;
-
-type MapFiltersDateValues = {
-  startDate: Date | undefined;
-  endDate: Date | undefined;
-};
