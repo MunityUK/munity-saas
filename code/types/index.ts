@@ -2,7 +2,7 @@ import { Complaint } from './classes/Complaint';
 import { StationScore } from './classes/StationScore';
 
 export * from './classes/Complaint';
-export * from './classes/ComplaintFilter';
+export * from './classes/ComplaintFilters';
 export * from './classes/StationScore';
 
 export type StationComplaints = {
