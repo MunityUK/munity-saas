@@ -120,7 +120,7 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
  * @param precision The number of decimal places.
  * @returns The rounded number.
  */
-export function round(number: number, precision = 1) {
+function round(number: number, precision = 1) {
   if (!precision) return number;
   const scale = 10 ** precision;
   return Math.round(number * scale) / scale;

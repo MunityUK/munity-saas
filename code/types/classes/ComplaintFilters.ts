@@ -6,11 +6,11 @@ import {
   Complaint,
   ComplaintStatus,
   IncidentType,
-  ListItem,
-  MapFilters,
   Race,
   Sex
-} from 'types';
+} from './Complaint';
+
+import { ListItem, MapFilters } from '..';
 
 export class ComplaintFilters {
   /**
