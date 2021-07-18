@@ -1,9 +1,9 @@
-import { Complaint } from './classes/complaint';
-import { StationScore } from './classes/score';
+import { Complaint } from './classes/Complaint';
+import { StationScore } from './classes/StationScore';
 
-export * from './classes/complaint';
-export * from './classes/filter';
-export * from './classes/score';
+export * from './classes/Complaint';
+export * from './classes/ComplaintFilter';
+export * from './classes/StationScore';
 
 export type StationComplaints = {
   [key: string]: Complaint[];
