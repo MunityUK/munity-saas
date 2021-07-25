@@ -2,7 +2,6 @@ import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
 import { Complaint, ComplaintStatus, StationScore } from '../../types';
-import { calculateStationScores } from '../../utils/functions';
 
 const STATION_NAME = 'Station';
 const DATE_OF_COMPLAINT = Date.UTC(2000, 0, 1);
@@ -19,7 +18,7 @@ describe('ComRank Tests', function () {
       dateOfResolution: undefined
     });
 
-    const score = calculateStationScores(complaints)[STATION_NAME];
+    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: Assertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
@@ -48,7 +47,7 @@ describe('ComRank Tests', function () {
       dateOfResolution: undefined
     });
 
-    const score = calculateStationScores(complaints)[STATION_NAME];
+    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: Assertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
@@ -77,7 +76,7 @@ describe('ComRank Tests', function () {
       dateOfResolution: DATE_OF_RESOLUTION
     });
 
-    const score = calculateStationScores(complaints)[STATION_NAME];
+    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: Assertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
@@ -106,7 +105,7 @@ describe('ComRank Tests', function () {
       dateOfResolution: Date.UTC(2000, 5, 1)
     });
 
-    const score = calculateStationScores(complaints)[STATION_NAME];
+    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: Assertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
@@ -157,7 +156,7 @@ describe('ComRank Tests', function () {
       complaintsResolved
     );
 
-    const score = calculateStationScores(complaints)[STATION_NAME];
+    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: Assertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
