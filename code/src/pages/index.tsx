@@ -3,12 +3,12 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useState } from 'react';
 
-import MapFiltersBar from 'src/components/map/filters';
+import MapFiltersBar from 'src/fragments/map/filters';
 import { getComplaints } from 'src/pages/api/complaints';
 import { parse } from 'src/utils/helper';
 import { Complaint } from 'types';
 
-const VoiceraMap = Dynamic(() => import('src/components/map'), {
+const VoiceraMap = Dynamic(() => import('src/fragments/map'), {
   ssr: false
 });
 
