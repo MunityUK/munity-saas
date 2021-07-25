@@ -2,6 +2,8 @@ import * as faker from 'faker';
 
 import { MapFiltersDateValues, MapFiltersValues } from 'types';
 
+import * as ComplaintHelper from './helpers';
+
 export class Complaint {
   id?: number;
   reportId?: string;
@@ -72,6 +74,14 @@ export class Complaint {
 
     return complaint;
   }
+
+  /**
+   * @see {ComplaintHelper.calculateStationScores}
+   */
+  static calculateStationScores(complaints: Complaint[]) {
+    return ComplaintHelper.calculateStationScores(complaints);
+  }
+
   /**
    * A type guard which verifies if the property is a Date type.
    * @param key The property to verify.

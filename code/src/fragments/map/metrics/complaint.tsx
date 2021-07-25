@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 
 import { ARCGIS_BASE_URL } from 'src/utils/constants';
-import { formatDate } from 'src/utils/helper';
+import { formatDate } from 'src/utils/functions';
 import { Complaint, SexLookup } from 'types';
 
 export default function MetricComplaintInfo({

@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { extractLabelValue } from 'src/utils/helper';
+import { extractLabelValue } from 'src/utils/functions';
 import { ListItem } from 'types';
 
 export function Select(props: SelectProps) {

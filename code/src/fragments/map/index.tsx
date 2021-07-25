@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import { MAP_ATTRIBUTION, MAP_URL } from 'src/utils/constants';
 import { setMapZoom, useAppSelector } from 'src/utils/reducers';
 import { Complaint, StationScores } from 'types';
-import { calculateStationScores } from 'utils/functions';
 
 import MapMarker from './marker';
 import MapMetrics from './metrics';
@@ -18,7 +17,7 @@ export default function VoiceraMap({ complaints }: VoiceraMapProps) {
   const [scoresByStation, setScoresByStation] = useState<StationScores>();
 
   useEffect(() => {
-    const scores = calculateStationScores(complaints);
+    const scores = Complaint.calculateStationScores(complaints);
     setScoresByStation(scores);
   }, []);
 

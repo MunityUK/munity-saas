@@ -6,11 +6,12 @@ import {
   StationComplaints,
   StationScore,
   StationScores
-} from '../types';
+} from '../..';
 
 /**
  * Calculates the ComRank score for each station among the total list of
  * complaints.
+ * @param complaints The list of complaints.
  * @returns The mapping of scores to station.
  */
 export function calculateStationScores(complaints: Complaint[]): StationScores {
