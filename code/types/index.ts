@@ -4,6 +4,7 @@ import { StationScore } from './classes/StationScore';
 export * from './classes/Complaint';
 export * from './classes/ComplaintFilters';
 export * from './classes/StationScore';
+export * from './enums';
 
 export type StationComplaints = {
   [key: string]: Complaint[];

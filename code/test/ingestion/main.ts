@@ -1,4 +1,4 @@
-import { createTable, insertComplaints } from './helper';
+import { createTables, insertComplaints } from './helper';
 
 import { Complaint } from '../../types';
 import { DB_TABLE } from '../../utils/knex';
@@ -9,7 +9,7 @@ const NUM_OF_RECORDS = process.argv[2] || 100;
 run(main);
 
 async function main() {
-  await createTable(DB_TABLE);
+  await createTables(DB_TABLE);
   console.info('Table (re)created.');
 
   await ingestData();
@@ -21,7 +21,7 @@ function ingestData() {
 
   for (let i = 1; i <= NUM_OF_RECORDS; i++) {
     const complaint = Complaint.random();
-    complaint.reportId = 'COM' + i.toString().padStart(4, '0');
+    complaint.complaintId = 'COM' + i.toString().padStart(4, '0');
     complaints.push(complaint);
   }
 

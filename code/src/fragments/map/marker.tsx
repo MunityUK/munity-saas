@@ -33,12 +33,12 @@ function IMapMarker({
       position={position}
       icon={icon}
       riseOnHover={true}
-      title={complaint.reportId}
+      title={complaint.complaintId}
       eventHandlers={{
         click: () => setSelectedComplaint(complaint)
       }}>
       {/* <Popup closeButton={false}>
-        {complaint.reportId} • {complaint.incidentType}
+        {complaint.complaintId} • {complaint.incidentType}
         <br />
         {complaint.station}
       </Popup> */}

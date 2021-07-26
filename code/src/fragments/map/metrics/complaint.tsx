@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 
 import { ARCGIS_BASE_URL } from 'src/utils/constants';
-import { formatDate } from 'src/utils/functions';
-import { Complaint, SexLookup } from 'types';
+import { Complaint } from 'types';
+import { formatDate } from 'utils/functions';
 
 export default function MetricComplaintInfo({
   complaint
@@ -30,7 +30,7 @@ export default function MetricComplaintInfo({
     );
 
     const fields = [
-      { label: 'Report ID', value: complaint.reportId },
+      { label: 'Complaint ID', value: complaint.complaintId },
       { label: 'Address', value: complaintAddress },
       { label: 'Station', value: complaint.station },
       { label: 'Police Force', value: complaint.force },
@@ -50,16 +50,17 @@ export default function MetricComplaintInfo({
       { label: 'Incident Type', value: complaint.incidentType },
       { label: 'Incident Description', value: complaint.incidentDescription },
       { label: 'County', value: complaint.county },
-      {
-        label: 'Complainant Age',
-        value: `${complaint.complainantAge} years old`
-      },
-      { label: 'Complainant Race', value: complaint.complainantRace },
-      { label: 'Complainant Sex', value: SexLookup[complaint.complainantSex!] },
-      { label: 'Officer ID', value: complaint.officerId },
-      { label: 'Officer Age', value: `${complaint.officerAge} years old` },
-      { label: 'Officer Race', value: complaint.officerRace },
-      { label: 'Officer Sex', value: SexLookup[complaint.officerSex!] },
+      // TODO: Display various values
+      // {
+      //   label: 'Complainant Age',
+      //   value: `${complaint.complainantAge} years old`
+      // },
+      // { label: 'Complainant Race', value: complaint.complainantRace },
+      // { label: 'Complainant Sex', value: SexLookup[complaint.complainantSex!] },
+      // { label: 'Officer ID', value: complaint.officerId },
+      // { label: 'Officer Age', value: `${complaint.officerAge} years old` },
+      // { label: 'Officer Race', value: complaint.officerRace },
+      // { label: 'Officer Sex', value: SexLookup[complaint.officerSex!] },
       { label: 'Notes', value: complaint.notes }
     ];
     setFields(fields);

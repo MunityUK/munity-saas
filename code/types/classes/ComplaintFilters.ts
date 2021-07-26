@@ -1,13 +1,11 @@
-import { capitalCase } from 'capital-case';
 import { compareAsc } from 'date-fns';
 
 import {
   BristolPoliceStations,
   Complaint,
+  ComplaintDateField,
   ComplaintStatus,
-  IncidentType,
-  Race,
-  Sex
+  IncidentType
 } from './Complaint';
 
 import { ListItem, MapFilters } from '..';
@@ -47,7 +45,7 @@ export class ComplaintFilters {
         if (Complaint.isDateProperty(key, values)) {
           const { startDate, endDate } = values;
 
-          const date = new Date(complaint[key]!);
+          const date = new Date(complaint[key as ComplaintDateField]!);
           const isAfterStart = !startDate || compareAsc(date, startDate!) === 1;
           const isBeforeEnd = !endDate || compareAsc(date, endDate!) === -1;
           return isAfterStart && isBeforeEnd;
@@ -61,13 +59,13 @@ export class ComplaintFilters {
   }
 }
 
-const raceOptions = Object.values(Race);
-const sexOptions = Object.entries(Sex).map(([key, value]) => {
-  return {
-    label: capitalCase(key),
-    value: value
-  };
-});
+// const raceOptions = Object.values(Race);
+// const sexOptions = Object.entries(Sex).map(([key, value]) => {
+//   return {
+//     label: capitalCase(key),
+//     value: value
+//   };
+// });
 
 export const FilterFields: Array<FilterField> = [
   {
@@ -97,26 +95,27 @@ export const FilterFields: Array<FilterField> = [
     name: 'status',
     items: Object.values(ComplaintStatus)
   },
-  {
-    label: 'Officer Race',
-    name: 'officerRace',
-    items: raceOptions
-  },
-  {
-    label: 'Officer Sex',
-    name: 'officerSex',
-    items: sexOptions
-  },
-  {
-    label: 'Complainant Race',
-    name: 'complainantRace',
-    items: raceOptions
-  },
-  {
-    label: 'Complainant Sex',
-    name: 'complainantSex',
-    items: sexOptions
-  }
+  // TODO: Support multiple values for filters
+  // {
+  //   label: 'Officer Race',
+  //   name: 'officerRace',
+  //   items: raceOptions
+  // },
+  // {
+  //   label: 'Officer Sex',
+  //   name: 'officerSex',
+  //   items: sexOptions
+  // },
+  // {
+  //   label: 'Complainant Race',
+  //   name: 'complainantRace',
+  //   items: raceOptions
+  // },
+  // {
+  //   label: 'Complainant Sex',
+  //   name: 'complainantSex',
+  //   items: sexOptions
+  // }
 ];
 
 type FilterField = {
