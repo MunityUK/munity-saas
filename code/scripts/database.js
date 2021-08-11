@@ -15,12 +15,9 @@ switch (os.type()) {
 
 function run(cmd) {
   const cp = exec(cmd, { cwd: __dirname, windowsHide: true });
-
   cp.stdout.on('data', (data) => {
-    console.info(data);
+    console.info(data.trim());
   });
-
-  cp.stderr.on('data', (data) => {
-    console.error(data);
-  });
+  cp.stderr.on('data', console.error);
+  cp.on('exit', () => console.info('Container started.'));
 }
