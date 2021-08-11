@@ -12,7 +12,7 @@ import MapMetrics from './metrics';
 
 const CENTER_POSITION = new LatLng(51.45523, -2.59665);
 
-export default function VoiceraMap({ complaints }: VoiceraMapProps) {
+export default function MunityMap({ complaints }: MunityMapProps) {
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint>();
   const [scoresByStation, setScoresByStation] = useState<StationScores>();
 
@@ -80,7 +80,7 @@ function MapAssist({ setSelectedComplaint }: MapAssistProps) {
   return <TileLayer attribution={MAP_ATTRIBUTION} url={MAP_URL} />;
 }
 
-type VoiceraMapProps = {
+type MunityMapProps = {
   complaints: Array<Complaint>;
 };
 

@@ -2,7 +2,7 @@
 
 set -e
 
-CONTAINER='voicera-db'
+CONTAINER='munity-db'
 IMAGE='mysql/mysql-server:8.0.26'
 
 ## Import environment variables from .env file.

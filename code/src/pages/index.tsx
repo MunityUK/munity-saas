@@ -8,7 +8,7 @@ import { getComplaints } from 'src/pages/api/complaints';
 import { Complaint } from 'types';
 import { parse } from 'utils/functions';
 
-const VoiceraMap = Dynamic(() => import('src/fragments/map'), {
+const MunityMap = Dynamic(() => import('src/fragments/map'), {
   ssr: false
 });
 
@@ -18,7 +18,7 @@ export default function Home({ allComplaints }: HomeProps) {
   return (
     <div className={'map-page'}>
       <Head>
-        <title>Voicera</title>
+        <title>Munity</title>
         {/* <link rel={'icon'} href={'/favicon.ico'} /> */}
       </Head>
 
@@ -27,7 +27,7 @@ export default function Home({ allComplaints }: HomeProps) {
           allComplaints={allComplaints}
           setComplaints={setComplaints}
         />
-        <VoiceraMap complaints={complaints} />
+        <MunityMap complaints={complaints} />
       </main>
     </div>
   );

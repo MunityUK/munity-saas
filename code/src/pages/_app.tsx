@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import 'src/styles/App.scss';
 import store, { persistor } from 'src/utils/reducers';
 
-export default function VoiceraApp({ Component, pageProps }: AppProps) {
+export default function MunityApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

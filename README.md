@@ -1,6 +1,6 @@
-# Voicera Web Application
+# Munity SaaS
 
-This is the source code repository of the Voicera web application in development.
+This is the source code repository of the Munity Software-as-a-Service (SaaS) in development.
 
 ## Set up development environment
 
@@ -44,7 +44,7 @@ To launch the database initialisation scripts, run:
 npm run db:init
 ```
 
-You should have a new Docker container named `voicera-db` started. Wait a few
+You should have a new Docker container named `munity-db` started. Wait a few
 seconds for it to bootstrap MySQL before running the next command.
 
 ### 4. Ingest example data
