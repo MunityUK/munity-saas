@@ -10,9 +10,9 @@ import {
 } from 'src/components/form';
 import {
   Complaint,
-  ComplaintDateField,
+  ComplaintDateProperty,
+  ComplaintFilterFields,
   ComplaintFilters,
-  FilterFields,
   MapFiltersDateValues
 } from 'types';
 
@@ -65,7 +65,7 @@ export default function MapFiltersBar({
    */
   const onDateChange = (selectedDate: Date, name: string) => {
     const [, property, position] = name.match(/(\w+)-(\w+)/)!;
-    const key = property as ComplaintDateField;
+    const key = property as ComplaintDateProperty;
 
     const dates = filters[key]!;
     setFilters((filters) => {
@@ -81,7 +81,7 @@ export default function MapFiltersBar({
 
   return (
     <div className={'map-filters'}>
-      {FilterFields.map(({ label, name, items }, key) => {
+      {ComplaintFilterFields.map(({ label, name, items }, key) => {
         const filterValues = filters[name];
         if (ComplaintFilters.isDateProperty(name)) {
           return (
