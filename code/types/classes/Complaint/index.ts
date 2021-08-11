@@ -2,7 +2,6 @@ import * as faker from 'faker';
 
 import * as ComplaintHelper from './helpers';
 
-import { MapFiltersDateValues, MapFiltersValues } from '../..';
 import { randomElement, randomEnumValue } from '../../../utils/functions';
 import { Complainant, Officer } from '../Person';
 
@@ -64,10 +63,10 @@ export class Complaint {
     }
 
     complaint.complainants = JSON.stringify(
-      Complainant.randomSet(faker.datatype.number(3))
+      Complainant.randomSet(faker.datatype.number({ min: 1, max: 3 }))
     );
     complaint.officers = JSON.stringify(
-      Officer.randomSet(faker.datatype.number(3))
+      Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
     );
 
     return complaint;
@@ -78,23 +77,6 @@ export class Complaint {
    */
   static calculateStationScores(complaints: Complaint[]) {
     return ComplaintHelper.calculateStationScores(complaints);
-  }
-
-  /**
-   * A type guard which verifies if the property is a Date type.
-   * @param key The property to verify.
-   * @param _values The values to determine types for.
-   * @returns True if the property is a date type.
-   */
-  static isDateProperty(
-    key: keyof Complaint,
-    _values?: MapFiltersValues
-  ): _values is MapFiltersDateValues {
-    return (
-      key === 'dateOfAddressal' ||
-      key === 'dateOfComplaint' ||
-      key === 'dateOfResolution'
-    );
   }
 }
 
@@ -109,11 +91,6 @@ export enum ComplaintStatus {
   ADDRESSED = 'Addressed',
   RESOLVED = 'Resolved'
 }
-
-export type ComplaintDateField =
-  | 'dateOfComplaint'
-  | 'dateOfAddressal'
-  | 'dateOfResolution';
 
 export const BristolPoliceStations = [
   'Avonmouth',
