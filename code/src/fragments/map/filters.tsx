@@ -10,9 +10,9 @@ import {
 } from 'src/components/form';
 import {
   Complaint,
+  ComplaintDateProperty,
+  ComplaintFilterFields,
   ComplaintFilters,
-  FilterFields,
-  MapFilters,
   MapFiltersDateValues
 } from 'types';
 
@@ -20,7 +20,9 @@ export default function MapFiltersBar({
   allComplaints,
   setComplaints
 }: MapFiltersProps) {
-  const [filters, setFilters] = useState<MapFilters>(new ComplaintFilters());
+  const [filters, setFilters] = useState<ComplaintFilters>(
+    new ComplaintFilters()
+  );
 
   useEffect(() => {
     filterComplaints();
@@ -40,7 +42,7 @@ export default function MapFiltersBar({
     const { name, value, checked } = e.target;
 
     setFilters((filters) => {
-      const key = name as keyof Complaint;
+      const key = name as keyof ComplaintFilters;
       const values = (filters[key] || []) as string[];
       if (checked) {
         if (!values.includes(value)) {
@@ -63,7 +65,7 @@ export default function MapFiltersBar({
    */
   const onDateChange = (selectedDate: Date, name: string) => {
     const [, property, position] = name.match(/(\w+)-(\w+)/)!;
-    const key = property as keyof Complaint;
+    const key = property as ComplaintDateProperty;
 
     const dates = filters[key]!;
     setFilters((filters) => {
@@ -79,15 +81,26 @@ export default function MapFiltersBar({
 
   return (
     <div className={'map-filters'}>
-      {FilterFields.map(({ label, name, items }, key) => {
+      {ComplaintFilterFields.map(({ label, name, items }, key) => {
         const filterValues = filters[name];
-        if (Complaint.isDateProperty(name, filterValues)) {
+        if (ComplaintFilters.isDateProperty(name)) {
           return (
             <FilterDateField
               label={label}
               name={name}
-              dates={filterValues}
+              dates={filterValues as MapFiltersDateValues}
               onChange={onDateChange}
+              key={key}
+            />
+          );
+        } else if (ComplaintFilters.isMultiValuedProperty(name)) {
+          return (
+            <FilterCheckboxField
+              label={label}
+              name={name}
+              items={items!}
+              checkedValues={filterValues as string[]}
+              onChange={onFilterCheck}
               key={key}
             />
           );
@@ -97,7 +110,7 @@ export default function MapFiltersBar({
               label={label}
               name={name}
               items={items!}
-              checkedValues={filterValues}
+              checkedValues={filterValues as string[]}
               onChange={onFilterCheck}
               key={key}
             />
@@ -180,12 +193,12 @@ interface MapFiltersProps {
 
 interface FilterCheckboxFieldProps extends CheckboxGroupProps {
   label: string;
-  name: keyof Complaint;
+  name: keyof ComplaintFilters;
 }
 
 interface FilterDateFieldProps {
   label: string;
-  name: keyof Complaint;
+  name: keyof ComplaintFilters;
   dates: MapFiltersDateValues;
   onChange: (date: Date, name: string) => void;
 }

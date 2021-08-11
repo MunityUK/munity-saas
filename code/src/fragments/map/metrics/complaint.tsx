@@ -1,8 +1,9 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 
 import { ARCGIS_BASE_URL } from 'src/utils/constants';
-import { formatDate } from 'src/utils/functions';
-import { Complaint, SexLookup } from 'types';
+import { Complaint } from 'types';
+import { Complainant, Officer, Person, SexLookup } from 'types/classes/Person';
+import { formatDate } from 'utils/functions';
 
 export default function MetricComplaintInfo({
   complaint
@@ -30,7 +31,7 @@ export default function MetricComplaintInfo({
     );
 
     const fields = [
-      { label: 'Report ID', value: complaint.reportId },
+      { label: 'Complaint ID', value: complaint.complaintId },
       { label: 'Address', value: complaintAddress },
       { label: 'Station', value: complaint.station },
       { label: 'Police Force', value: complaint.force },
@@ -51,15 +52,13 @@ export default function MetricComplaintInfo({
       { label: 'Incident Description', value: complaint.incidentDescription },
       { label: 'County', value: complaint.county },
       {
-        label: 'Complainant Age',
-        value: `${complaint.complainantAge} years old`
+        label: 'Complainant(s)',
+        value: <People people={complaint.complainants as Complainant[]} />
       },
-      { label: 'Complainant Race', value: complaint.complainantRace },
-      { label: 'Complainant Sex', value: SexLookup[complaint.complainantSex!] },
-      { label: 'Officer ID', value: complaint.officerId },
-      { label: 'Officer Age', value: `${complaint.officerAge} years old` },
-      { label: 'Officer Race', value: complaint.officerRace },
-      { label: 'Officer Sex', value: SexLookup[complaint.officerSex!] },
+      {
+        label: 'Officer(s)',
+        value: <People people={complaint.officers as Officer[]} />
+      },
       { label: 'Notes', value: complaint.notes }
     ];
     setFields(fields);
@@ -79,6 +78,22 @@ export default function MetricComplaintInfo({
   );
 }
 
+function People({ people }: ComplainantProps) {
+  return (
+    <ul className={'complaint-field__list'}>
+      {people.map((person, key) => {
+        const sex = SexLookup[person.sex!];
+        return (
+          <li key={key}>
+            {person.age}yo {person.race} {sex}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+// TODO: Make async function
 /**
  * Reverse geocodes a complaint's location using its latitude and longtude.
  * @param complaint The complaint.
@@ -105,6 +120,10 @@ function reverseGeocodeCoordinates(
 
 interface MetricStationProfileProps {
   complaint: Complaint;
+}
+
+interface ComplainantProps {
+  people: Person[];
 }
 
 interface ComplaintField {

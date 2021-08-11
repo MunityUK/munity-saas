@@ -102,6 +102,7 @@
   display: block;
   font-size: 0.7em;
   padding: 1em;
+  text-align: center;
   transition: all 0.3s ease;
   width: 100%;
 
@@ -142,6 +143,11 @@
       opacity: 1;
     }
   }
+}
+
+.complaint-field__list {
+  margin-block: 0.5em 0;
+  padding-inline-start: 20px;
 }
 
 .map-metrics-legend {

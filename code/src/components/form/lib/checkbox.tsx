@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { extractLabelValue } from 'src/utils/functions';
 import { ListItem } from 'types';
+import { extractLabelValue } from 'utils/functions';
 
 export function CheckboxGroup(props: CheckboxGroupProps) {
   const { name, items, onChange, checkedValues, className } = props;

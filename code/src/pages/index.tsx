@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 
 import MapFiltersBar from 'src/fragments/map/filters';
 import { getComplaints } from 'src/pages/api/complaints';
-import { parse } from 'src/utils/functions';
 import { Complaint } from 'types';
+import { parse } from 'utils/functions';
 
 const VoiceraMap = Dynamic(() => import('src/fragments/map'), {
   ssr: false

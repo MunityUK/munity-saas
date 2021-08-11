@@ -1,12 +1,6 @@
 import { differenceInDays, differenceInMilliseconds } from 'date-fns';
 
-import {
-  Complaint,
-  ComplaintStatus,
-  StationComplaints,
-  StationScore,
-  StationScores
-} from '../..';
+import { Complaint, ComplaintStatus, StationScore, StationScores } from '../..';
 
 /**
  * Calculates the ComRank score for each station among the total list of
@@ -224,4 +218,7 @@ function getComplaintCountByStatus(
   return complaints.filter((c) => statuses.includes(c.status!)).length;
 }
 
+type StationComplaints = {
+  [key: string]: Complaint[];
+};
 type TimeByComplaint = { [key: number]: number };
