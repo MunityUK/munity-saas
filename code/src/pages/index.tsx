@@ -19,7 +19,7 @@ export default function Home({ allComplaints }: HomeProps) {
     <div className={'map-page'}>
       <Head>
         <title>Voicera</title>
-        <link rel={'icon'} href={'/favicon.ico'} />
+        {/* <link rel={'icon'} href={'/favicon.ico'} /> */}
       </Head>
 
       <main className={'map-main'}>
@@ -43,7 +43,3 @@ export const getServerSideProps: GetServerSideProps = async () => {
 interface HomeProps {
   allComplaints: Array<Complaint>;
 }
-
-type MapFiltersBar = {
-  [key in keyof Complaint]: Array<string>;
-};
