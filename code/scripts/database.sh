@@ -19,20 +19,26 @@ for env in "${ENV_VARS[@]}"; do
   fi
 done
 
+function print() {
+  echo "========================================"
+  echo "= ${1}"
+  echo "========================================"
+}
+
 ## Kill and remove container if it's up and running.
-if [ "$(docker ps -aq -f name=$CONTAINER)" ]; then
-  echo "Destroying $CONTAINER container..."
-  docker rm -f $CONTAINER >/dev/null 2>&1
+if [ "$(docker ps -aq -f name=${CONTAINER})" ]; then
+  print "Destroying ${CONTAINER} container..."
+  docker rm -f "${CONTAINER}"
 fi
 
 ## Pull the image from DockerHub if it isn't found locally.
 if [[ -z "$(docker images -q ${IMAGE})" ]]; then
-  echo "Pulling $IMAGE image..."
-  docker pull "${IMAGE}" >/dev/null 2>&1
+  print "Pulling $IMAGE image..."
+  docker pull "${IMAGE}"
 fi
 
 ## Create and start the container with MySQL environment variables bootstrapped.
-echo "Running $CONTAINER container..."
+print "Running $CONTAINER container..."
 docker run --name=$CONTAINER \
   --env MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD}" \
   --env MYSQL_USER="${MYSQL_USER}" \
@@ -40,7 +46,4 @@ docker run --name=$CONTAINER \
   --env MYSQL_DATABASE="${MYSQL_DATABASE}" \
   --detach \
   --publish 3306:3306 \
-  "${IMAGE}" \
-  >/dev/null 2>&1
-
-echo "Container starting..."
+  "${IMAGE}"
