@@ -2,6 +2,7 @@ import * as faker from 'faker';
 
 import * as ComplaintHelper from './helpers';
 
+import { ARCGIS_BASE_URL } from '../../../utils/constants';
 import { randomElement, randomEnumValue } from '../../../utils/functions';
 import { Complainant, Officer } from '../Person';
 
@@ -77,6 +78,28 @@ export class Complaint {
    */
   static calculateStationScores(complaints: Complaint[]) {
     return ComplaintHelper.calculateStationScores(complaints);
+  }
+
+  /**
+   * Reverse geocodes a complaint's location using its latitude and longtude.
+   * @param complaint The complaint.
+   * @returns A promise which resolves to the fetch response data.
+   */
+  static async reverseGeocodeCoordinates(complaint: Complaint) {
+    const url = new URL(`${ARCGIS_BASE_URL}/reverseGeocode`);
+    url.searchParams.append('f', 'pjson');
+    url.searchParams.append('langCode', 'EN');
+    url.searchParams.append(
+      'location',
+      `${complaint.longitude},${complaint.latitude}`
+    );
+
+    try {
+      const res = await fetch(url.href);
+      return await res.json();
+    } catch (message) {
+      return console.error(message);
+    }
   }
 }
 

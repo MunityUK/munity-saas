@@ -1,6 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 
-import { ARCGIS_BASE_URL } from 'src/utils/constants';
 import { Complaint } from 'types';
 import { Complainant, Officer, Person, SexLookup } from 'types/classes/Person';
 import { formatDate } from 'utils/functions';
@@ -12,8 +11,16 @@ export default function MetricComplaintInfo({
   const [fields, setFields] = useState<Array<ComplaintField>>([]);
 
   useEffect(() => {
-    reverseGeocodeCoordinates(complaint, collateFields);
+    onComplaintSelection();
   }, [complaint.id]);
+
+  /**
+   * Function to run on every new complaint selection.
+   */
+  const onComplaintSelection = async () => {
+    const { address } = await Complaint.reverseGeocodeCoordinates(complaint);
+    collateFields(address);
+  };
 
   /**
    * Builds the list of fields to display.
@@ -91,31 +98,6 @@ function People({ people }: ComplainantProps) {
       })}
     </ul>
   );
-}
-
-// TODO: Make async function
-/**
- * Reverse geocodes a complaint's location using its latitude and longtude.
- * @param complaint The complaint.
- * @param callback The function to be called on the response.
- */
-function reverseGeocodeCoordinates(
-  complaint: Complaint,
-  callback: (address: string) => void
-) {
-  const url = new URL(`${ARCGIS_BASE_URL}/reverseGeocode`);
-  url.searchParams.append('f', 'pjson');
-  url.searchParams.append('langCode', 'EN');
-  url.searchParams.append(
-    'location',
-    `${complaint.longitude},${complaint.latitude}`
-  );
-
-  fetch(url.href)
-    .then((res) => res.json())
-    .then((response) => {
-      callback(response.address);
-    });
 }
 
 interface MetricStationProfileProps {

@@ -23,7 +23,7 @@ export default function MetricStationProfile({
   }, [complaint?.id]);
 
   /**
-   * Calculate the metrics for the complaint's station and sets the chart data.
+   * Calculates the metrics for the complaint's station and sets the chart data.
    * @param score The station score.
    */
   const calculateMetrics = (score: StationScore) => {

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import 'src/styles/App.scss';
-import store, { persistor } from 'src/utils/reducers';
+import store, { persistor } from 'src/tools/reducers';
 
 export default function MunityApp({ Component, pageProps }: AppProps) {
   return (
