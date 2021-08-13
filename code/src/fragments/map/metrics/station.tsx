@@ -29,23 +29,7 @@ export default function MetricStationProfile({
   const calculateMetrics = (score: StationScore) => {
     if (!complaint) return;
 
-    const metrics = [
-      {
-        color: '#0f007d',
-        label: ComplaintStatus.RESOLVED,
-        number: score.numberOfComplaintsResolved!
-      },
-      {
-        color: '#7d0188',
-        label: ComplaintStatus.ADDRESSED,
-        number: score.numberOfComplaintsAddressed!
-      },
-      {
-        color: '#7d0015',
-        label: ComplaintStatus.UNADDRESSED,
-        number: score.numberOfComplaintsUnaddressed!
-      }
-    ];
+    const metrics = buildMetrics(score);
     setMetrics(metrics);
 
     const dataset: ChartDatasetModel = {
@@ -55,8 +39,8 @@ export default function MetricStationProfile({
     const labels: Array<string> = [];
 
     metrics.forEach(({ color, label, number }) => {
-      dataset.data.push(number);
       dataset.backgroundColor.push(color);
+      dataset.data.push(number);
       labels.push(label);
     });
 
@@ -89,7 +73,9 @@ export default function MetricStationProfile({
 
   return (
     <div className={'map-metrics-content--station'}>
-      <div className={'map-metrics-content--station__name'}>{complaint.station}</div>
+      <div className={'map-metrics-content--station__name'}>
+        {complaint.station}
+      </div>
       <Doughnut
         type={'doughnut'}
         data={chartData}
@@ -135,6 +121,26 @@ function ChartKey({ metrics }: ChartKeyProps) {
       })}
     </div>
   );
+}
+
+function buildMetrics(score: StationScore) {
+  return [
+    {
+      color: '#0f007d',
+      label: ComplaintStatus.RESOLVED,
+      number: score.numberOfComplaintsResolved!
+    },
+    {
+      color: '#7d0188',
+      label: ComplaintStatus.ADDRESSED,
+      number: score.numberOfComplaintsAddressed!
+    },
+    {
+      color: '#7d0015',
+      label: ComplaintStatus.UNADDRESSED,
+      number: score.numberOfComplaintsUnaddressed!
+    }
+  ];
 }
 
 interface MapMetric {
