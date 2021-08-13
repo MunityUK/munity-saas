@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useReducer, useState } from 'react';
 
 import {
   CheckboxGroup,
@@ -8,6 +8,7 @@ import {
   DatePicker,
   Label
 } from 'src/components/form';
+import { FilterInitialState, FilterReducer } from 'src/reducers/filters';
 import {
   Complaint,
   ComplaintDateProperty,
@@ -20,13 +21,11 @@ export default function MapFiltersBar({
   allComplaints,
   setComplaints
 }: MapFiltersProps) {
-  const [filters, setFilters] = useState<ComplaintFilters>(
-    new ComplaintFilters()
-  );
+  const [filters, dispatch] = useReducer(FilterReducer, FilterInitialState);
 
   useEffect(() => {
     filterComplaints();
-  }, [JSON.stringify(filters)]);
+  }, [filters]);
 
   /** Filter the list of complaints by specified property. */
   const filterComplaints = () => {
@@ -40,42 +39,34 @@ export default function MapFiltersBar({
    */
   const onFilterCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
+    const key = name as Exclude<keyof ComplaintFilters, ComplaintDateProperty>;
+    const values = filters[key] || new Set();
 
-    setFilters((filters) => {
-      const key = name as keyof ComplaintFilters;
-      const values = (filters[key] || []) as string[];
-      if (checked) {
-        if (!values.includes(value)) {
-          values.push(value);
-        }
-      } else {
-        const index = values.indexOf(value);
-        if (index > -1) {
-          values.splice(index, 1);
-        }
-      }
-      return { ...filters, [key]: values };
-    });
+    if (checked) {
+      values.add(value);
+    } else {
+      values.delete(value);
+    }
+
+    dispatch({ name: key, payload: values });
   };
 
   /**
-   * Handle selection on dates from datepicker.
+   * Handle selection of dates from datepicker.
    * @param selectedDate The selected date.
    * @param name The name of the input.
    */
   const onDateChange = (selectedDate: Date, name: string) => {
     const [, property, position] = name.match(/(\w+)-(\w+)/)!;
     const key = property as ComplaintDateProperty;
-
     const dates = filters[key]!;
-    setFilters((filters) => {
-      return {
-        ...filters,
-        [key]: {
-          ...dates,
-          [position]: selectedDate
-        }
-      };
+
+    dispatch({
+      name: key,
+      payload: {
+        ...dates,
+        [position]: selectedDate
+      }
     });
   };
 
@@ -93,24 +84,13 @@ export default function MapFiltersBar({
               key={key}
             />
           );
-        } else if (ComplaintFilters.isMultiValuedProperty(name)) {
-          return (
-            <FilterCheckboxField
-              label={label}
-              name={name}
-              items={items!}
-              checkedValues={filterValues as string[]}
-              onChange={onFilterCheck}
-              key={key}
-            />
-          );
         } else {
           return (
             <FilterCheckboxField
               label={label}
               name={name}
               items={items!}
-              checkedValues={filterValues as string[]}
+              checkedValues={Array.from(filterValues as Set<string>)}
               onChange={onFilterCheck}
               key={key}
             />

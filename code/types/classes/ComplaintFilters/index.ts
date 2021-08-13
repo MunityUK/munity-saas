@@ -20,13 +20,13 @@ export class ComplaintFilters {
   dateOfComplaint?: MapFiltersDateValues;
   dateOfAddressal?: MapFiltersDateValues;
   dateOfResolution?: MapFiltersDateValues;
-  incidentType?: string[];
-  station?: string[];
-  status?: string[];
-  officerRace?: string[];
-  officerSex?: string[];
-  complainantRace?: string[];
-  complainantSex?: string[];
+  incidentType?: Set<string>;
+  station?: Set<string>;
+  status?: Set<string>;
+  officerRace?: Set<string>;
+  officerSex?: Set<string>;
+  complainantRace?: Set<string>;
+  complainantSex?: Set<string>;
 
   /**
    * Initialise the complaint filters.
@@ -36,13 +36,13 @@ export class ComplaintFilters {
       dateOfComplaint: DefaultDateFilters,
       dateOfAddressal: DefaultDateFilters,
       dateOfResolution: DefaultDateFilters,
-      incidentType: [],
-      station: [],
-      status: [],
-      officerRace: [],
-      officerSex: [],
-      complainantRace: [],
-      complainantSex: []
+      incidentType: new Set(),
+      station: new Set(),
+      status: new Set(),
+      officerRace: new Set(),
+      officerSex: new Set(),
+      complainantRace: new Set(),
+      complainantSex: new Set()
     };
   }
 
@@ -63,9 +63,9 @@ export class ComplaintFilters {
           const date = complaint[key as ComplaintDateProperty]!;
           return isDateInRange(date, values);
         } else if (this.isMultiValuedProperty(key)) {
-          return filterMultiValuedProperty(key, complaint, values);
+          return filterMultiValuedProperty(key, complaint, Array.from(values));
         } else {
-          const options = <string[]>values;
+          const options = Array.from(values);
           if (!options || !options.length) return true;
           return options.includes(complaint[key]!);
         }
