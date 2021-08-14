@@ -72,54 +72,56 @@ export default function MetricStationProfile({
   };
 
   return (
-    <div className={'map-metrics-content--station'}>
-      <div className={'map-metrics-content--station__name'}>
-        {complaint.station}
-      </div>
-      <Doughnut
-        type={'doughnut'}
-        data={chartData}
-        options={{
-          plugins: {
-            legend: {
-              display: false
+    <section className={'map-metrics-content--station'}>
+      <h1>{complaint.station}</h1>
+      <figure>
+        <Doughnut
+          type={'doughnut'}
+          data={chartData}
+          options={{
+            plugins: {
+              legend: {
+                display: false
+              }
             }
-          }
-        }}
-      />
-      <ChartKey metrics={metrics} />
+          }}
+        />
+        <figcaption>
+          <ChartLegend metrics={metrics} />
+        </figcaption>
+      </figure>
       {fields.map(({ label, value }, key) => {
         return (
-          <div className={'complaint-field'} key={key}>
+          <fieldset className={'complaint-field'} key={key}>
             <label>{label}:</label>
-            <div>{value}</div>
-          </div>
+            <p>{value}</p>
+          </fieldset>
         );
       })}
-    </div>
+    </section>
   );
 }
 
 /**
  * The key for the doughnut chart.
  */
-function ChartKey({ metrics }: ChartKeyProps) {
+function ChartLegend({ metrics }: ChartKeyProps) {
   return (
-    <div className={'map-metrics-legend'}>
+    <table className={'map-metrics-legend'}>
       {metrics.map(({ color, label, number }, key) => {
         return (
-          <div className={'map-metrics-legend__key'} key={key}>
-            <span>
+          <tr key={key}>
+            <td>
               <svg width={10} height={10}>
                 <circle cx={5} cy={5} r={5} fill={color} />
               </svg>
-            </span>
-            <span>{label}</span>
-            <span className={'map-metrics-legend__key-number'}>{number}</span>
-          </div>
+            </td>
+            <td>{label}</td>
+            <td className={'map-metrics-legend__value'}>{number}</td>
+          </tr>
         );
       })}
-    </div>
+    </table>
   );
 }
 

@@ -1,14 +1,12 @@
-import classnames from 'classnames';
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { ListItems } from 'types';
 import { extractLabelValue } from 'utils/functions';
 
 export function CheckboxGroup(props: CheckboxGroupProps) {
-  const { name, items, onChange, checkedValues, className } = props;
-  const classes = classnames('checkbox-group', className);
+  const { name, items, onChange, checkedValues } = props;
   return (
-    <div className={classes}>
+    <Fragment>
       {items.map((item, key) => {
         const { label, value } = extractLabelValue(item);
         const checked = checkedValues?.includes(value.toString()) ?? false;
@@ -24,7 +22,7 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
           />
         );
       })}
-    </div>
+    </Fragment>
   );
 }
 

@@ -1,9 +1,9 @@
-.map-main {
+main.map-main {
   display: flex;
   height: 100%;
 }
 
-.map-filters {
+aside.map-filters {
   background: #fff;
   max-width: 275px;
   overflow-y: scroll;
@@ -11,14 +11,16 @@
   width: 100%;
 }
 
-.map-filters-field {
+fieldset.map-filters-field {
+  border: 0;
   border-bottom: 1px solid #000;
   margin: 0.4em 0;
   overflow: hidden;
+  padding: 0;
   padding-bottom: 0.7em;
 }
 
-.map-filters-field__label {
+label.map-filters-field__label {
   cursor: pointer;
   font-size: 1em;
   opacity: 0.8;
@@ -26,14 +28,15 @@
   position: relative;
 }
 
-.map-filters__checkbox-group {
+fieldset.map-filters__checkbox-group {
+  border: 0;
   padding: 0.1em 0;
+}
 
-  &-label {
-    font-size: 80%;
-    font-weight: bold;
-    padding: 0.2em 0;
-  }
+legend.map-filters__checkbox-group-legend {
+  font-size: 80%;
+  font-weight: bold;
+  padding: 0.2em 0;
 }
 
 .map-filters__datepicker {
@@ -73,21 +76,26 @@
   }
 }
 
-.map-container-wrapper {
+map.map-container-wrapper {
   flex: 1 0 auto;
   position: relative;
+
+  .map-container {
+    height: 100%;
+  }
 }
 
-.map-container {
-  height: 100%;
-}
-
-.map-metrics {
+dialog.map-metrics {
   background-color: #fff;
+  border: 0;
   border-radius: 10px;
   box-shadow: 0 0 6px 1px #909090;
+  display: block;
+  left: unset;
+  margin: 0;
   opacity: 0;
   overflow: hidden;
+  padding: 0;
   position: absolute;
   right: 20px;
   top: 20px;
@@ -102,11 +110,13 @@
   }
 }
 
-.map-metrics-tabs {
+nav.map-metrics-tabs {
   display: flex;
+  margin: 0;
+  padding: 0;
 }
 
-.map-metrics-tabs__button {
+label.map-metrics-tabs__button {
   background: rgb(208, 208, 208);
   cursor: pointer;
   display: block;
@@ -124,24 +134,44 @@
 .map-metrics-content {
   height: 450px;
   overflow-y: scroll;
+}
 
-  &--complaint {
-    font-size: 0.95em;
-    padding: 1em;
+section.map-metrics-content--complaint {
+  font-size: 0.95em;
+  padding: 1em;
+}
+
+section.map-metrics-content--station {
+  padding: 1em;
+
+  h1 {
+    font-size: 1.2em;
+    margin: 0 0 1em;
+    text-align: center;
   }
 
-  &--station {
-    padding: 1.5em;
+  figure {
+    margin: 0;
+    padding: 0.5em;
   }
 }
 
-.complaint-field {
+fieldset.complaint-field {
   animation: fade-in 0.4s;
   animation-fill-mode: both;
+  border: 0;
   padding: 0.5em 0;
 
   label {
     font-weight: bold;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  time {
+    display: block;
   }
 
   @keyframes fade-in {
@@ -155,7 +185,7 @@
   }
 }
 
-.people-grid {
+table.people-grid {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 90%;
@@ -178,17 +208,20 @@
   }
 }
 
-.map-metrics-legend {
+table.map-metrics-legend {
+  border-collapse: collapse;
   margin-top: 1em;
+  width: 100%;
 
-  &__key {
-    display: grid;
+  tr {
     font-size: 0.8em;
-    grid-template-columns: 15px 1fr 30px;
+  }
 
-    &-number {
-      text-align: right;
-      width: 100%;
-    }
+  td {
+    padding: 0;
+  }
+
+  td:last-of-type {
+    text-align: center;
   }
 }
