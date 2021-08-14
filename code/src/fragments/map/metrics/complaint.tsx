@@ -60,11 +60,11 @@ export default function MetricComplaintInfo({
       { label: 'County', value: complaint.county },
       {
         label: 'Complainant(s)',
-        value: <People people={complaint.complainants as Complainant[]} />
+        value: <PeopleGrid people={complaint.complainants as Complainant[]} />
       },
       {
         label: 'Officer(s)',
-        value: <People people={complaint.officers as Officer[]} />
+        value: <PeopleGrid people={complaint.officers as Officer[]} />
       },
       { label: 'Notes', value: complaint.notes }
     ];
@@ -85,18 +85,29 @@ export default function MetricComplaintInfo({
   );
 }
 
-function People({ people }: ComplainantProps) {
+function PeopleGrid({ people }: ComplainantProps) {
   return (
-    <ul className={'complaint-field__list'}>
-      {people.map((person, key) => {
-        const sex = SexLookup[person.sex!];
-        return (
-          <li key={key}>
-            {person.age}yo {person.race} {sex}
-          </li>
-        );
-      })}
-    </ul>
+    <table className={'people-grid'}>
+      <thead>
+        <tr>
+          <th className={'people-grid__col'}>Age</th>
+          <th>Ethnic Group</th>
+          <th className={'people-grid__col'}>Sex</th>
+        </tr>
+      </thead>
+      <tbody>
+        {people.map((person, key) => {
+          const sex = SexLookup[person.sex!][0];
+          return (
+            <tr key={key}>
+              <td className={'people-grid__col'}>{person.age}</td>
+              <td>{person.ethnicGroup}</td>
+              <td className={'people-grid__col'}>{sex}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
 

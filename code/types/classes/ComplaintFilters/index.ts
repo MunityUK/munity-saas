@@ -7,14 +7,14 @@ import {
   MultiValuedPropertyFilterType
 } from './helpers';
 
-import { ListItem, MapFiltersDateValues } from '../..';
+import { ListItemGroups, ListItems, MapFiltersDateValues } from '../..';
 import {
   BristolPoliceStations,
   Complaint,
   ComplaintStatus,
   IncidentType
 } from '../Complaint';
-import { Race, Sex } from '../Person';
+import { EthnicGroup, Sex } from '../Person';
 
 export class ComplaintFilters {
   dateOfComplaint?: MapFiltersDateValues;
@@ -23,9 +23,9 @@ export class ComplaintFilters {
   incidentType?: Set<string>;
   station?: Set<string>;
   status?: Set<string>;
-  officerRace?: Set<string>;
+  officerEthnicGroup?: Set<string>;
   officerSex?: Set<string>;
-  complainantRace?: Set<string>;
+  complainantEthnicGroup?: Set<string>;
   complainantSex?: Set<string>;
 
   /**
@@ -39,9 +39,9 @@ export class ComplaintFilters {
       incidentType: new Set(),
       station: new Set(),
       status: new Set(),
-      officerRace: new Set(),
+      officerEthnicGroup: new Set(),
       officerSex: new Set(),
-      complainantRace: new Set(),
+      complainantEthnicGroup: new Set(),
       complainantSex: new Set()
     };
   }
@@ -110,7 +110,33 @@ const DatePropertyFilters = <const>[
   'dateOfResolution'
 ];
 
-const RaceOptions = Object.values(Race);
+const EthnicGroupOptions = {
+  White: [
+    EthnicGroup.WHITE_BRITISH,
+    EthnicGroup.WHITE_GYPSY,
+    EthnicGroup.WHITE_IRISH,
+    EthnicGroup.WHITE_OTHER
+  ],
+  Mixed: [
+    EthnicGroup.MIXED_AFRICAN,
+    EthnicGroup.MIXED_CARIBBEAN,
+    EthnicGroup.MIXED_ASIAN,
+    EthnicGroup.MIXED_OTHER
+  ],
+  Asian: [
+    EthnicGroup.ASIAN_INDIAN,
+    EthnicGroup.ASIAN_PAKISTANI,
+    EthnicGroup.ASIAN_BANGLADESHI,
+    EthnicGroup.ASIAN_CHINESE,
+    EthnicGroup.ASIAN_OTHER
+  ],
+  Black: [
+    EthnicGroup.BLACK_AFRICAN,
+    EthnicGroup.BLACK_CARIBBEAN,
+    EthnicGroup.BLACK_OTHER
+  ],
+  Other: [EthnicGroup.ARAB, EthnicGroup.OTHER]
+};
 const SexOptions = Object.entries(Sex).map(([key, value]) => {
   return {
     label: capitalCase(key),
@@ -153,9 +179,9 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
     defaultValue: []
   },
   {
-    label: 'Officer Race',
-    name: 'officerRace',
-    items: RaceOptions,
+    label: 'Officer Ethnic Group',
+    name: 'officerEthnicGroup',
+    itemGroups: EthnicGroupOptions,
     defaultValue: []
   },
   {
@@ -165,9 +191,9 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
     defaultValue: []
   },
   {
-    label: 'Complainant Race',
-    name: 'complainantRace',
-    items: RaceOptions,
+    label: 'Complainant Ethnic Group',
+    name: 'complainantEthnicGroup',
+    itemGroups: EthnicGroupOptions,
     defaultValue: []
   },
   {
@@ -183,5 +209,6 @@ type ComplaintFilterFieldType = {
   label: string;
   name: keyof ComplaintFilters;
   defaultValue: Array<unknown> | MapFiltersDateValues;
-  items?: Array<ListItem>;
+  items?: ListItems;
+  itemGroups?: ListItemGroups
 };

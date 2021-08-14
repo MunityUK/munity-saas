@@ -5,7 +5,7 @@
 
 .map-filters {
   background: #fff;
-  max-width: 250px;
+  max-width: 275px;
   overflow-y: scroll;
   padding: 1.5em;
   width: 100%;
@@ -24,6 +24,16 @@
   opacity: 0.8;
   padding: 0.4em 0;
   position: relative;
+}
+
+.map-filters__checkbox-group {
+  padding: 0.1em 0;
+
+  &-label {
+    font-size: 80%;
+    font-weight: bold;
+    padding: 0.2em 0;
+  }
 }
 
 .map-filters__datepicker {
@@ -145,9 +155,27 @@
   }
 }
 
-.complaint-field__list {
-  margin-block: 0.5em 0;
-  padding-inline-start: 20px;
+.people-grid {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 90%;
+  margin-top: 0.5em;
+  text-align: center;
+  width: 100%;
+
+  thead {
+    background-color: #e6e6e6;
+  }
+
+  tr {
+    vertical-align: baseline;
+  }
+
+  th,
+  td {
+    border: 1px solid #a0a0a0;
+    padding: 0.4em;
+  }
 }
 
 .map-metrics-legend {

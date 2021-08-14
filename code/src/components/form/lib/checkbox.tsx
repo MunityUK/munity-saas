@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { ListItem } from 'types';
+import { ListItems } from 'types';
 import { extractLabelValue } from 'utils/functions';
 
 export function CheckboxGroup(props: CheckboxGroupProps) {
@@ -49,18 +49,12 @@ const ICheckbox = React.memo(Checkbox);
 
 export interface CheckboxGroupProps
   extends React.InputHTMLAttributes<HTMLDivElement> {
-  /** The name of the field. */
   name: string;
-
-  /** The list of options as checkboxes. */
-  items: Array<ListItem>;
-
-  /** The list of values which are checked. */
+  items: ListItems;
   checkedValues?: Array<string>;
 }
 
 export interface CheckboxProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  /** The label for the checkbox. */
   label: string;
 }

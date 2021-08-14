@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { ListItem } from 'types';
+import { ListItems } from 'types';
 import { extractLabelValue } from 'utils/functions';
 
 export function Select(props: SelectProps) {
@@ -25,5 +25,5 @@ export function Select(props: SelectProps) {
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
   name?: string;
-  items: Array<ListItem>;
+  items: ListItems;
 }

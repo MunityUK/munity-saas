@@ -38,17 +38,17 @@ export function filterMultiValuedProperty(
 }
 
 export const PropertyFilterMap: PropertyFilterMapType = {
-  officerRace: {
+  officerEthnicGroup: {
     accessor: 'officers',
-    prop: 'race'
+    prop: 'ethnicGroup'
   },
   officerSex: {
     accessor: 'officers',
     prop: 'sex'
   },
-  complainantRace: {
+  complainantEthnicGroup: {
     accessor: 'complainants',
-    prop: 'race'
+    prop: 'ethnicGroup'
   },
   complainantSex: {
     accessor: 'complainants',
@@ -57,9 +57,9 @@ export const PropertyFilterMap: PropertyFilterMapType = {
 };
 
 export const MultiValuedPropertyFilters = <const>[
-  'officerRace',
+  'officerEthnicGroup',
   'officerSex',
-  'complainantRace',
+  'complainantEthnicGroup',
   'complainantSex'
 ];
 
