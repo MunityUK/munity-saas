@@ -14,7 +14,7 @@ import {
   ComplaintStatus,
   IncidentType
 } from '../Complaint';
-import { Race, Sex } from '../Person';
+import { EthnicGroup, Sex } from '../Person';
 
 export class ComplaintFilters {
   dateOfComplaint?: MapFiltersDateValues;
@@ -23,9 +23,9 @@ export class ComplaintFilters {
   incidentType?: Set<string>;
   station?: Set<string>;
   status?: Set<string>;
-  officerRace?: Set<string>;
+  officerEthnicGroup?: Set<string>;
   officerSex?: Set<string>;
-  complainantRace?: Set<string>;
+  complainantEthnicGroup?: Set<string>;
   complainantSex?: Set<string>;
 
   /**
@@ -39,9 +39,9 @@ export class ComplaintFilters {
       incidentType: new Set(),
       station: new Set(),
       status: new Set(),
-      officerRace: new Set(),
+      officerEthnicGroup: new Set(),
       officerSex: new Set(),
-      complainantRace: new Set(),
+      complainantEthnicGroup: new Set(),
       complainantSex: new Set()
     };
   }
@@ -110,7 +110,7 @@ const DatePropertyFilters = <const>[
   'dateOfResolution'
 ];
 
-const RaceOptions = Object.values(Race);
+const EthnicGroupOptions = Object.values(EthnicGroup);
 const SexOptions = Object.entries(Sex).map(([key, value]) => {
   return {
     label: capitalCase(key),
@@ -153,9 +153,9 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
     defaultValue: []
   },
   {
-    label: 'Officer Race',
-    name: 'officerRace',
-    items: RaceOptions,
+    label: 'Officer Ethnic Group',
+    name: 'officerEthnicGroup',
+    items: EthnicGroupOptions,
     defaultValue: []
   },
   {
@@ -165,9 +165,9 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
     defaultValue: []
   },
   {
-    label: 'Complainant Race',
-    name: 'complainantRace',
-    items: RaceOptions,
+    label: 'Complainant Ethnic Group',
+    name: 'complainantEthnicGroup',
+    items: EthnicGroupOptions,
     defaultValue: []
   },
   {

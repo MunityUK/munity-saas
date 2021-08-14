@@ -4,15 +4,28 @@ import { randomElement, randomEnumValue } from '../../utils/functions';
 
 export class Person {
   age?: number;
-  race?: Race;
+  ethnicGroup?: EthnicGroup;
   sex?: Sex;
 }
 
-export enum Race {
-  BLACK = 'Black',
-  MIXED = 'Mixed',
-  ASIAN = 'Asian',
-  WHITE = 'White',
+export enum EthnicGroup {
+  WHITE_BRITISH = 'British',
+  WHITE_IRISH = 'Irish',
+  WHITE_GYPSY = 'Gypsy or Irish Traveller',
+  WHITE_OTHER = 'White Other',
+  MIXED_CARIBBEAN = 'White and Black Caribbean',
+  MIXED_AFRICAN = 'White and Black African',
+  MIXED_ASIAN = 'White and Asian',
+  MIXED_OTHER = 'Mixed Other',
+  ASIAN_INDIAN = 'Indian',
+  ASIAN_PAKISTANI = 'Pakistani',
+  ASIAN_BANGLADESHI = 'Bangladeshi',
+  ASIAN_CHINESE = 'Chinese',
+  ASIAN_OTHER = 'Asian Other',
+  BLACK_AFRICAN = 'African',
+  BLACK_CARIBBEAN = 'Caribbean',
+  BLACK_OTHER = 'Black Other',
+  ARAB = 'Arab',
   OTHER = 'Other'
 }
 
@@ -42,7 +55,7 @@ export class Officer extends Person {
     officer.officerId =
       'OI' + faker.datatype.number().toString().padStart(5, '0');
     officer.age = faker.datatype.number({ min: 25, max: 55 });
-    officer.race = randomEnumValue(Race, 2);
+    officer.ethnicGroup = randomEnumValue(EthnicGroup, 2);
     officer.sex = randomElement(SexDistribution);
     return officer;
   }
@@ -70,7 +83,7 @@ export class Complainant extends Person {
   static random() {
     const complainant = new Complainant();
     complainant.age = faker.datatype.number({ min: 25, max: 55 });
-    complainant.race = randomEnumValue(Race, 2);
+    complainant.ethnicGroup = randomEnumValue(EthnicGroup, 2);
     complainant.sex = randomElement(SexDistribution);
     return complainant;
   }

@@ -92,7 +92,7 @@ function People({ people }: ComplainantProps) {
         const sex = SexLookup[person.sex!];
         return (
           <li key={key}>
-            {person.age}yo {person.race} {sex}
+            {person.age}yo {person.ethnicGroup} {sex}
           </li>
         );
       })}
