@@ -1,4 +1,10 @@
-import React, { SetStateAction, useEffect, useReducer, useState } from 'react';
+import React, {
+  Fragment,
+  SetStateAction,
+  useEffect,
+  useReducer,
+  useState
+} from 'react';
 
 import {
   CheckboxGroup,
@@ -14,6 +20,7 @@ import {
   ComplaintDateProperty,
   ComplaintFilterFields,
   ComplaintFilters,
+  ListItemGroups,
   MapFiltersDateValues
 } from 'types';
 
@@ -72,7 +79,7 @@ export default function MapFiltersBar({
 
   return (
     <div className={'map-filters'}>
-      {ComplaintFilterFields.map(({ label, name, items }, key) => {
+      {ComplaintFilterFields.map(({ label, name, items, itemGroups }, key) => {
         const filterValues = filters[name];
         if (ComplaintFilters.isDateProperty(name)) {
           return (
@@ -90,6 +97,7 @@ export default function MapFiltersBar({
               label={label}
               name={name}
               items={items!}
+              itemGroups={itemGroups}
               checkedValues={Array.from(filterValues as Set<string>)}
               onChange={onFilterCheck}
               key={key}
@@ -103,8 +111,43 @@ export default function MapFiltersBar({
 
 /** A field for the dropdown menu to filter map markers by property. */
 const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
-  const { label, name, items, onChange, checkedValues } = props;
+  const { label, name, items, itemGroups, onChange, checkedValues } = props;
   const [isCollapsed, setCollapsed] = useState(true);
+
+  const Options = () => {
+    if (items) {
+      return (
+        <CheckboxGroup
+          name={name}
+          items={items!}
+          onChange={onChange}
+          checkedValues={checkedValues}
+        />
+      );
+    } else if (itemGroups) {
+      return (
+        <Fragment>
+          {Object.entries(itemGroups).map(([supergroup, ethnicGroups], key) => {
+            return (
+              <div className={'map-filters__checkbox-group'} key={key}>
+                <Label className={'map-filters__checkbox-group-label'}>
+                  {supergroup}
+                </Label>
+                <CheckboxGroup
+                  name={name}
+                  items={ethnicGroups}
+                  onChange={onChange}
+                  checkedValues={checkedValues}
+                />
+              </div>
+            );
+          })}
+        </Fragment>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <div className={'map-filters-field'}>
@@ -115,12 +158,7 @@ const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
         <CollapsibleIcon isCollapsed={isCollapsed} />
       </Label>
       <Collapsible isCollapsed={isCollapsed}>
-        <CheckboxGroup
-          name={name}
-          items={items!}
-          onChange={onChange}
-          checkedValues={checkedValues}
-        />
+        <Options />
       </Collapsible>
     </div>
   );
@@ -174,6 +212,7 @@ interface MapFiltersProps {
 interface FilterCheckboxFieldProps extends CheckboxGroupProps {
   label: string;
   name: keyof ComplaintFilters;
+  itemGroups?: ListItemGroups;
 }
 
 interface FilterDateFieldProps {

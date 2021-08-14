@@ -26,6 +26,16 @@
   position: relative;
 }
 
+.map-filters__checkbox-group {
+  padding: 0.1em 0;
+
+  &-label {
+    font-size: 80%;
+    font-weight: bold;
+    padding: 0.2em 0;
+  }
+}
+
 .map-filters__datepicker {
   width: 100%;
 }
