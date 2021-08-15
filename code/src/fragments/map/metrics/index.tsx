@@ -26,6 +26,7 @@ export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
   const classes = classnames('map-metrics', {
     'map-metrics--visible': !!complaint
   });
+
   return (
     <dialog className={classes}>
       <MetricTabs tabHook={[selectedTab, setSelectedTab]} />
@@ -33,7 +34,7 @@ export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
         {selectedTab === 'complaint' ? (
           <MetricComplaintInfo complaint={complaint} />
         ) : (
-          <MetricStationProfile complaint={complaint} scores={scores} />
+          <MetricStationProfile station={complaint?.station} scores={scores} />
         )}
       </main>
     </dialog>
