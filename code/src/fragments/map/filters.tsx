@@ -78,7 +78,7 @@ export default function MapFiltersBar({
   };
 
   return (
-    <div className={'map-filters'}>
+    <aside className={'map-filters'}>
       {ComplaintFilterFields.map(({ label, name, items, itemGroups }, key) => {
         const filterValues = filters[name];
         if (ComplaintFilters.isDateProperty(name)) {
@@ -105,7 +105,7 @@ export default function MapFiltersBar({
           );
         }
       })}
-    </div>
+    </aside>
   );
 }
 
@@ -129,17 +129,17 @@ const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
         <Fragment>
           {Object.entries(itemGroups).map(([supergroup, ethnicGroups], key) => {
             return (
-              <div className={'map-filters__checkbox-group'} key={key}>
-                <Label className={'map-filters__checkbox-group-label'}>
+              <fieldset className={'map-filters__checkbox-group'} key={key}>
+                <legend className={'map-filters__checkbox-group-legend'}>
                   {supergroup}
-                </Label>
+                </legend>
                 <CheckboxGroup
                   name={name}
                   items={ethnicGroups}
                   onChange={onChange}
                   checkedValues={checkedValues}
                 />
-              </div>
+              </fieldset>
             );
           })}
         </Fragment>
@@ -150,7 +150,7 @@ const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
   };
 
   return (
-    <div className={'map-filters-field'}>
+    <fieldset className={'map-filters-field'}>
       <Label
         className={'map-filters-field__label'}
         onClick={() => setCollapsed(!isCollapsed)}>
@@ -160,7 +160,7 @@ const FilterCheckboxField = (props: FilterCheckboxFieldProps) => {
       <Collapsible isCollapsed={isCollapsed}>
         <Options />
       </Collapsible>
-    </div>
+    </fieldset>
   );
 };
 
@@ -174,7 +174,7 @@ const FilterDateField = (props: FilterDateFieldProps) => {
   const endInputName = `${name}-endDate`;
 
   return (
-    <div className={'map-filters-field'}>
+    <fieldset className={'map-filters-field'}>
       <Label
         className={'map-filters-field__label'}
         onClick={() => setCollapsed(!isCollapsed)}>
@@ -200,7 +200,7 @@ const FilterDateField = (props: FilterDateFieldProps) => {
           className={'map-filters__datepicker'}
         />
       </Collapsible>
-    </div>
+    </fieldset>
   );
 };
 

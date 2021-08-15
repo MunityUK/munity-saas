@@ -27,16 +27,16 @@ export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
     'map-metrics--visible': !!complaint
   });
   return (
-    <div className={classes}>
+    <dialog className={classes}>
       <MetricTabs tabHook={[selectedTab, setSelectedTab]} />
-      <div className={'map-metrics-content'}>
+      <main className={'map-metrics-content'}>
         {selectedTab === 'complaint' ? (
           <MetricComplaintInfo complaint={complaint} />
         ) : (
           <MetricStationProfile complaint={complaint} scores={scores} />
         )}
-      </div>
-    </div>
+      </main>
+    </dialog>
   );
 }
 
@@ -46,7 +46,7 @@ export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
 function MetricTabs({ tabHook }: MetricTabsProps) {
   const [selectedTab, setSelectedTab] = tabHook;
   return (
-    <div className={'map-metrics-tabs'}>
+    <nav className={'map-metrics-tabs'}>
       {METRIC_TABS.map(({ title, value }, key) => {
         const isActive = selectedTab === value;
         const classes = classnames('map-metrics-tabs__button', {
@@ -66,7 +66,7 @@ function MetricTabs({ tabHook }: MetricTabsProps) {
           </label>
         );
       })}
-    </div>
+    </nav>
   );
 }
 

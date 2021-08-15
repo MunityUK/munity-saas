@@ -22,13 +22,13 @@ export default function MunityMap({ complaints }: MunityMapProps) {
   }, []);
 
   return (
-    <div className={'map-container-wrapper'}>
+    <map className={'map-container-wrapper'}>
       <MapLayout
         complaints={complaints}
         selectedComplaintHook={[selectedComplaint, setSelectedComplaint]}
       />
       <MapMetrics complaint={selectedComplaint!} scores={scoresByStation!} />
-    </div>
+    </map>
   );
 }
 

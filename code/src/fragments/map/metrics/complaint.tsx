@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { Fragment, ReactNode, useEffect, useState } from 'react';
 
 import { Complaint } from 'types';
 import { Complainant, Officer, Person, SexLookup } from 'types/classes/Person';
@@ -27,37 +27,41 @@ export default function MetricComplaintInfo({
    * @param address The address of the complaint.
    */
   const collateFields = (address: any) => {
-    const complaintAddress = (
-      <div>
-        {address['Address']}
-        <br />
-        {address['District']}
-        <br />
-        {address['Postal']}
-      </div>
-    );
-
     const fields = [
-      { label: 'Complaint ID', value: complaint.complaintId },
-      { label: 'Address', value: complaintAddress },
-      { label: 'Station', value: complaint.station },
-      { label: 'Police Force', value: complaint.force },
-      { label: 'Status', value: complaint.status?.toUpperCase() },
+      { label: 'Complaint ID', value: <p>{complaint.complaintId}</p> },
+      {
+        label: 'Address',
+        value: (
+          <address className={'complaint-field__address'}>
+            {address['Address']}
+            <br />
+            {address['District']}
+            <br />
+            {address['Postal']}
+          </address>
+        )
+      },
+      { label: 'Station', value: <p>{complaint.station}</p> },
+      { label: 'Police Force', value: <p>{complaint.force}</p> },
+      { label: 'Status', value: <p>{complaint.status?.toUpperCase()}</p> },
       {
         label: 'Date of Complaint',
-        value: formatDate(complaint.dateOfComplaint!)
+        value: <time>{formatDate(complaint.dateOfComplaint!)}</time>
       },
       {
         label: 'Date of Addressal',
-        value: formatDate(complaint.dateOfAddressal!)
+        value: <time>{formatDate(complaint.dateOfAddressal!)}</time>
       },
       {
         label: 'Date of Resolution',
-        value: formatDate(complaint.dateOfResolution!)
+        value: <time>{formatDate(complaint.dateOfResolution!)}</time>
       },
-      { label: 'Incident Type', value: complaint.incidentType },
-      { label: 'Incident Description', value: complaint.incidentDescription },
-      { label: 'County', value: complaint.county },
+      { label: 'Incident Type', value: <p>{complaint.incidentType}</p> },
+      {
+        label: 'Incident Description',
+        value: <p>{complaint.incidentDescription}</p>
+      },
+      { label: 'County', value: <p>{complaint.county}</p> },
       {
         label: 'Complainant(s)',
         value: <PeopleGrid people={complaint.complainants as Complainant[]} />
@@ -66,22 +70,22 @@ export default function MetricComplaintInfo({
         label: 'Officer(s)',
         value: <PeopleGrid people={complaint.officers as Officer[]} />
       },
-      { label: 'Notes', value: complaint.notes }
+      { label: 'Notes', value: <p>{complaint.notes}</p> }
     ];
     setFields(fields);
   };
 
   return (
-    <div className={'map-metrics-content--complaint'}>
+    <section className={'map-metrics-content--complaint'}>
       {fields.map(({ label, value }, key) => {
         return (
-          <div className={'complaint-field'} key={key}>
+          <fieldset className={'complaint-field'} key={key}>
             <label>{label}:</label>
-            <div>{value}</div>
-          </div>
+            <Fragment>{value}</Fragment>
+          </fieldset>
         );
       })}
-    </div>
+    </section>
   );
 }
 
@@ -90,9 +94,9 @@ function PeopleGrid({ people }: ComplainantProps) {
     <table className={'people-grid'}>
       <thead>
         <tr>
-          <th className={'people-grid__col'}>Age</th>
+          <th>Age</th>
           <th>Ethnic Group</th>
-          <th className={'people-grid__col'}>Sex</th>
+          <th>Sex</th>
         </tr>
       </thead>
       <tbody>
@@ -100,9 +104,9 @@ function PeopleGrid({ people }: ComplainantProps) {
           const sex = SexLookup[person.sex!][0];
           return (
             <tr key={key}>
-              <td className={'people-grid__col'}>{person.age}</td>
+              <td>{person.age}</td>
               <td>{person.ethnicGroup}</td>
-              <td className={'people-grid__col'}>{sex}</td>
+              <td>{sex}</td>
             </tr>
           );
         })}
