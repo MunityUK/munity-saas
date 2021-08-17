@@ -3,18 +3,32 @@ import React from 'react';
 const POSITION = 21;
 const RADIUS = 16;
 const STROKE_WIDTH = 8;
+const GAP_FACTOR = 2.65;
 
 export function DoughnutChart({ data }: DoughnutChartData) {
   const total = data.reduce((a, b) => a + b.value, 0);
-  let strokeDashOffset = 22.5;
-  let strokeGapCount = data.length - 2;
+  let strokeDashOffset = 25;
+  let strokeGapCount = data.length - GAP_FACTOR;
 
   return (
     <svg width={'100%'} height={'100%'} viewBox={'0 0 42 42'}>
       {data.map(({ color, value }, key) => {
         if (!value) {
-          if (strokeGapCount) strokeGapCount--;
-          return null;
+          if (strokeGapCount) strokeGapCount = 0;
+          return (
+            <circle
+              cx={POSITION}
+              cy={POSITION}
+              r={0}
+              fill={'transparent'}
+              stroke={color}
+              strokeWidth={0}
+              strokeDasharray={'100 0'}
+              strokeDashoffset={strokeDashOffset}
+              className={'doughnut-arc'}
+              key={key}
+            />
+          );
         }
 
         const strokeMax = 100 - strokeGapCount;
@@ -36,6 +50,7 @@ export function DoughnutChart({ data }: DoughnutChartData) {
             strokeWidth={STROKE_WIDTH}
             strokeDasharray={strokeDashArray}
             strokeDashoffset={strokeDashOffset}
+            className={'doughnut-arc'}
             key={key}
           />
         );
