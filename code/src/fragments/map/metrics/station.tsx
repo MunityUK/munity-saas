@@ -26,17 +26,17 @@ export default function MetricStationProfile({
     if (!score) return [];
     return [
       {
-        color: '#0f007d',
+        color: '#13b835',
         label: ComplaintStatus.RESOLVED,
         number: score.numberOfComplaintsResolved!
       },
       {
-        color: '#7d0188',
+        color: '#d2d200',
         label: ComplaintStatus.ADDRESSED,
         number: score.numberOfComplaintsAddressed!
       },
       {
-        color: '#7d0015',
+        color: '#ce1e1e',
         label: ComplaintStatus.UNADDRESSED,
         number: score.numberOfComplaintsUnaddressed!
       }
