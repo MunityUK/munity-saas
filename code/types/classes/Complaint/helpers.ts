@@ -12,7 +12,7 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
   const complaintsByStation: StationComplaints = {};
   const stationScores: StationScores = {};
 
-  const addressalTimeByComplaint: { [key: number]: number } = {};
+  const investigationTimeByComplaint: { [key: number]: number } = {};
   const resolutionTimeByComplaint: { [key: number]: number } = {};
   const caseDurationByComplaint: { [key: number]: number } = {};
 
@@ -23,21 +23,21 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     listOfComplaints.push(complaint);
     complaintsByStation[station!] = listOfComplaints;
 
-    if (complaint.dateOfAddressal) {
-      addressalTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateOfComplaint!),
-        new Date(complaint.dateOfAddressal)
+    if (complaint.dateUnderInvestigation) {
+      investigationTimeByComplaint[complaint.id!] = differenceInMilliseconds(
+        new Date(complaint.dateComplaintMade!),
+        new Date(complaint.dateUnderInvestigation)
       );
     }
 
-    if (complaint.dateOfResolution) {
+    if (complaint.dateResolved) {
       resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateOfAddressal!),
-        new Date(complaint.dateOfResolution)
+        new Date(complaint.dateUnderInvestigation!),
+        new Date(complaint.dateResolved)
       );
       caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateOfComplaint!),
-        new Date(complaint.dateOfResolution)
+        new Date(complaint.dateComplaintMade!),
+        new Date(complaint.dateResolved)
       );
     }
   });
@@ -45,24 +45,24 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
   Object.entries(complaintsByStation).forEach(([station, complaints]) => {
     // Calculate counts.
     const complaintCount = complaints.length;
-    const addressedCount = getComplaintCountByStatus(complaints, [
-      ComplaintStatus.ADDRESSED
+    const investigatingCount = getComplaintCountByStatus(complaints, [
+      ComplaintStatus.INVESTIGATING
     ]);
     const resolvedCount = getComplaintCountByStatus(complaints, [
       ComplaintStatus.RESOLVED
     ]);
-    const unaddressedCount = complaints.length - addressedCount - resolvedCount;
+    const unaddressedCount = complaints.length - investigatingCount - resolvedCount;
 
     // Calculate percentages.
     const percentageUnaddressed = (unaddressedCount / complaintCount) * 100;
-    const percentageAddressed = (addressedCount / complaintCount) * 100;
+    const percentageInvestigating = (investigatingCount / complaintCount) * 100;
     const percentageResolved = (resolvedCount / complaintCount) * 100;
-    const percentageProgressed = percentageResolved + percentageAddressed;
+    const percentageAttendedTo = percentageResolved + percentageInvestigating;
 
     // Calculate average times.
-    const avgAddressalTime = calcAverageTime(
+    const avgInvestigationTime = calcAverageTime(
       complaints,
-      addressalTimeByComplaint
+      investigationTimeByComplaint
     );
     const avgResolutionTime = calcAverageTime(
       complaints,
@@ -77,20 +77,20 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     const score = new StationScore();
     score.totalNumberOfComplaints = complaintCount;
     score.numberOfComplaintsResolved = resolvedCount;
-    score.numberOfComplaintsAddressed = addressedCount;
+    score.numberOfComplaintsInvestigating = investigatingCount;
     score.numberOfComplaintsUnaddressed = unaddressedCount;
 
     score.percentageUnaddressed = round(percentageUnaddressed) + '%';
-    score.percentageAddressed = round(percentageAddressed) + '%';
+    score.percentageInvestigating = round(percentageInvestigating) + '%';
     score.percentageResolved = round(percentageResolved) + '%';
-    score.percentageProgressed = round(percentageProgressed) + '%';
-    score.averageAddressalTime = assignAverageTime(avgAddressalTime);
+    score.percentageAttendedTo = round(percentageAttendedTo) + '%';
+    score.averageInvestigationTime = assignAverageTime(avgInvestigationTime);
     score.averageResolutionTime = assignAverageTime(avgResolutionTime);
     score.averageCaseDuration = assignAverageTime(avgCaseDuration);
 
     const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
-    const penaltyUnaddressed = calcUnaddressedPenalty(percentageProgressed);
-    const penaltyLongAddressTime = calcLongAddressTimePenalty(avgAddressalTime);
+    const penaltyUnaddressed = calcUnaddressedPenalty(percentageAttendedTo);
+    const penaltyLongAddressTime = calcLongAddressTimePenalty(avgInvestigationTime);
     const penaltyLongResolveTime = calcLongResolveTimePenalty(
       avgResolutionTime
     );
@@ -132,22 +132,22 @@ function calcUnresolvedPenalty(percentageResolved: number) {
 
 /**
  * Calculates the penalty incurred for unaddressed complaints.
- * @param percentageProgressed The percentage of addressed and resolved
+ * @param percentageAttendedTo The percentage of addressed and resolved
  * complaints collectively.
  * @returns The calculated penalty to deduct from final score.
  */
-function calcUnaddressedPenalty(percentageProgressed: number) {
-  return (100 - percentageProgressed) * 0.5;
+function calcUnaddressedPenalty(percentageAttendedTo: number) {
+  return (100 - percentageAttendedTo) * 0.5;
 }
 
 /**
- * Calculates the penalty incurred for a long average complaint addressal time.
- * @param avgAddressalTime The average addressal time.
+ * Calculates the penalty incurred for a long average complaint investigation time.
+ * @param avgInvestigationTime The average investigation time.
  * @returns The calculated penalty to deduct from final score.
  */
-function calcLongAddressTimePenalty(avgAddressalTime: number | null) {
-  if (avgAddressalTime === null) return 0;
-  const cappedPenalty = Math.min(avgAddressalTime - 30, 30);
+function calcLongAddressTimePenalty(avgInvestigationTime: number | null) {
+  if (avgInvestigationTime === null) return 0;
+  const cappedPenalty = Math.min(avgInvestigationTime - 30, 30);
   return Math.max(cappedPenalty * 0.8, 0);
 }
 
@@ -166,12 +166,12 @@ function calcLongResolveTimePenalty(avgResolutionTime: number | null) {
  * Calculate the final score using the penalty deductions.
  * @param pua The penalty for unaddressed complaints.
  * @param pur The penalty for unresolved complaints
- * @param plat The penalty for long average complaint addressal times.
+ * @param plit The penalty for long average complaint investigation times.
  * @param plrt The penalty for long average complaint resolution times.
  * @returns The final score.
  */
-function calcFinalScore(pua: number, pur: number, plat: number, plrt: number) {
-  return round(100 - pua - pur - plat - plrt);
+function calcFinalScore(pua: number, pur: number, plit: number, plrt: number) {
+  return round(100 - pua - pur - plit - plrt);
 }
 
 /**

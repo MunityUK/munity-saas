@@ -11,9 +11,9 @@ export class Complaint {
   complaintId?: string;
   station?: string;
   force?: string;
-  dateOfComplaint?: Date;
-  dateOfAddressal?: Date;
-  dateOfResolution?: Date;
+  dateComplaintMade?: Date;
+  dateUnderInvestigation?: Date;
+  dateResolved?: Date;
   incidentType?: IncidentType;
   incidentDescription?: string;
   status?: ComplaintStatus;
@@ -29,7 +29,7 @@ export class Complaint {
    * Generates a random complaint.
    * @returns The generated complaint.
    */
-  static random() {
+  static random(options?: RandomComplaintOptions) {
     const complaintId = faker.datatype
       .number(10000)
       .toString()
@@ -41,25 +41,25 @@ export class Complaint {
     complaint.force = 'Avon and Somerset Constabulary';
     complaint.incidentType = randomEnumValue(IncidentType);
     complaint.incidentDescription = faker.lorem.sentence();
-    complaint.status = randomEnumValue(ComplaintStatus, 2);
+    complaint.status = options?.status ?? randomEnumValue(ComplaintStatus, 2);
     complaint.notes = faker.lorem.sentence();
     complaint.city = 'Bristol';
     complaint.county = 'Avon';
     complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
     complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
-    complaint.dateOfComplaint = faker.date.past();
+    complaint.dateComplaintMade = faker.date.past();
 
     if (complaint.status !== ComplaintStatus.UNADDRESSED) {
-      complaint.dateOfAddressal = faker.date.future(
+      complaint.dateUnderInvestigation = faker.date.future(
         0.2,
-        complaint.dateOfComplaint
+        complaint.dateComplaintMade
       );
     }
 
     if (complaint.status === ComplaintStatus.RESOLVED) {
-      complaint.dateOfResolution = faker.date.future(
+      complaint.dateResolved = faker.date.future(
         0.5,
-        complaint.dateOfAddressal
+        complaint.dateUnderInvestigation
       );
     }
 
@@ -111,7 +111,7 @@ export enum IncidentType {
 
 export enum ComplaintStatus {
   UNADDRESSED = 'Unaddressed',
-  ADDRESSED = 'Addressed',
+  INVESTIGATING = 'Under Investigation',
   RESOLVED = 'Resolved'
 }
 
@@ -126,3 +126,7 @@ export const BristolPoliceStations = [
   'The Bridewell',
   'Trinity Road'
 ];
+
+type RandomComplaintOptions = {
+  status?: ComplaintStatus;
+}

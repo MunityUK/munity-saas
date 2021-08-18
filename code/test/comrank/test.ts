@@ -4,32 +4,32 @@ import { describe, it } from 'mocha';
 import { Complaint, ComplaintStatus, StationScore } from '../../types';
 
 const STATION_NAME = 'Station';
-const DATE_OF_COMPLAINT = Date.UTC(2000, 0, 1);
-const DATE_OF_ADDRESSAL = Date.UTC(2000, 0, 15);
-const DATE_OF_RESOLUTION = Date.UTC(2000, 0, 31);
+const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
+const DATE_INVESTIGATING = Date.UTC(2000, 0, 15);
+const DATE_RESOLVED = Date.UTC(2000, 0, 31);
 
 describe('ComRank Tests', function () {
   it('Given all complaints unaddressed', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: undefined,
-      dateOfResolution: undefined
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: undefined,
+      dateResolved: undefined
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
-    const assertions: Assertions = [
+    const assertions: ScoreAssertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
       [ScoreProp.numberOfComplaintsUnaddressed, 5],
-      [ScoreProp.numberOfComplaintsAddressed, 0],
+      [ScoreProp.numberOfComplaintsInvestigating, 0],
       [ScoreProp.numberOfComplaintsResolved, 0],
       [ScoreProp.percentageUnaddressed, '100%'],
-      [ScoreProp.percentageAddressed, '0%'],
+      [ScoreProp.percentageInvestigating, '0%'],
       [ScoreProp.percentageResolved, '0%'],
-      [ScoreProp.percentageProgressed, '0%'],
-      [ScoreProp.averageAddressalTime, null],
+      [ScoreProp.percentageAttendedTo, '0%'],
+      [ScoreProp.averageInvestigationTime, null],
       [ScoreProp.averageResolutionTime, null],
       [ScoreProp.averageCaseDuration, null],
       [ScoreProp.finalScore, 30]
@@ -41,24 +41,24 @@ describe('ComRank Tests', function () {
   it('Given all complaints addressed', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
-      status: ComplaintStatus.ADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: undefined
+      status: ComplaintStatus.INVESTIGATING,
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
+      dateResolved: undefined
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
-    const assertions: Assertions = [
+    const assertions: ScoreAssertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
       [ScoreProp.numberOfComplaintsUnaddressed, 0],
-      [ScoreProp.numberOfComplaintsAddressed, 5],
+      [ScoreProp.numberOfComplaintsInvestigating, 5],
       [ScoreProp.numberOfComplaintsResolved, 0],
       [ScoreProp.percentageUnaddressed, '0%'],
-      [ScoreProp.percentageAddressed, '100%'],
+      [ScoreProp.percentageInvestigating, '100%'],
       [ScoreProp.percentageResolved, '0%'],
-      [ScoreProp.percentageProgressed, '100%'],
-      [ScoreProp.averageAddressalTime, '14 days'],
+      [ScoreProp.percentageAttendedTo, '100%'],
+      [ScoreProp.averageInvestigationTime, '14 days'],
       [ScoreProp.averageResolutionTime, null],
       [ScoreProp.averageCaseDuration, null],
       [ScoreProp.finalScore, 80]
@@ -71,23 +71,23 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: DATE_OF_RESOLUTION
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
+      dateResolved: DATE_RESOLVED
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
-    const assertions: Assertions = [
+    const assertions: ScoreAssertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
       [ScoreProp.numberOfComplaintsUnaddressed, 0],
-      [ScoreProp.numberOfComplaintsAddressed, 0],
+      [ScoreProp.numberOfComplaintsInvestigating, 0],
       [ScoreProp.numberOfComplaintsResolved, 5],
       [ScoreProp.percentageUnaddressed, '0%'],
-      [ScoreProp.percentageAddressed, '0%'],
+      [ScoreProp.percentageInvestigating, '0%'],
       [ScoreProp.percentageResolved, '100%'],
-      [ScoreProp.percentageProgressed, '100%'],
-      [ScoreProp.averageAddressalTime, '14 days'],
+      [ScoreProp.percentageAttendedTo, '100%'],
+      [ScoreProp.averageInvestigationTime, '14 days'],
       [ScoreProp.averageResolutionTime, '16 days'],
       [ScoreProp.averageCaseDuration, '30 days'],
       [ScoreProp.finalScore, 100]
@@ -100,23 +100,23 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: Date.UTC(2000, 3, 1),
-      dateOfResolution: Date.UTC(2000, 5, 1)
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: Date.UTC(2000, 3, 1),
+      dateResolved: Date.UTC(2000, 5, 1)
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
-    const assertions: Assertions = [
+    const assertions: ScoreAssertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
       [ScoreProp.numberOfComplaintsUnaddressed, 0],
-      [ScoreProp.numberOfComplaintsAddressed, 0],
+      [ScoreProp.numberOfComplaintsInvestigating, 0],
       [ScoreProp.numberOfComplaintsResolved, 5],
       [ScoreProp.percentageUnaddressed, '0%'],
-      [ScoreProp.percentageAddressed, '0%'],
+      [ScoreProp.percentageInvestigating, '0%'],
       [ScoreProp.percentageResolved, '100%'],
-      [ScoreProp.percentageProgressed, '100%'],
-      [ScoreProp.averageAddressalTime, '91 days'],
+      [ScoreProp.percentageAttendedTo, '100%'],
+      [ScoreProp.averageInvestigationTime, '91 days'],
       [ScoreProp.averageResolutionTime, '61 days'],
       [ScoreProp.averageCaseDuration, '152 days'],
       [ScoreProp.finalScore, 75.6]
@@ -129,25 +129,25 @@ describe('ComRank Tests', function () {
     const complaintsUnaddressed = createComplaints(1, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: undefined,
-      dateOfResolution: undefined
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: undefined,
+      dateResolved: undefined
     });
 
     const complaintsAddressed = createComplaints(2, {
       station: STATION_NAME,
-      status: ComplaintStatus.ADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: undefined
+      status: ComplaintStatus.INVESTIGATING,
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
+      dateResolved: undefined
     });
 
     const complaintsResolved = createComplaints(2, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: DATE_OF_RESOLUTION
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
+      dateResolved: DATE_RESOLVED
     });
 
     const complaints = [].concat(
@@ -158,16 +158,16 @@ describe('ComRank Tests', function () {
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
-    const assertions: Assertions = [
+    const assertions: ScoreAssertions = [
       [ScoreProp.totalNumberOfComplaints, 5],
       [ScoreProp.numberOfComplaintsUnaddressed, 1],
-      [ScoreProp.numberOfComplaintsAddressed, 2],
+      [ScoreProp.numberOfComplaintsInvestigating, 2],
       [ScoreProp.numberOfComplaintsResolved, 2],
       [ScoreProp.percentageUnaddressed, '20%'],
-      [ScoreProp.percentageAddressed, '40%'],
+      [ScoreProp.percentageInvestigating, '40%'],
       [ScoreProp.percentageResolved, '40%'],
-      [ScoreProp.percentageProgressed, '80%'],
-      [ScoreProp.averageAddressalTime, '14 days'],
+      [ScoreProp.percentageAttendedTo, '80%'],
+      [ScoreProp.averageInvestigationTime, '14 days'],
       [ScoreProp.averageResolutionTime, '16 days'],
       [ScoreProp.averageCaseDuration, '30 days'],
       [ScoreProp.finalScore, 78]
@@ -199,7 +199,7 @@ function createComplaints(quantity: number, overrides: ComplaintOverrides) {
  * @param score The station score.
  * @param assertions The list of assertions.
  */
-function runAssertions(score: StationScore, assertions: Assertions) {
+function runAssertions(score: StationScore, assertions: ScoreAssertions) {
   assertions.forEach(([field, actual]) => {
     assertThat(score[field], actual, field);
   });
@@ -219,17 +219,17 @@ function assertThat<T>(actual: T, expected: T, fieldName: string) {
 const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
   totalNumberOfComplaints: 'totalNumberOfComplaints',
   numberOfComplaintsUnaddressed: 'numberOfComplaintsUnaddressed',
-  numberOfComplaintsAddressed: 'numberOfComplaintsAddressed',
+  numberOfComplaintsInvestigating: 'numberOfComplaintsInvestigating',
   numberOfComplaintsResolved: 'numberOfComplaintsResolved',
   percentageUnaddressed: 'percentageUnaddressed',
-  percentageAddressed: 'percentageAddressed',
+  percentageInvestigating: 'percentageInvestigating',
   percentageResolved: 'percentageResolved',
-  percentageProgressed: 'percentageProgressed',
-  averageAddressalTime: 'averageAddressalTime',
+  percentageAttendedTo: 'percentageAttendedTo',
+  averageInvestigationTime: 'averageInvestigationTime',
   averageResolutionTime: 'averageResolutionTime',
   averageCaseDuration: 'averageCaseDuration',
   finalScore: 'finalScore'
 };
 
-type Assertions = Array<[keyof StationScore, unknown]>;
+type ScoreAssertions = Array<[keyof StationScore, unknown]>;
 type ComplaintOverrides = { [key in keyof Complaint]: unknown };

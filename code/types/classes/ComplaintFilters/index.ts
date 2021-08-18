@@ -1,5 +1,3 @@
-import { capitalCase } from 'capital-case';
-
 import {
   filterMultiValuedProperty,
   isDateInRange,
@@ -14,12 +12,12 @@ import {
   ComplaintStatus,
   IncidentType
 } from '../Complaint';
-import { EthnicGroup, Sex } from '../Person';
+import { EthnicGroupOptions, SexOptions } from '../Person';
 
 export class ComplaintFilters {
-  dateOfComplaint?: MapFiltersDateValues;
-  dateOfAddressal?: MapFiltersDateValues;
-  dateOfResolution?: MapFiltersDateValues;
+  dateComplaintMade?: MapFiltersDateValues;
+  dateUnderInvestigation?: MapFiltersDateValues;
+  dateResolved?: MapFiltersDateValues;
   incidentType?: Set<string>;
   station?: Set<string>;
   status?: Set<string>;
@@ -33,9 +31,9 @@ export class ComplaintFilters {
    */
   constructor() {
     return {
-      dateOfComplaint: DefaultDateFilters,
-      dateOfAddressal: DefaultDateFilters,
-      dateOfResolution: DefaultDateFilters,
+      dateComplaintMade: DefaultDateFilters,
+      dateUnderInvestigation: DefaultDateFilters,
+      dateResolved: DefaultDateFilters,
       incidentType: new Set(),
       station: new Set(),
       status: new Set(),
@@ -105,59 +103,25 @@ const DefaultDateFilters: MapFiltersDateValues = {
 };
 
 const DatePropertyFilters = <const>[
-  'dateOfComplaint',
-  'dateOfAddressal',
-  'dateOfResolution'
+  'dateComplaintMade',
+  'dateUnderInvestigation',
+  'dateResolved'
 ];
-
-const EthnicGroupOptions = {
-  White: [
-    EthnicGroup.WHITE_BRITISH,
-    EthnicGroup.WHITE_GYPSY,
-    EthnicGroup.WHITE_IRISH,
-    EthnicGroup.WHITE_OTHER
-  ],
-  Mixed: [
-    EthnicGroup.MIXED_AFRICAN,
-    EthnicGroup.MIXED_CARIBBEAN,
-    EthnicGroup.MIXED_ASIAN,
-    EthnicGroup.MIXED_OTHER
-  ],
-  Asian: [
-    EthnicGroup.ASIAN_INDIAN,
-    EthnicGroup.ASIAN_PAKISTANI,
-    EthnicGroup.ASIAN_BANGLADESHI,
-    EthnicGroup.ASIAN_CHINESE,
-    EthnicGroup.ASIAN_OTHER
-  ],
-  Black: [
-    EthnicGroup.BLACK_AFRICAN,
-    EthnicGroup.BLACK_CARIBBEAN,
-    EthnicGroup.BLACK_OTHER
-  ],
-  Other: [EthnicGroup.ARAB, EthnicGroup.OTHER]
-};
-const SexOptions = Object.entries(Sex).map(([key, value]) => {
-  return {
-    label: capitalCase(key),
-    value: value
-  };
-});
 
 export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
   {
     label: 'Date of Complaint',
-    name: 'dateOfComplaint',
+    name: 'dateComplaintMade',
     defaultValue: DefaultDateFilters
   },
   {
-    label: 'Date of Addressal',
-    name: 'dateOfAddressal',
+    label: 'Date of Investigation',
+    name: 'dateUnderInvestigation',
     defaultValue: DefaultDateFilters
   },
   {
     label: 'Date of Resolution',
-    name: 'dateOfResolution',
+    name: 'dateResolved',
     defaultValue: DefaultDateFilters
   },
   {
@@ -210,5 +174,5 @@ type ComplaintFilterFieldType = {
   name: keyof ComplaintFilters;
   defaultValue: Array<unknown> | MapFiltersDateValues;
   items?: ListItems;
-  itemGroups?: ListItemGroups
+  itemGroups?: ListItemGroups;
 };

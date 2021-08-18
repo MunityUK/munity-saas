@@ -153,7 +153,7 @@ section.map-metrics-content--station {
   figure {
     margin: 0 auto;
     max-width: 180px;
-    padding: 0.5em;
+    padding: 0.5em 0;
   }
 }
 
@@ -190,19 +190,19 @@ table.station-stats {
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 80%;
-  margin-top: 0.5em;
+  margin-top: 1em;
   width: 100%;
 
   tr {
     vertical-align: baseline;
   }
 
-  td {
-    border: 1px solid #a0a0a0;
-    padding: 0.4em;
+  td.station-stats--label {
+    font-weight: bold;
   }
 
   td.station-stats--values {
+    min-width: 60px;
     text-align: right;
   }
 }
@@ -220,7 +220,7 @@ table.people-grid {
   }
 
   tr {
-    vertical-align: baseline;
+    vertical-align: middle;
   }
 
   th,
@@ -233,7 +233,7 @@ table.people-grid {
 table.map-metrics-legend {
   border-collapse: collapse;
   margin: 1em auto 0;
-  width: 90%;
+  width: 100%;
 
   tr {
     font-size: 0.8em;
@@ -243,8 +243,13 @@ table.map-metrics-legend {
     padding: 0;
   }
 
-  td:last-of-type {
-    text-align: center;
+  td.map-metrics-legend__key {
+    padding-right: 0.4em;
+  }
+  
+  td.map-metrics-legend__value {
+    min-width: 20px;
+    text-align: right;
   }
 }
 
@@ -254,6 +259,6 @@ circle.doughnut-arc {
 
 text.doughnut-score {
   font-family: $font-family;
-  font-size: 0.4em;
+  font-size: 0.35em;
   font-weight: bold;
 }
