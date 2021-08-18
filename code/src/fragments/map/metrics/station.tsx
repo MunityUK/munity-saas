@@ -1,61 +1,66 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { Doughnut } from 'react-chartjs-2';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { Complaint, ComplaintStatus, StationScore, StationScores } from 'types';
+import { DoughnutChart } from 'src/components/chart/doughnut';
+import { ComplaintStatus, StationScore, StationScores } from 'types';
 
 /**
- * The content of the complaint information metric tab.
+ * The content of the station metric tab.
  */
 export default function MetricStationProfile({
-  complaint,
+  station,
   scores
-}: MetricComplaintInfoProps) {
-  if (!complaint) return null;
+}: MetricStationProps) {
+  if (!station) return null;
 
-  const [chartData, setChartData] = useState<ChartDataModel>();
-  const [fields, setFields] = useState<Array<ScoreField>>([]);
-  const [metrics, setMetrics] = useState<Array<MapMetric>>([]);
+  const [score, setScore] = useState<StationScore>();
 
   useEffect(() => {
-    const score = scores[complaint.station!];
-    calculateMetrics(score);
-    collateFields(score);
-  }, [complaint?.id]);
+    const score = scores[station!];
+    setScore(score);
+  }, [station]);
 
   /**
-   * Calculates the metrics for the complaint's station and sets the chart data.
-   * @param score The station score.
+   * Calculates the metrics for the complaint's station.
    */
-  const calculateMetrics = (score: StationScore) => {
-    if (!complaint) return;
+  const metrics = useMemo(() => {
+    if (!score) return [];
+    return [
+      {
+        color: '#13b835',
+        label: ComplaintStatus.RESOLVED,
+        number: score.numberOfComplaintsResolved!
+      },
+      {
+        color: '#d2d200',
+        label: ComplaintStatus.ADDRESSED,
+        number: score.numberOfComplaintsAddressed!
+      },
+      {
+        color: '#ce1e1e',
+        label: ComplaintStatus.UNADDRESSED,
+        number: score.numberOfComplaintsUnaddressed!
+      }
+    ];
+  }, [score]);
 
-    const metrics = buildMetrics(score);
-    setMetrics(metrics);
-
-    const dataset: ChartDatasetModel = {
-      data: [],
-      backgroundColor: []
-    };
-    const labels: Array<string> = [];
-
-    metrics.forEach(({ color, label, number }) => {
-      dataset.backgroundColor.push(color);
-      dataset.data.push(number);
-      labels.push(label);
+  /**
+   * Sets the chart data using built metrics.
+   */
+  const chartData = useMemo(() => {
+    if (!metrics) return [];
+    return metrics.map(({ color, number }) => {
+      return { color, value: number };
     });
-
-    setChartData({ datasets: [dataset], labels });
-  };
+  }, [metrics]);
 
   /**
    * Builds the list of fields to display.
-   * @param score The station score.
    */
-  const collateFields = (score: StationScore) => {
-    const fields = [
-      { label: 'Score', value: score.finalScore },
+  const fields = useMemo(() => {
+    if (!score) return [];
+    return [
       {
-        label: 'Total Number of Complaints',
+        label: 'Total No. of Complaints',
         value: score.totalNumberOfComplaints
       },
       {
@@ -66,38 +71,34 @@ export default function MetricStationProfile({
         label: 'Avg. Resolution Time',
         value: score.averageResolutionTime ?? 'N/A'
       },
-      { label: 'Avg. Case Duration', value: score.averageCaseDuration ?? 'N/A' }
+      {
+        label: 'Avg. Case Duration',
+        value: score.averageCaseDuration ?? 'N/A'
+      }
     ];
-    setFields(fields);
-  };
+  }, [score]);
 
   return (
     <section className={'map-metrics-content--station'}>
-      <h1>{complaint.station}</h1>
+      <h1>{station}</h1>
       <figure>
-        <Doughnut
-          type={'doughnut'}
-          data={chartData}
-          options={{
-            plugins: {
-              legend: {
-                display: false
-              }
-            }
-          }}
-        />
+        <DoughnutChart data={chartData} score={score?.finalScore} />
         <figcaption>
           <ChartLegend metrics={metrics} />
         </figcaption>
       </figure>
-      {fields.map(({ label, value }, key) => {
-        return (
-          <fieldset className={'complaint-field'} key={key}>
-            <label>{label}:</label>
-            <p>{value}</p>
-          </fieldset>
-        );
-      })}
+      <table className={'station-stats'}>
+        <tbody>
+          {fields.map(({ label, value }, key) => {
+            return (
+              <tr key={key}>
+                <td>{label}</td>
+                <td className={'station-stats--values'}>{value}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </section>
   );
 }
@@ -108,41 +109,23 @@ export default function MetricStationProfile({
 function ChartLegend({ metrics }: ChartKeyProps) {
   return (
     <table className={'map-metrics-legend'}>
-      {metrics.map(({ color, label, number }, key) => {
-        return (
-          <tr key={key}>
-            <td>
-              <svg width={10} height={10}>
-                <circle cx={5} cy={5} r={5} fill={color} />
-              </svg>
-            </td>
-            <td>{label}</td>
-            <td className={'map-metrics-legend__value'}>{number}</td>
-          </tr>
-        );
-      })}
+      <tbody>
+        {metrics.map(({ color, label, number }, key) => {
+          return (
+            <tr key={key}>
+              <td>
+                <svg width={10} height={10}>
+                  <circle cx={5} cy={5} r={5} fill={color} />
+                </svg>
+              </td>
+              <td>{label}</td>
+              <td className={'map-metrics-legend__value'}>{number}</td>
+            </tr>
+          );
+        })}
+      </tbody>
     </table>
   );
-}
-
-function buildMetrics(score: StationScore) {
-  return [
-    {
-      color: '#0f007d',
-      label: ComplaintStatus.RESOLVED,
-      number: score.numberOfComplaintsResolved!
-    },
-    {
-      color: '#7d0188',
-      label: ComplaintStatus.ADDRESSED,
-      number: score.numberOfComplaintsAddressed!
-    },
-    {
-      color: '#7d0015',
-      label: ComplaintStatus.UNADDRESSED,
-      number: score.numberOfComplaintsUnaddressed!
-    }
-  ];
 }
 
 interface MapMetric {
@@ -151,28 +134,11 @@ interface MapMetric {
   number: number;
 }
 
-interface ChartDataModel {
-  datasets: Array<ChartDatasetModel>;
-  labels: Array<string>;
-}
-
-interface ChartDatasetModel {
-  data: Array<number>;
-  backgroundColor: Array<string>;
-}
-
-interface ScoreField {
-  label: string;
-  value: ReactNode;
-}
-
-interface MapMetricsProps {
-  complaint: Complaint;
+interface MetricStationProps {
+  station?: string;
   scores: StationScores;
 }
 
 interface ChartKeyProps {
   metrics: Array<MapMetric>;
 }
-
-type MetricComplaintInfoProps = MapMetricsProps;
