@@ -13,9 +13,9 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: undefined,
-      dateOfResolution: undefined
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: undefined,
+      dateResolved: undefined
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
@@ -41,10 +41,10 @@ describe('ComRank Tests', function () {
   it('Given all complaints addressed', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
-      status: ComplaintStatus.ADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: undefined
+      status: ComplaintStatus.INVESTIGATING,
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: DATE_OF_ADDRESSAL,
+      dateResolved: undefined
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
@@ -71,9 +71,9 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: DATE_OF_RESOLUTION
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: DATE_OF_ADDRESSAL,
+      dateResolved: DATE_OF_RESOLUTION
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
@@ -100,9 +100,9 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: Date.UTC(2000, 3, 1),
-      dateOfResolution: Date.UTC(2000, 5, 1)
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: Date.UTC(2000, 3, 1),
+      dateResolved: Date.UTC(2000, 5, 1)
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
@@ -129,25 +129,25 @@ describe('ComRank Tests', function () {
     const complaintsUnaddressed = createComplaints(1, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: undefined,
-      dateOfResolution: undefined
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: undefined,
+      dateResolved: undefined
     });
 
     const complaintsAddressed = createComplaints(2, {
       station: STATION_NAME,
-      status: ComplaintStatus.ADDRESSED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: undefined
+      status: ComplaintStatus.INVESTIGATING,
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: DATE_OF_ADDRESSAL,
+      dateResolved: undefined
     });
 
     const complaintsResolved = createComplaints(2, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateOfComplaint: DATE_OF_COMPLAINT,
-      dateOfAddressal: DATE_OF_ADDRESSAL,
-      dateOfResolution: DATE_OF_RESOLUTION
+      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateUnderInvestigation: DATE_OF_ADDRESSAL,
+      dateResolved: DATE_OF_RESOLUTION
     });
 
     const complaints = [].concat(
