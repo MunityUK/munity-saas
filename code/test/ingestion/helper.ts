@@ -10,9 +10,9 @@ export function createTables(dbTable: string) {
       table.string('complaintId', 15).unique();
       table.string('station', 100);
       table.string('force', 50);
-      table.dateTime('dateOfComplaint');
-      table.dateTime('dateOfAddressal');
-      table.dateTime('dateOfResolution');
+      table.dateTime('dateComplaintMade');
+      table.dateTime('dateUnderInvestigation');
+      table.dateTime('dateResolved');
       table.string('incidentType', 20);
       table.text('incidentDescription');
       table.string('status', 20);
@@ -27,6 +27,6 @@ export function createTables(dbTable: string) {
     });
 }
 
-export function insertComplaints(table: string, complaints: Complaint[]) {
-  return knex(table).insert(complaints);
+export function insertComplaints(tableName: string, complaints: Complaint[]) {
+  return knex(tableName).insert(complaints);
 }

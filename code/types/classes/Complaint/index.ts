@@ -29,7 +29,7 @@ export class Complaint {
    * Generates a random complaint.
    * @returns The generated complaint.
    */
-  static random() {
+  static random(options?: RandomComplaintOptions) {
     const complaintId = faker.datatype
       .number(10000)
       .toString()
@@ -41,7 +41,7 @@ export class Complaint {
     complaint.force = 'Avon and Somerset Constabulary';
     complaint.incidentType = randomEnumValue(IncidentType);
     complaint.incidentDescription = faker.lorem.sentence();
-    complaint.status = randomEnumValue(ComplaintStatus, 2);
+    complaint.status = options?.status ?? randomEnumValue(ComplaintStatus, 2);
     complaint.notes = faker.lorem.sentence();
     complaint.city = 'Bristol';
     complaint.county = 'Avon';
@@ -126,3 +126,7 @@ export const BristolPoliceStations = [
   'The Bridewell',
   'Trinity Road'
 ];
+
+type RandomComplaintOptions = {
+  status?: ComplaintStatus;
+}
