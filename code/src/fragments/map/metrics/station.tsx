@@ -93,7 +93,7 @@ export default function MetricStationProfile({
             return (
               <tr key={key}>
                 <td>{label}</td>
-                <td>{value}</td>
+                <td className={'station-stats--values'}>{value}</td>
               </tr>
             );
           })}

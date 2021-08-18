@@ -201,6 +201,10 @@ table.station-stats {
     border: 1px solid #a0a0a0;
     padding: 0.4em;
   }
+
+  td.station-stats--values {
+    text-align: right;
+  }
 }
 
 table.people-grid {
@@ -249,5 +253,7 @@ circle.doughnut-arc {
 }
 
 text.doughnut-score {
+  font-family: $font-family;
   font-size: 0.4em;
+  font-weight: bold;
 }
