@@ -49,7 +49,7 @@ export default function MetricComplaintInfo({
         value: <time>{formatDate(complaint.dateComplaintMade!)}</time>
       },
       {
-        label: 'Date of Addressal',
+        label: 'Date of Investigation Start',
         value: <time>{formatDate(complaint.dateUnderInvestigation!)}</time>
       },
       {

@@ -1,14 +1,9 @@
+import { capitalCase } from 'capital-case';
 import faker from 'faker';
 
 import { randomElement, randomEnumValue } from '../../utils/functions';
 
-export class Person {
-  age?: number;
-  ethnicGroup?: EthnicGroup;
-  sex?: Sex;
-}
-
-export enum EthnicGroup {
+enum EthnicGroup {
   WHITE_BRITISH = 'British',
   WHITE_IRISH = 'Irish',
   WHITE_GYPSY = 'Gypsy or Irish Traveller',
@@ -29,19 +24,18 @@ export enum EthnicGroup {
   OTHER = 'Other'
 }
 
-export enum Sex {
+enum Sex {
   MALE = '1',
   FEMALE = '2',
   INDETERMINATE = '9',
   UNKNOWN = '0'
 }
 
-export const SexLookup = {
-  '1': 'Male',
-  '2': 'Female',
-  '9': 'Indeterminate',
-  '0': 'Unknown'
-};
+export class Person {
+  age?: number;
+  ethnicGroup?: EthnicGroup;
+  sex?: Sex;
+}
 
 export class Officer extends Person {
   officerId?: string;
@@ -102,6 +96,48 @@ export class Complainant extends Person {
     return complainants;
   }
 }
+
+export const SexLookup = {
+  '1': 'Male',
+  '2': 'Female',
+  '9': 'Indeterminate',
+  '0': 'Unknown'
+};
+
+export const EthnicGroupOptions = {
+  White: [
+    EthnicGroup.WHITE_BRITISH,
+    EthnicGroup.WHITE_GYPSY,
+    EthnicGroup.WHITE_IRISH,
+    EthnicGroup.WHITE_OTHER
+  ],
+  Mixed: [
+    EthnicGroup.MIXED_AFRICAN,
+    EthnicGroup.MIXED_CARIBBEAN,
+    EthnicGroup.MIXED_ASIAN,
+    EthnicGroup.MIXED_OTHER
+  ],
+  Asian: [
+    EthnicGroup.ASIAN_INDIAN,
+    EthnicGroup.ASIAN_PAKISTANI,
+    EthnicGroup.ASIAN_BANGLADESHI,
+    EthnicGroup.ASIAN_CHINESE,
+    EthnicGroup.ASIAN_OTHER
+  ],
+  Black: [
+    EthnicGroup.BLACK_AFRICAN,
+    EthnicGroup.BLACK_CARIBBEAN,
+    EthnicGroup.BLACK_OTHER
+  ],
+  Other: [EthnicGroup.ARAB, EthnicGroup.OTHER]
+};
+
+export const SexOptions = Object.entries(Sex).map(([key, value]) => {
+  return {
+    label: capitalCase(key),
+    value: value
+  };
+});
 
 const SexDistribution = [
   { sex: Sex.UNKNOWN, probability: 2 },

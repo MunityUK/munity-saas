@@ -20,12 +20,12 @@ function printScores(stationScores: StationScores) {
     console.info(`**** Station #${i + 1}: ${station}`);
     console.info('> Total Number of Complaints: ' + score.totalNumberOfComplaints);
     console.info('> Number of Complaints Unaddressed: ' + score.numberOfComplaintsUnaddressed);
-    console.info('> Number of Complaints Addressed: ' + score.numberOfComplaintsInvestigating);
+    console.info('> Number of Complaints Investigating: ' + score.numberOfComplaintsInvestigating);
     console.info('> Number of Complaints Resolved: ' + score.numberOfComplaintsResolved);
     console.info('> Percentage Unaddressed: ' + score.percentageUnaddressed);
-    console.info('> Percentage Addressed: ' + score.percentageInvestigating);
+    console.info('> Percentage Investigating: ' + score.percentageInvestigating);
     console.info('> Percentage Resolved: ' + score.percentageResolved);
-    console.info('> Avg. Addressal Time: ' + score.averageInvestigationTime);
+    console.info('> Avg. Investigation Time: ' + score.averageInvestigationTime);
     console.info('> Avg. Resolution Time: ' + score.averageResolutionTime);
     console.info('> Avg. Case Duration: ' + score.averageCaseDuration);
     console.info('**** Score: ' + score.finalScore + ' / 100 ****');

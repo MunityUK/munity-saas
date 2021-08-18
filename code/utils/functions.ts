@@ -8,7 +8,7 @@ import { ListItem } from 'types';
  * @param randSum The number of times random is summed.
  * @returns The random enum value.
  */
- export function randomEnumValue<T>(enumeration: T, randSum = 1): T[keyof T] {
+export function randomEnumValue<T>(enumeration: T, randSum = 1): T[keyof T] {
   return randomElement(Object.values(enumeration), randSum);
 }
 

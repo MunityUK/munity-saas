@@ -64,7 +64,7 @@ export default function MetricStationProfile({
         value: score.totalNumberOfComplaints
       },
       {
-        label: 'Avg. Addressal Time',
+        label: 'Avg. Investigation Time',
         value: score.averageInvestigationTime ?? 'N/A'
       },
       {

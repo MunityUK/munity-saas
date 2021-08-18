@@ -1,5 +1,3 @@
-import { capitalCase } from 'capital-case';
-
 import {
   filterMultiValuedProperty,
   isDateInRange,
@@ -14,7 +12,7 @@ import {
   ComplaintStatus,
   IncidentType
 } from '../Complaint';
-import { EthnicGroup, Sex } from '../Person';
+import { EthnicGroupOptions, SexOptions } from '../Person';
 
 export class ComplaintFilters {
   dateComplaintMade?: MapFiltersDateValues;
@@ -110,40 +108,6 @@ const DatePropertyFilters = <const>[
   'dateResolved'
 ];
 
-const EthnicGroupOptions = {
-  White: [
-    EthnicGroup.WHITE_BRITISH,
-    EthnicGroup.WHITE_GYPSY,
-    EthnicGroup.WHITE_IRISH,
-    EthnicGroup.WHITE_OTHER
-  ],
-  Mixed: [
-    EthnicGroup.MIXED_AFRICAN,
-    EthnicGroup.MIXED_CARIBBEAN,
-    EthnicGroup.MIXED_ASIAN,
-    EthnicGroup.MIXED_OTHER
-  ],
-  Asian: [
-    EthnicGroup.ASIAN_INDIAN,
-    EthnicGroup.ASIAN_PAKISTANI,
-    EthnicGroup.ASIAN_BANGLADESHI,
-    EthnicGroup.ASIAN_CHINESE,
-    EthnicGroup.ASIAN_OTHER
-  ],
-  Black: [
-    EthnicGroup.BLACK_AFRICAN,
-    EthnicGroup.BLACK_CARIBBEAN,
-    EthnicGroup.BLACK_OTHER
-  ],
-  Other: [EthnicGroup.ARAB, EthnicGroup.OTHER]
-};
-const SexOptions = Object.entries(Sex).map(([key, value]) => {
-  return {
-    label: capitalCase(key),
-    value: value
-  };
-});
-
 export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
   {
     label: 'Date of Complaint',
@@ -210,5 +174,5 @@ type ComplaintFilterFieldType = {
   name: keyof ComplaintFilters;
   defaultValue: Array<unknown> | MapFiltersDateValues;
   items?: ListItems;
-  itemGroups?: ListItemGroups
+  itemGroups?: ListItemGroups;
 };
