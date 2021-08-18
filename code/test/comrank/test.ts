@@ -4,16 +4,16 @@ import { describe, it } from 'mocha';
 import { Complaint, ComplaintStatus, StationScore } from '../../types';
 
 const STATION_NAME = 'Station';
-const DATE_OF_COMPLAINT = Date.UTC(2000, 0, 1);
-const DATE_OF_ADDRESSAL = Date.UTC(2000, 0, 15);
-const DATE_OF_RESOLUTION = Date.UTC(2000, 0, 31);
+const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
+const DATE_INVESTIGATING = Date.UTC(2000, 0, 15);
+const DATE_RESOLVED = Date.UTC(2000, 0, 31);
 
 describe('ComRank Tests', function () {
   it('Given all complaints unaddressed', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateComplaintMade: DATE_COMPLAINT,
       dateUnderInvestigation: undefined,
       dateResolved: undefined
     });
@@ -42,8 +42,8 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,
-      dateComplaintMade: DATE_OF_COMPLAINT,
-      dateUnderInvestigation: DATE_OF_ADDRESSAL,
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
       dateResolved: undefined
     });
 
@@ -71,9 +71,9 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateComplaintMade: DATE_OF_COMPLAINT,
-      dateUnderInvestigation: DATE_OF_ADDRESSAL,
-      dateResolved: DATE_OF_RESOLUTION
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
+      dateResolved: DATE_RESOLVED
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
@@ -100,7 +100,7 @@ describe('ComRank Tests', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateComplaintMade: DATE_COMPLAINT,
       dateUnderInvestigation: Date.UTC(2000, 3, 1),
       dateResolved: Date.UTC(2000, 5, 1)
     });
@@ -129,7 +129,7 @@ describe('ComRank Tests', function () {
     const complaintsUnaddressed = createComplaints(1, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
-      dateComplaintMade: DATE_OF_COMPLAINT,
+      dateComplaintMade: DATE_COMPLAINT,
       dateUnderInvestigation: undefined,
       dateResolved: undefined
     });
@@ -137,17 +137,17 @@ describe('ComRank Tests', function () {
     const complaintsAddressed = createComplaints(2, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,
-      dateComplaintMade: DATE_OF_COMPLAINT,
-      dateUnderInvestigation: DATE_OF_ADDRESSAL,
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
       dateResolved: undefined
     });
 
     const complaintsResolved = createComplaints(2, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
-      dateComplaintMade: DATE_OF_COMPLAINT,
-      dateUnderInvestigation: DATE_OF_ADDRESSAL,
-      dateResolved: DATE_OF_RESOLUTION
+      dateComplaintMade: DATE_COMPLAINT,
+      dateUnderInvestigation: DATE_INVESTIGATING,
+      dateResolved: DATE_RESOLVED
     });
 
     const complaints = [].concat(
