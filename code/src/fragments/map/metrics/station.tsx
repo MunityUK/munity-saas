@@ -33,7 +33,7 @@ export default function MetricStationProfile({
       {
         color: '#d2d200',
         label: ComplaintStatus.INVESTIGATING,
-        number: score.numberOfComplaintsAddressed!
+        number: score.numberOfComplaintsInvestigating!
       },
       {
         color: '#ce1e1e',
@@ -65,7 +65,7 @@ export default function MetricStationProfile({
       },
       {
         label: 'Avg. Addressal Time',
-        value: score.averageAddressalTime ?? 'N/A'
+        value: score.averageInvestigationTime ?? 'N/A'
       },
       {
         label: 'Avg. Resolution Time',

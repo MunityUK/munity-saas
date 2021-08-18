@@ -1,13 +1,13 @@
 export class StationScore {
   totalNumberOfComplaints?: number;
   numberOfComplaintsResolved?: number;
-  numberOfComplaintsAddressed?: number;
+  numberOfComplaintsInvestigating?: number;
   numberOfComplaintsUnaddressed?: number;
   percentageUnaddressed?: string;
-  percentageAddressed?: string;
+  percentageInvestigating?: string;
   percentageResolved?: string;
-  percentageProgressed?: string;
-  averageAddressalTime?: string | null;
+  percentageAttendedTo?: string;
+  averageInvestigationTime?: string | null;
   averageResolutionTime?: string | null;
   averageCaseDuration?: string | null;
   finalScore?: number;
