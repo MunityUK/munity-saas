@@ -92,7 +92,7 @@ export default function MetricStationProfile({
           {fields.map(({ label, value }, key) => {
             return (
               <tr key={key}>
-                <td>{label}</td>
+                <td className={'station-stats--label'}>{label}:</td>
                 <td className={'station-stats--values'}>{value}</td>
               </tr>
             );
@@ -113,7 +113,7 @@ function ChartLegend({ metrics }: ChartKeyProps) {
         {metrics.map(({ color, label, number }, key) => {
           return (
             <tr key={key}>
-              <td>
+              <td className={'map-metrics-legend__key'}>
                 <svg width={10} height={10}>
                   <circle cx={5} cy={5} r={5} fill={color} />
                 </svg>
