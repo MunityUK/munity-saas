@@ -46,15 +46,15 @@ export default function MetricComplaintInfo({
       { label: 'Status', value: <p>{complaint.status?.toUpperCase()}</p> },
       {
         label: 'Date of Complaint',
-        value: <time>{formatDate(complaint.dateOfComplaint!)}</time>
+        value: <time>{formatDate(complaint.dateComplaintMade!)}</time>
       },
       {
         label: 'Date of Addressal',
-        value: <time>{formatDate(complaint.dateOfAddressal!)}</time>
+        value: <time>{formatDate(complaint.dateUnderInvestigation!)}</time>
       },
       {
         label: 'Date of Resolution',
-        value: <time>{formatDate(complaint.dateOfResolution!)}</time>
+        value: <time>{formatDate(complaint.dateResolved!)}</time>
       },
       { label: 'Incident Type', value: <p>{complaint.incidentType}</p> },
       {

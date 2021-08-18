@@ -32,7 +32,7 @@ export default function MetricStationProfile({
       },
       {
         color: '#d2d200',
-        label: ComplaintStatus.ADDRESSED,
+        label: ComplaintStatus.INVESTIGATING,
         number: score.numberOfComplaintsAddressed!
       },
       {

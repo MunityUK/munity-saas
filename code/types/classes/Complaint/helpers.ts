@@ -23,21 +23,21 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     listOfComplaints.push(complaint);
     complaintsByStation[station!] = listOfComplaints;
 
-    if (complaint.dateOfAddressal) {
+    if (complaint.dateUnderInvestigation) {
       addressalTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateOfComplaint!),
-        new Date(complaint.dateOfAddressal)
+        new Date(complaint.dateComplaintMade!),
+        new Date(complaint.dateUnderInvestigation)
       );
     }
 
-    if (complaint.dateOfResolution) {
+    if (complaint.dateResolved) {
       resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateOfAddressal!),
-        new Date(complaint.dateOfResolution)
+        new Date(complaint.dateUnderInvestigation!),
+        new Date(complaint.dateResolved)
       );
       caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateOfComplaint!),
-        new Date(complaint.dateOfResolution)
+        new Date(complaint.dateComplaintMade!),
+        new Date(complaint.dateResolved)
       );
     }
   });
@@ -46,7 +46,7 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     // Calculate counts.
     const complaintCount = complaints.length;
     const addressedCount = getComplaintCountByStatus(complaints, [
-      ComplaintStatus.ADDRESSED
+      ComplaintStatus.INVESTIGATING
     ]);
     const resolvedCount = getComplaintCountByStatus(complaints, [
       ComplaintStatus.RESOLVED
