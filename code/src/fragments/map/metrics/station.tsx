@@ -59,7 +59,6 @@ export default function MetricStationProfile({
   const fields = useMemo(() => {
     if (!score) return [];
     return [
-      { label: 'Score', value: score.finalScore },
       {
         label: 'Total No. of Complaints',
         value: score.totalNumberOfComplaints
@@ -83,7 +82,7 @@ export default function MetricStationProfile({
     <section className={'map-metrics-content--station'}>
       <h1>{station}</h1>
       <figure>
-        <DoughnutChart data={chartData} />
+        <DoughnutChart data={chartData} score={score?.finalScore} />
         <figcaption>
           <ChartLegend metrics={metrics} />
         </figcaption>
