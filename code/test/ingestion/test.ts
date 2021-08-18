@@ -7,7 +7,7 @@ import { Complaint, ComplaintStatus } from '../../types';
 import knex, { DB_SCHEMA, DB_TABLE_TEST } from '../../utils/knex';
 import { tryCatch } from '../utils';
 
-describe('Ingestion Tests', function () {
+describe('Database Tests', function () {
   it(
     'Create test table',
     tryCatch(async () => {
