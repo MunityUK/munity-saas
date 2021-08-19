@@ -6,6 +6,9 @@
     "extends": "@zzavidd/stylelint-config"
   },
   "prettier": "@zzavidd/prettier-config",
+  "bin": {
+    "munity": "./scripts/database.sh"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

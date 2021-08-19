@@ -1,7 +1,7 @@
 import { capitalCase } from 'capital-case';
 import faker from 'faker';
 
-import { randomElement, randomEnumValue } from '../../utils/functions';
+import { randomElement, randomEnumValue } from '../../utils/functions/common';
 
 enum EthnicGroup {
   WHITE_BRITISH = 'British',

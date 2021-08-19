@@ -1,6 +1,6 @@
 import { Complaint, StationScore } from '../../types';
+import { run } from '../../utils/functions/test';
 import knex, { DB_TABLE } from '../../utils/knex';
-import { run } from '../utils';
 
 run(main);
 

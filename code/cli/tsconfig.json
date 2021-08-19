@@ -4,6 +4,6 @@
     "esModuleInterop": true,
     "isolatedModules": false,
     "module": "commonjs",
-    "moduleResolution": "node",
-  },
+    "moduleResolution": "node"
+  }
 }

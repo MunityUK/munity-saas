@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
 import { ListItems } from 'types';
-import { extractLabelValue } from 'utils/functions';
+import { extractLabelValue } from 'utils/functions/common';
 
 export function CheckboxGroup(props: CheckboxGroupProps) {
   const { name, items, onChange, checkedValues } = props;

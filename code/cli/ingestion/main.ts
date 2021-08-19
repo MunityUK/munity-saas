@@ -1,8 +1,7 @@
-import { createTables, insertComplaints } from './helper';
-
 import { Complaint } from '../../types';
+import { createTables, insertComplaints } from '../../utils/functions/database';
+import { run } from '../../utils/functions/test';
 import { DB_TABLE } from '../../utils/knex';
-import { run } from '../utils';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 

@@ -1,11 +1,10 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import { createTables, insertComplaints } from './helper';
-
 import { Complaint, ComplaintStatus } from '../../types';
+import { createTables, insertComplaints } from '../../utils/functions/database';
+import { tryCatch } from '../../utils/functions/test';
 import knex, { DB_SCHEMA, DB_TABLE_TEST } from '../../utils/knex';
-import { tryCatch } from '../utils';
 
 describe('Database Tests', function () {
   it(

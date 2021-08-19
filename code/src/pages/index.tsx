@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import MapFiltersBar from 'src/fragments/map/filters';
 import { getComplaints } from 'src/pages/api/complaints';
 import { Complaint } from 'types';
-import { parse } from 'utils/functions';
+import { parse } from 'utils/functions/common';
 
 const MunityMap = Dynamic(() => import('src/fragments/map'), {
   ssr: false

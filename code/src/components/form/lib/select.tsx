@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 
 import { ListItems } from 'types';
-import { extractLabelValue } from 'utils/functions';
+import { extractLabelValue } from 'utils/functions/common';
 
 export function Select(props: SelectProps) {
   const { items, name, placeholder, value, onChange, className } = props;

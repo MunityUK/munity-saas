@@ -3,7 +3,7 @@ import * as faker from 'faker';
 import * as ComplaintHelper from './helpers';
 
 import { ARCGIS_BASE_URL } from '../../../utils/constants';
-import { randomElement, randomEnumValue } from '../../../utils/functions';
+import { randomElement, randomEnumValue } from '../../../utils/functions/common';
 import { Complainant, Officer } from '../Person';
 
 export class Complaint {
