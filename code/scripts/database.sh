@@ -2,12 +2,15 @@
 
 set -e
 
+SCRIPT_DIR="$(dirname "${0}")"
+cd "${SCRIPT_DIR}"
+
 CONTAINER='munity-db'
 IMAGE='mysql/mysql-server:8.0.26'
 
 # shellcheck disable=SC1091
 ## Import environment variables from .env file.
-source ../.env
+source "${SCRIPT_DIR}/.env"
 
 ENV_VARS=(MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE)
 

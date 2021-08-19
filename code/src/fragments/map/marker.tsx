@@ -36,13 +36,8 @@ function IMapMarker({
       title={complaint.complaintId}
       eventHandlers={{
         click: () => setSelectedComplaint(complaint)
-      }}>
-      {/* <Popup closeButton={false}>
-        {complaint.complaintId} • {complaint.incidentType}
-        <br />
-        {complaint.station}
-      </Popup> */}
-    </Marker>
+      }}
+    />
   );
 }
 
