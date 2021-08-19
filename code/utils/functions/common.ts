@@ -2,6 +2,31 @@ import { format } from 'date-fns';
 
 import { ListItem } from 'types';
 
+export function writeAsList(items: string[]): string {
+  if (items.length < 2) return items[0];
+
+  return items.reduce((acc, item, key, { length }) => {
+    if (key === 0) {
+      acc += `${item}`;
+    } else if (key < length - 1) {
+      acc += `, ${item}`;
+    } else {
+      acc += ` and ${item}`;
+    }
+    return acc;
+  }, '');
+}
+
+/**
+ * Validates if a specified value is a member of an enum.
+ * @param enumeration The enum to check against.
+ * @param value The value to validate.
+ * @returns True if value is part of enum.
+ */
+export function isEnumValue<T>(enumeration: T, value: unknown): boolean {
+  return Object.values(enumeration).includes(value);
+}
+
 /**
  * Produces a random value from an enum.
  * @param enumeration The enum.

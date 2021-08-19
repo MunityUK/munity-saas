@@ -7,7 +7,7 @@
   },
   "prettier": "@zzavidd/prettier-config",
   "bin": {
-    "munity": "./scripts/database.sh"
+    "munity": "./cli/bin/cli/index.js"
   },
   "scripts": {
     "dev": "next dev",
@@ -15,6 +15,9 @@
     "start": "next start",
     "check": "tsc --noEmit",
     "test": "ts-mocha --project test/tsconfig.json --recursive --exit --no-timeout test/index.ts",
+    "precli": "rm -rf cli/bin",
+    "cli": "tsc --project cli/tsconfig.json",
+    "cli:dev": "ts-node --project cli/tsconfig.json cli",
     "db:init": "node scripts/database.js",
     "db:ingest": "ts-node --project test/tsconfig.json test/ingestion/main",
     "comrank": "ts-node --project test/tsconfig.json test/comrank/main",

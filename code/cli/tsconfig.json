@@ -1,9 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "esModuleInterop": true,
     "isolatedModules": false,
     "module": "commonjs",
-    "moduleResolution": "node"
-  }
+    "noEmit": false,
+    "outDir": "./bin"
+  },
+  "include": ["**/*.ts"]
 }

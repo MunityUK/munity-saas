@@ -1,13 +1,10 @@
 import { Complaint } from '../../types';
 import { createTables, insertComplaints } from '../../utils/functions/database';
-import { run } from '../../utils/functions/test';
 import { DB_TABLE } from '../../utils/knex';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 
-run(main);
-
-async function main() {
+export async function main() {
   await createTables(DB_TABLE);
   console.info('Table (re)created.');
 

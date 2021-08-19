@@ -3,7 +3,12 @@ import * as faker from 'faker';
 import * as ComplaintHelper from './helpers';
 
 import { ARCGIS_BASE_URL } from '../../../utils/constants';
-import { randomElement, randomEnumValue } from '../../../utils/functions/common';
+import {
+  isEnumValue,
+  randomElement,
+  randomEnumValue,
+  writeAsList
+} from '../../../utils/functions/common';
 import { Complainant, Officer } from '../Person';
 
 export class Complaint {
@@ -70,7 +75,21 @@ export class Complaint {
       Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
     );
 
+    complaint.validate();
     return complaint;
+  }
+
+  /**
+   * Validates the properties of this complaint.
+   */
+  validate() {
+    const { status } = this;
+    if (!isEnumValue(ComplaintStatus, status)) {
+      const validStatuses = writeAsList(Object.keys(ComplaintStatus));
+      throw new TypeError(
+        `'${status}' is not a valid complaint status. The valid complaint status options are ${validStatuses}.`
+      );
+    }
   }
 
   /**
@@ -129,4 +148,4 @@ export const BristolPoliceStations = [
 
 type RandomComplaintOptions = {
   status?: ComplaintStatus;
-}
+};

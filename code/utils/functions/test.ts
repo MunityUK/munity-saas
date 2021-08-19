@@ -10,7 +10,7 @@ export function run(main: () => Promise<void>) {
     try {
       await main();
     } catch (err) {
-      console.error(err);
+      console.error(`${err.name}: ${err.message}`);
     } finally {
       process.exit(0);
     }
