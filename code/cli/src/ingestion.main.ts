@@ -4,6 +4,8 @@ import { DB_TABLE } from '../../app/utils/knex';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 
+main()
+;
 export async function main() {
   await createTables(DB_TABLE);
   console.info('Table (re)created.');

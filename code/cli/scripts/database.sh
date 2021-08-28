@@ -5,12 +5,19 @@ set -e
 SCRIPT_DIR="$(dirname "${0}")"
 cd "${SCRIPT_DIR}"
 
-CONTAINER='munity-db'
-IMAGE='mysql/mysql-server:8.0.26'
+# Determine project root directory
+ROOT_DIR=$(pushd . 1> /dev/null ; \
+  while [ "$(PWD)" != "/" ]; do \
+  test -e .root && grep -q 'Munity-Saas-Root-Dir' < .root && { pwd; break; }; \
+  cd .. ; done ; popd \
+  1> /dev/null)
 
 # shellcheck disable=SC1091
 ## Import environment variables from .env file.
-source "${SCRIPT_DIR}/.env"
+source "${ROOT_DIR}/.env"
+
+CONTAINER='munity-db'
+IMAGE='mysql/mysql-server:8.0.26'
 
 ENV_VARS=(MYSQL_ROOT_PASSWORD MYSQL_USER MYSQL_PASSWORD MYSQL_DATABASE)
 
