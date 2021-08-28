@@ -1,6 +1,6 @@
 import { compareAsc } from 'date-fns';
 
-import { Complaint, MapFiltersDateValues } from '../../../types';
+import { Complaint, MapFiltersDateValues } from '../..';
 import { Person } from '../Person';
 
 /**

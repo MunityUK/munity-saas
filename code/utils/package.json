@@ -1,6 +1,5 @@
 {
-  "name": "munity-cli",
-  "version": "0.1.0",
+  "name": "munity-utils",
   "private": true,
   "eslintConfig": {
     "extends": "@zzavidd/eslint-config"
@@ -8,22 +7,23 @@
   "prettier": "@zzavidd/prettier-config",
   "scripts": {
     "dev": "ts-node .",
-    "eslint": "eslint --ext .ts,.tsx .",
-    "db:init": "node scripts/database.js",
-    "db:ingest": "ts-node --project ./tsconfig.json src/ingestion.main"
+    "eslint": "eslint --ext .ts,.tsx ."
   },
   "dependencies": {
     "capital-case": "^1.0.4",
     "date-fns": "^2.21.3",
+    "faker": "^5.5.3",
     "knex": "^0.95.5",
     "mysql2": "^2.2.5"
   },
   "devDependencies": {
+    "@types/faker": "^5.5.8",
     "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.29.3",
     "@zzavidd/eslint-config": "^0.2.12",
     "@zzavidd/prettier-config": "^0.2.12",
+    "chai": "^4.3.4",
     "dotenv": "^8.2.0",
     "eslint": "^7.24.0",
     "eslint-plugin-import": "^2.22.1",

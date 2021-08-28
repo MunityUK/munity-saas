@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import React, { SetStateAction } from 'react';
 import { Marker } from 'react-leaflet';
 
-import { Complaint } from 'types';
+import { Complaint } from '@utils/types';
 
 const DEFAULT_ICON = L.icon({
   iconUrl: '/marker.svg',

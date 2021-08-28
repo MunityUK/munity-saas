@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
+import Knex from 'knex';
 
 import path from 'path';
 
-import Knex from 'knex';
-
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 export const DB_SCHEMA = process.env.MYSQL_DATABASE!;
 export const DB_TABLE = 'complaints';

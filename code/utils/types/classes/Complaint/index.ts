@@ -2,13 +2,13 @@ import * as faker from 'faker';
 
 import * as ComplaintHelper from './helpers';
 
-import { ARCGIS_BASE_URL } from '../../../utils/constants';
+import { ARCGIS_BASE_URL } from '../../../constants';
 import {
   isEnumValue,
   randomElement,
   randomEnumValue,
   writeAsList
-} from '../../../utils/functions/common';
+} from '../../../functions/common';
 import { Complainant, Officer } from '../Person';
 
 export class Complaint {
@@ -75,15 +75,15 @@ export class Complaint {
       Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
     );
 
-    complaint.validate();
+    Complaint.validate(complaint);
     return complaint;
   }
 
   /**
    * Validates the properties of this complaint.
    */
-  validate() {
-    const { status } = this;
+  static validate(complaint: Complaint) {
+    const { status } = complaint;
     if (!isEnumValue(ComplaintStatus, status)) {
       const validStatuses = writeAsList(Object.keys(ComplaintStatus));
       throw new TypeError(

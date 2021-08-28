@@ -7,6 +7,14 @@ import React, {
 } from 'react';
 
 import {
+  Complaint,
+  ComplaintDateProperty,
+  ComplaintFilterFields,
+  ComplaintFilters,
+  ListItemGroups,
+  MapFiltersDateValues
+} from '@utils/types';
+import {
   CheckboxGroup,
   CheckboxGroupProps,
   Collapsible,
@@ -15,14 +23,6 @@ import {
   Label
 } from 'src/components/form';
 import { FilterInitialState, FilterReducer } from 'src/reducers/filters';
-import {
-  Complaint,
-  ComplaintDateProperty,
-  ComplaintFilterFields,
-  ComplaintFilters,
-  ListItemGroups,
-  MapFiltersDateValues
-} from 'types';
 
 export default function MapFiltersBar({
   allComplaints,

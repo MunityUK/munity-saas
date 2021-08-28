@@ -1,5 +1,5 @@
-import { Complaint } from '../../types';
 import knex, { DB_SCHEMA } from '../knex';
+import { Complaint } from '../types';
 
 export function createTables(dbTable: string) {
   return knex.schema

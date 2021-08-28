@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { ListItem } from '../../types';
+import { ListItem } from '../types';
 
 /**
  * Write a list of strings out as a comma-separated string.

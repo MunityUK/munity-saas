@@ -1,7 +1,7 @@
 import Knex from 'knex';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { Complaint } from 'types';
+import { Complaint } from '@utils/types';
 
 const knex = Knex({
   client: 'mysql2',

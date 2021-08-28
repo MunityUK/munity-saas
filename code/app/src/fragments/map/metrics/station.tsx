@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
+import { ComplaintStatus, StationScore, StationScores } from '@utils/types';
 import { DoughnutChart } from 'src/components/chart/doughnut';
-import { ComplaintStatus, StationScore, StationScores } from 'types';
 
 /**
  * The content of the station metric tab.

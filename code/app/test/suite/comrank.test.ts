@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Complaint, ComplaintStatus, StationScore } from '../../types';
+import { Complaint, ComplaintStatus, StationScore } from '../../../utils/types';
 
 const STATION_NAME = 'Station';
 const DATE_COMPLAINT = Date.UTC(2000, 0, 1);

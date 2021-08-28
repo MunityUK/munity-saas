@@ -2,10 +2,10 @@
 
 import { Command } from 'commander';
 
-import { Complaint } from '../app/types';
-import { insertComplaints } from '../app/utils/functions/database';
-import { run } from '../app/utils/functions/test';
-import { DB_TABLE } from '../app/utils/knex';
+import { insertComplaints } from '../utils/functions/database';
+import { run } from '../utils/functions/test';
+import { DB_TABLE } from '../utils/knex';
+import { Complaint } from '../utils/types';
 const cli = new Command();
 
 run(main);

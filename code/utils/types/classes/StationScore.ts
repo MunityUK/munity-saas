@@ -12,3 +12,7 @@ export class StationScore {
   averageCaseDuration?: string | null;
   finalScore?: number;
 }
+
+export type StationScores = {
+  [key: string]: StationScore;
+};

@@ -3,9 +3,9 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 
+import { MAP_ATTRIBUTION, MAP_URL } from '@utils/constants';
+import { Complaint, StationScores } from '@utils/types';
 import { setMapZoom, useAppSelector } from 'src/reducers/app';
-import { Complaint, StationScores } from 'types';
-import { MAP_ATTRIBUTION, MAP_URL } from 'utils/constants';
 
 import MapMarker from './marker';
 import MapMetrics from './metrics';

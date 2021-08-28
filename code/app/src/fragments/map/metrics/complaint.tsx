@@ -1,8 +1,13 @@
 import React, { Fragment, ReactNode, useEffect, useState } from 'react';
 
-import { Complaint } from 'types';
-import { Complainant, Officer, Person, SexLookup } from 'types/classes/Person';
-import { formatDate } from 'utils/functions/common';
+import { formatDate } from '@utils/functions/common';
+import {
+  Complainant,
+  Complaint,
+  Officer,
+  Person,
+  SexLookup
+} from '@utils/types';
 
 export default function MetricComplaintInfo({
   complaint

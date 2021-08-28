@@ -1,6 +1,6 @@
-import { Complaint } from '../../app/types';
-import { createTables, insertComplaints } from '../../app/utils/functions/database';
-import { DB_TABLE } from '../../app/utils/knex';
+import { createTables, insertComplaints } from '../../utils/functions/database';
+import { DB_TABLE } from '../../utils/knex';
+import { Complaint } from '../../utils/types';
 
 const NUM_OF_RECORDS = process.argv[2] || 100;
 
