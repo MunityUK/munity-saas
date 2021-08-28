@@ -2,6 +2,11 @@ import { format } from 'date-fns';
 
 import { ListItem } from 'types';
 
+/**
+ * Write a list of strings out as a comma-separated string.
+ * @param items The array of string items.
+ * @returns The comma-separated English string.
+ */
 export function writeAsList(items: string[]): string {
   if (items.length < 2) return items[0];
 
@@ -50,10 +55,20 @@ export function randomElement<T>(array: T[], randSum = 1): T {
   return array[Math.floor(randomness * array.length)];
 }
 
-export function parse(value: unknown) {
-  return JSON.parse(JSON.stringify(value));
+/**
+ * Parses server-side JSON for the client.
+ * @param json The JSON coming from the server.
+ * @returns The hydrated JSON.
+ */
+export function hydrate<T>(json: T): T {
+  return JSON.parse(JSON.stringify(json));
 }
 
+/**
+ * Transforms a date to a user-friendly format.
+ * @param date The date to transform.
+ * @returns The formatted state.
+ */
 export function formatDate(date: Date): string {
   if (!date) return 'N/A';
   return format(new Date(date!), 'HH:mm, E do MMMM yyyy');

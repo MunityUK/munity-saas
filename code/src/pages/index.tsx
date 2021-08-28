@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import MapFiltersBar from 'src/fragments/map/filters';
 import { getComplaints } from 'src/pages/api/complaints';
 import { Complaint } from 'types';
-import { parse } from 'utils/functions/common';
+import { hydrate } from 'utils/functions/common';
 
 const MunityMap = Dynamic(() => import('src/fragments/map'), {
   ssr: false
@@ -36,7 +36,7 @@ export default function Home({ allComplaints }: HomeProps) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const complaints = await getComplaints();
   return {
-    props: { allComplaints: parse(complaints) ?? [] }
+    props: { allComplaints: hydrate(complaints) ?? [] }
   };
 };
 
