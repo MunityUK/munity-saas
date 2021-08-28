@@ -2,9 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "isolatedModules": false,
-    "module": "commonjs",
-    "noEmit": false,
-    "outDir": "./bin"
+    "module": "commonjs"
   },
   "include": ["**/*.ts"]
 }

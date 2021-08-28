@@ -1,0 +1,30 @@
+{
+  "name": "munity-cli",
+  "version": "0.1.0",
+  "private": true,
+  "prettier": "@zzavidd/prettier-config",
+  "scripts": {
+    "dev": "ts-node .",
+    "eslint": "eslint --ext .ts,.tsx ."
+  },
+  "dependencies": {
+    "capital-case": "^1.0.4",
+    "date-fns": "^2.21.3",
+    "knex": "^0.95.5",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "^15.6.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.29.3",
+    "@zzavidd/eslint-config": "^0.2.12",
+    "@zzavidd/prettier-config": "^0.2.12",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.24.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-react": "^7.23.2",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.3.4"
+  }
+}

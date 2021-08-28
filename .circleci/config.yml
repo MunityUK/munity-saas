@@ -11,16 +11,16 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - app-{{ checksum "./code/package-lock.json" }}
+            - app-{{ checksum "./code/app/package-lock.json" }}
             - app-
       - run:
           name: Install packages
           command: npm install
-          working_directory: ./code
+          working_directory: ./code/app
       - save_cache:
           paths:
             - ~/project/code/node_modules
-          key: app-{{ checksum "./code/package-lock.json" }}
+          key: app-{{ checksum "./code/app/package-lock.json" }}
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Build application
           command: npm run build
-          working_directory: ./code
+          working_directory: ./code/app
 
   inspect:
     executor: node
@@ -39,11 +39,11 @@ jobs:
       - run:
           name: Run ESLint
           command: npm run eslint -- --max-warnings 0
-          working_directory: ./code
+          working_directory: ./code/app
       - run:
           name: Run Stylelint
           command: npm run stylelint
-          working_directory: ./code
+          working_directory: ./code/app
 
   test:
     docker:
@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Run tests
           command: npm test
-          working_directory: ./code
+          working_directory: ./code/app
 
 workflows:
   build-inspect-test:
