@@ -3,7 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "eslintConfig": {
-    "extends": "@zzavidd/eslint-config"
+    "extends": "@zzavidd/eslint-config",
+    "ignorePatterns": ["dist/**/*"],
+    "settings": {
+      "react": {
+        "version": "latest"
+      }
+    }
   },
   "main": "./dist/index.js",
   "prettier": "@zzavidd/prettier-config",
