@@ -1,4 +1,4 @@
-import { Knex as KnexType } from 'knex';
+import { Knex } from 'knex';
 
 import { Complaint } from './types/classes/Complaint';
 
@@ -6,10 +6,10 @@ export const DB_SCHEMA = process.env.MYSQL_DATABASE!;
 export const DB_TABLE = 'complaints';
 export const DB_TABLE_TEST = 'complaints_test';
 
-export default class MunityDB {
-  conn: KnexType;
+export class MunityDB {
+  conn: Knex;
 
-  constructor(knex: KnexType) {
+  constructor(knex: Knex) {
     this.conn = knex;
   }
 

@@ -1,14 +1,7 @@
-import { Complaint } from '@munity/utils';
-import MunityDB, { DB_SCHEMA, DB_TABLE } from '@munity/utils/dist/database';
+import { Complaint, MunityDB, DB_TABLE, DB_SCHEMA } from '@munity/utils';
 import Knex from 'knex';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-// const knex = MunityDB.default({
-//   host: process.env.MYSQL_HOST!,
-//   user: process.env.MYSQL_USER!,
-//   password: process.env.MYSQL_PASSWORD!,
-//   database: MunityDB.DB_SCHEMA
-// });
 const knex = Knex<Complaint, Complaint[]>({
   client: 'mysql2',
   connection: {
@@ -18,7 +11,7 @@ const knex = Knex<Complaint, Complaint[]>({
     database: DB_SCHEMA
   }
 });
-const conn = new MunityDB(knex);
+const conn = new MunityDB(knex as any);
 
 export default async function (_: NextApiRequest, res: NextApiResponse) {
   try {
