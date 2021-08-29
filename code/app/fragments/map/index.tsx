@@ -4,8 +4,8 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 
-import { MAP_ATTRIBUTION, MAP_URL } from 'src/constants';
-import { setMapZoom, useAppSelector } from 'src/reducers/app';
+import { setMapZoom, useAppSelector } from 'reducers/app';
+import { MAP_ATTRIBUTION, MAP_URL } from 'strings';
 
 import MapMarker from './marker';
 import MapMetrics from './metrics';

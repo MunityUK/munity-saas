@@ -1,7 +1,7 @@
 import { ComplaintStatus, StationScore, StationScores } from '@munity/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { DoughnutChart } from 'src/components/chart/doughnut';
+import { DoughnutChart } from 'components/chart/doughnut';
 
 /**
  * The content of the station metric tab.

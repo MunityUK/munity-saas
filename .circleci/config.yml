@@ -11,16 +11,16 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - app-{{ checksum "./code/app/package-lock.json" }}
+            - app-{{ checksum "./code/package-lock.json" }}
             - app-
       - run:
           name: Install packages
           command: npm install
-          working_directory: ./code/app
+          working_directory: ./code
       - save_cache:
           paths:
             - ~/project/code/node_modules
-          key: app-{{ checksum "./code/app/package-lock.json" }}
+          key: app-{{ checksum "./code/package-lock.json" }}
 
 jobs:
   build:

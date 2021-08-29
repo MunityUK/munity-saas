@@ -20,15 +20,10 @@
     "jsx": "preserve"
   },
   "include": [
-    "src/types/**/*.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "types/**/*",
-    "utils/**/*"
+    "**/*.ts",
+    "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "scripts",
-    "test"
+    "node_modules"
   ]
 }

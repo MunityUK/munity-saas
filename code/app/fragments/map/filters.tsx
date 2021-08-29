@@ -21,8 +21,8 @@ import {
   CollapsibleIcon,
   DatePicker,
   Label
-} from 'src/components/form';
-import { FilterInitialState, FilterReducer } from 'src/reducers/filters';
+} from 'components/form';
+import { FilterInitialState, FilterReducer } from 'reducers/filters';
 
 export default function MapFiltersBar({
   allComplaints,

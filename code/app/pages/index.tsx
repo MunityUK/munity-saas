@@ -4,10 +4,10 @@ import Dynamic from 'next/dynamic';
 import Head from 'next/head';
 import React, { useState } from 'react';
 
-import MapFiltersBar from 'src/fragments/map/filters';
-import { getComplaints } from 'src/pages/api/complaints';
+import MapFiltersBar from 'fragments/map/filters';
+import { getComplaints } from 'pages/api/complaints';
 
-const MunityMap = Dynamic(() => import('src/fragments/map'), {
+const MunityMap = Dynamic(() => import('fragments/map'), {
   ssr: false
 });
 
