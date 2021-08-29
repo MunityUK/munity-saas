@@ -1,7 +1,6 @@
+import { Complaint, StationScores } from '@munity/utils';
 import classnames from 'classnames';
 import React, { SetStateAction, useState } from 'react';
-
-import { Complaint, StationScores } from '@utils/types';
 
 import MetricComplaintInfo from './complaint';
 import MetricStationProfile from './station';

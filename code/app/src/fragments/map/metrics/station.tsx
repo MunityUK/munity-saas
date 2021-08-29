@@ -1,6 +1,6 @@
+import { ComplaintStatus, StationScore, StationScores } from '@munity/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { ComplaintStatus, StationScore, StationScores } from '@utils/types';
 import { DoughnutChart } from 'src/components/chart/doughnut';
 
 /**

@@ -1,4 +1,4 @@
-import { ComplaintFilters, MapFiltersDateValues } from '@utils/types';
+import { ComplaintFilters, MapFiltersDateValues } from '@munity/utils';
 
 export const FilterInitialState = new ComplaintFilters();
 

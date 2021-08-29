@@ -1,3 +1,11 @@
+import {
+  Complaint,
+  ComplaintDateProperty,
+  ComplaintFilterFields,
+  ComplaintFilters,
+  ListItemGroups,
+  MapFiltersDateValues
+} from '@munity/utils';
 import React, {
   Fragment,
   SetStateAction,
@@ -6,14 +14,6 @@ import React, {
   useState
 } from 'react';
 
-import {
-  Complaint,
-  ComplaintDateProperty,
-  ComplaintFilterFields,
-  ComplaintFilters,
-  ListItemGroups,
-  MapFiltersDateValues
-} from '@utils/types';
 import {
   CheckboxGroup,
   CheckboxGroupProps,

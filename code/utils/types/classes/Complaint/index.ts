@@ -2,7 +2,6 @@ import * as faker from 'faker';
 
 import * as ComplaintHelper from './helpers';
 
-import { ARCGIS_BASE_URL } from '../../../constants';
 import {
   isEnumValue,
   randomElement,
@@ -10,6 +9,9 @@ import {
   writeAsList
 } from '../../../functions/common';
 import { Complainant, Officer } from '../Person';
+
+const ARCGIS_BASE_URL =
+  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/';
 
 export class Complaint {
   id?: number;

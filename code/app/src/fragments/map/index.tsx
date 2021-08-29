@@ -1,10 +1,10 @@
+import { Complaint, StationScores } from '@munity/utils';
 import { LatLng } from 'leaflet';
 import React, { SetStateAction, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 
-import { MAP_ATTRIBUTION, MAP_URL } from '@utils/constants';
-import { Complaint, StationScores } from '@utils/types';
+import { MAP_ATTRIBUTION, MAP_URL } from 'src/constants';
 import { setMapZoom, useAppSelector } from 'src/reducers/app';
 
 import MapMarker from './marker';

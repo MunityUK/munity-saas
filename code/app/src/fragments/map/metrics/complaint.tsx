@@ -1,13 +1,12 @@
-import React, { Fragment, ReactNode, useEffect, useState } from 'react';
-
-import { formatDate } from '@utils/functions/common';
 import {
+  MunityCommon,
   Complainant,
   Complaint,
   Officer,
   Person,
   SexLookup
-} from '@utils/types';
+} from '@munity/utils';
+import React, { Fragment, ReactNode, useEffect, useState } from 'react';
 
 export default function MetricComplaintInfo({
   complaint
@@ -51,15 +50,21 @@ export default function MetricComplaintInfo({
       { label: 'Status', value: <p>{complaint.status?.toUpperCase()}</p> },
       {
         label: 'Date of Complaint',
-        value: <time>{formatDate(complaint.dateComplaintMade!)}</time>
+        value: (
+          <time>{MunityCommon.formatDate(complaint.dateComplaintMade!)}</time>
+        )
       },
       {
         label: 'Date of Investigation Start',
-        value: <time>{formatDate(complaint.dateUnderInvestigation!)}</time>
+        value: (
+          <time>
+            {MunityCommon.formatDate(complaint.dateUnderInvestigation!)}
+          </time>
+        )
       },
       {
         label: 'Date of Resolution',
-        value: <time>{formatDate(complaint.dateResolved!)}</time>
+        value: <time>{MunityCommon.formatDate(complaint.dateResolved!)}</time>
       },
       { label: 'Incident Type', value: <p>{complaint.incidentType}</p> },
       {

@@ -5,7 +5,7 @@ import {
   MultiValuedPropertyFilterType
 } from './helpers';
 
-import { ListItemGroups, ListItems, MapFiltersDateValues } from '../..';
+import { ListItemGroups, ListItem, MapFiltersDateValues } from '../..';
 import {
   BristolPoliceStations,
   Complaint,
@@ -173,6 +173,6 @@ type ComplaintFilterFieldType = {
   label: string;
   name: keyof ComplaintFilters;
   defaultValue: Array<unknown> | MapFiltersDateValues;
-  items?: ListItems;
+  items?: ListItem[];
   itemGroups?: ListItemGroups;
 };

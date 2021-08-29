@@ -14,7 +14,6 @@ export type ListItem =
       label: string;
       value: string | number;
     };
-export type ListItems = Array<ListItem>;
 export type ListItemGroups = {
-  [key in string]: ListItems;
+  [key in string]: ListItem[];
 }

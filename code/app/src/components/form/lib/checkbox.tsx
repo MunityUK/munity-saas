@@ -1,14 +1,12 @@
+import { MunityCommon, ListItem } from '@munity/utils';
 import React, { Fragment } from 'react';
-
-import { extractLabelValue } from '@utils/functions/common';
-import { ListItems } from '@utils/types';
 
 export function CheckboxGroup(props: CheckboxGroupProps) {
   const { name, items, onChange, checkedValues } = props;
   return (
     <Fragment>
       {items.map((item, key) => {
-        const { label, value } = extractLabelValue(item);
+        const { label, value } = MunityCommon.extractLabelValue(item);
         const checked = checkedValues?.includes(value.toString()) ?? false;
 
         return (
@@ -48,7 +46,7 @@ const ICheckbox = React.memo(Checkbox);
 export interface CheckboxGroupProps
   extends React.InputHTMLAttributes<HTMLDivElement> {
   name: string;
-  items: ListItems;
+  items: ListItem[];
   checkedValues?: Array<string>;
 }
 

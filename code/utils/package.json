@@ -1,13 +1,18 @@
 {
-  "name": "munity-utils",
+  "name": "@munity/utils",
+  "version": "0.1.0",
   "private": true,
   "eslintConfig": {
     "extends": "@zzavidd/eslint-config"
   },
+  "main": "./dist/index.js",
   "prettier": "@zzavidd/prettier-config",
   "scripts": {
-    "dev": "ts-node .",
-    "eslint": "eslint --ext .ts,.tsx ."
+    "clean": "rm -rf ./dist",
+    "check": "tsc --noEmit",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "eslint": "eslint --ext .ts ."
   },
   "dependencies": {
     "capital-case": "^1.0.4",
