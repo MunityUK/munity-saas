@@ -13,11 +13,16 @@ export class MunityDB {
     this.conn = knex;
   }
 
-  createTables(dbTable: string) {
+  /**
+   * Creates the database tables.
+   * @param tableName The name of the table to create.
+   * @returns A promise.
+   */
+  createTables(tableName: string) {
     return this.conn.schema
       .withSchema(DB_SCHEMA)
-      .dropTableIfExists(dbTable)
-      .createTable(dbTable, (table) => {
+      .dropTableIfExists(tableName)
+      .createTable(tableName, (table) => {
         table.increments('id');
         table.string('complaintId', 15).unique();
         table.string('station', 100);
@@ -39,10 +44,21 @@ export class MunityDB {
       });
   }
 
+  /**
+   * Retrieves all complaints from the table.
+   * @param tableName The name of the table to query.
+   * @returns A promise.
+   */
   getAllComplaints(tableName: string): Promise<Complaint[]> {
     return this.conn(tableName).select<Array<Complaint>>();
   }
 
+  /**
+   * Inserts complaints into the specified table.
+   * @param tableName The name of the table to insert complaints into.
+   * @param complaints The list of complaints to insert.
+   * @returns A promise.
+   */
   insertComplaints(tableName: string, complaints: Complaint[]) {
     return this.conn(tableName).insert(complaints);
   }
