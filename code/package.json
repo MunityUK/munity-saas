@@ -9,6 +9,8 @@
     "bootstrap": "lerna exec npm install --parallel",
     "clean": "lerna clean -y",
     "dev": "npm run dev --prefix app",
+    "preenv": "rm -rf app/.env cli/.env",
+    "env": "ln .env app/.env && ln .env cli/.env",
     "eslint": "eslint --ext .js,.ts,.tsx .",
     "stylelint": "stylelint **/*.scss"
   },

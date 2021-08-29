@@ -2,11 +2,12 @@
   "name": "@munity/cli",
   "private": true,
   "scripts": {
-    "dev": "ts-node .",
+    "cli": "ts-node .",
     "db:init": "node scripts/database.js",
-    "db:ingest": "ts-node --project ./tsconfig.json src/ingestion.main"
+    "db:ingest": "ts-node src/ingestion.main"
   },
   "dependencies": {
+    "@munity/utils": "file:../utils",
     "capital-case": "^1.0.4",
     "date-fns": "^2.21.3",
     "knex": "^0.95.5",

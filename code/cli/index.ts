@@ -1,30 +1,30 @@
-#!/usr/bin/env node
-
 import { Command } from 'commander';
 
-import { insertComplaints } from '../utils/functions/database';
-import { run } from '../utils/functions/test';
-import { DB_TABLE } from '../utils/knex';
-import { Complaint } from '../utils/types';
-const cli = new Command();
+import Comrank from './src/comrank';
+import * as Database from './src/database';
 
-run(main);
+main();
 
 async function main() {
-  cli
-    .command('create')
+  const program = new Command();
+
+  program
+    .command('ingest')
     .arguments('[quantity] [status]')
-    .description('Creates a new complaint.')
-    .action(async (quantity = 1, status) => {
-      const complaints: Complaint[] = [];
+    .description('Ingests random complaints into the database.')
+    .action(Database.ingest);
 
-      for (let i = 1; i <= quantity; i++) {
-        const complaint = Complaint.random({ status });
-        complaints.push(complaint);
-      }
+  program
+    .command('comrank')
+    .description('Prints the PCP scores for each station to the console.')
+    .action(Comrank);
 
-      await insertComplaints(DB_TABLE, complaints);
-    });
+  program
+    .command('create-tables')
+    .description('Creates the tables in the database.')
+    .action(Database.createTables);
 
-  await cli.parseAsync();
+  program.addHelpCommand(false);
+  await program.parseAsync();
+  process.exit(0);
 }
