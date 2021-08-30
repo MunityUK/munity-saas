@@ -17,7 +17,7 @@ export default async function (_: NextApiRequest, res: NextApiResponse) {
   try {
     const complaints = await getComplaints();
     res.status(200).json({ complaints });
-  } catch (err) {
+  } catch (err: any) {
     const { message, statusCode } = err;
     res.status(statusCode).json({ message });
   }
