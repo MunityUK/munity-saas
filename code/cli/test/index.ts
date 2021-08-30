@@ -1,2 +1,2 @@
 import ('./suite/comrank.test');
-import ('./suite/ingestion.test');
+import ('./suite/database.test');
