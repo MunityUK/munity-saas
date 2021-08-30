@@ -9,12 +9,12 @@ commands:
   install_dependencies:
     steps:
       - checkout
+      - combine_package_lock:
+          filename: combined-package-lock.txt
       - restore_cache:
           keys:
             - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
             - app-
-      - combine_package_lock:
-          filename: combined-package-lock.txt
       - run:
           name: Install root dependencies
           command: npm install
