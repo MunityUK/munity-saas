@@ -46,7 +46,7 @@ commands:
     steps:
       - run:
           name: Consolidate package-lock.json files
-          command: echo @munity/app @munity/cli @munity/utils | awk -F packages '{printf "\".%s/package-lock.json\" ", $2}' | xargs cat > << parameters.filename >>
+          command: packages=(. app cli utils) && printf '%s\n' "${packages[@]}" | awk -F packages '{printf "\"%s/package-lock.json\" ", $1}' | xargs cat > combined-package-lock.txt
           working_directory: ./code
 
 jobs:
