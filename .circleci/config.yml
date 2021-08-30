@@ -9,18 +9,35 @@ commands:
   install_dependencies:
     steps:
       - checkout
+      - combine_package_lock:
+          filename: combined-package-lock.txt
       - restore_cache:
           keys:
-            - app-{{ checksum "./code/package-lock.json" }}
+            - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "combined-package-lock.txt" }}
             - app-
       - run:
-          name: Install packages
+          name: Install root dependencies
           command: npm install
+          working_directory: ./code
+      - run:
+          name: Install packages dependencies
+          command: npm run bootstrap
           working_directory: ./code
       - save_cache:
           paths:
             - ~/project/code/node_modules
           key: app-{{ checksum "./code/package-lock.json" }}
+
+  combine_package_lock:
+    description: 'Concatenate all package-lock.json files into single file. File
+    is used as checksum source for part of caching key.'
+    parameters:
+      filename:
+        type: string
+    steps:
+      - run:
+          name: Combine package-lock.json files to single file
+          command: npx lerna la -a | awk -F packages '{printf "\"packages%s/package-lock.json\" ", $2}' | xargs cat > << parameters.filename >>
 
 jobs:
   build:
