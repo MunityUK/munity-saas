@@ -32,7 +32,7 @@ Then run the following command to create hard links of the `.env` in the subpack
 npm run env
 ```
 
-Remain in this `code` directory for the subsequent steps.
+Remain in the `code` directory for the subsequent steps.
 
 ### 2. Install project dependencies
 
@@ -46,6 +46,12 @@ And then run the following to install all the subpackage dependencies:
 
 ```
 npm run bootstrap
+```
+
+Finally, build the project's local utility library by running the following:
+
+```
+npm run build:utils
 ```
 
 ### 3. Set up database:
@@ -67,7 +73,7 @@ Run the command to ingest example data:
 npm run cli -- ingest
 ```
 
-> Note: The default number of records ingested is 100. You can change this by
+> Note: The default number of records ingested is 1. You can change this by
 > specifying a number preceded by two dashes e.g.
 > ```
 > npm run cli -- ingest 50

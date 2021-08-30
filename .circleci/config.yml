@@ -7,10 +7,13 @@ executors:
 
 commands:
   install_dependencies:
-    description: 'Installs and caches project dependencies.'
+    description: 'Installs all project dependencies.'
     steps:
       - checkout
-      - consolidate_package_lock
+      - run:
+          name: Consolidate package-lock.json files
+          command: packages=(. app cli utils) && printf '%s\n' "${packages[@]}" | awk -F packages '{printf "\"%s/package-lock.json\" ", $1}' | xargs cat > combined-package-lock.txt
+          working_directory: ./code
       - restore_cache:
           keys:
             - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
@@ -25,15 +28,7 @@ commands:
           working_directory: ./code
       - run:
           name: Build utility library
-          command: npm run build
-          working_directory: ./code/utils
-
-  consolidate_package_lock:
-    description: 'Concatenate all package-lock.json files into single file used as checksum source for part of caching key.'
-    steps:
-      - run:
-          name: Consolidate package-lock.json files
-          command: packages=(. app cli utils) && printf '%s\n' "${packages[@]}" | awk -F packages '{printf "\"%s/package-lock.json\" ", $1}' | xargs cat > combined-package-lock.txt
+          command: npm run build:utils
           working_directory: ./code
 
 jobs:
@@ -43,8 +38,8 @@ jobs:
       - install_dependencies
       - run:
           name: Build application
-          command: npm run build
-          working_directory: ./code/app
+          command: npm run build:app
+          working_directory: ./code
       - save_cache:
           paths:
             - ~/project/code/node_modules
