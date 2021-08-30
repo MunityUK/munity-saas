@@ -9,7 +9,7 @@ export function run(main: () => Promise<void>) {
   return (async () => {
     try {
       await main();
-    } catch (err) {
+    } catch (err: any) {
       console.error(`${err.name}: ${err.message}`);
     } finally {
       process.exit(0);
@@ -26,7 +26,7 @@ export function tryCatch(runnable: () => Promise<void>) {
   return async () => {
     try {
       await runnable();
-    } catch (err) {
+    } catch (err: any) {
       assert.fail(err);
     }
   };

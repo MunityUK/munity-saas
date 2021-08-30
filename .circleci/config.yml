@@ -7,10 +7,10 @@ executors:
 
 commands:
   install_dependencies:
+    description: 'Installs and caches project dependencies.'
     steps:
       - checkout
-      - combine_package_lock:
-          filename: combined-package-lock.txt
+      - consolidate_package_lock
       - restore_cache:
           keys:
             - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
@@ -20,24 +20,20 @@ commands:
           command: npm install
           working_directory: ./code
       - run:
-          name: Install packages dependencies
+          name: Install subpackage dependencies
           command: npm run bootstrap
           working_directory: ./code
-      - save_cache:
-          paths:
-            - ~/project/code/node_modules
-          key: app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
+      - run:
+          name: Build utility library
+          command: npm run build
+          working_directory: ./code/utils
 
-  combine_package_lock:
-    description: 'Concatenate all package-lock.json files into single file. File
-    is used as checksum source for part of caching key.'
-    parameters:
-      filename:
-        type: string
+  consolidate_package_lock:
+    description: 'Concatenate all package-lock.json files into single file used as checksum source for part of caching key.'
     steps:
       - run:
-          name: Combine package-lock.json files to single file
-          command: npx lerna la -a | awk -F packages '{printf "\".%s/package-lock.json\" ", $2}' | xargs cat > << parameters.filename >>
+          name: Consolidate package-lock.json files
+          command: packages=(. app cli utils) && printf '%s\n' "${packages[@]}" | awk -F packages '{printf "\"%s/package-lock.json\" ", $1}' | xargs cat > combined-package-lock.txt
           working_directory: ./code
 
 jobs:
@@ -49,6 +45,15 @@ jobs:
           name: Build application
           command: npm run build
           working_directory: ./code/app
+      - save_cache:
+          paths:
+            - ~/project/code/node_modules
+            - ~/project/code/app/.next/cache
+            - ~/project/code/app/node_modules
+            - ~/project/code/cli/node_modules
+            - ~/project/code/utils/dist
+            - ~/project/code/utils/node_modules
+          key: app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
 
   inspect:
     executor: node
@@ -78,7 +83,7 @@ jobs:
       - run:
           name: Run tests
           command: npm test
-          working_directory: ./code/app
+          working_directory: ./code
 
 workflows:
   build-inspect-test:
