@@ -7,6 +7,7 @@ executors:
 
 commands:
   install_dependencies:
+    description: 'Installs and caches project dependencies.'
     steps:
       - checkout
       - combine_package_lock:
@@ -26,11 +27,13 @@ commands:
       - save_cache:
           paths:
             - ~/project/code/node_modules
+            - ~/project/code/app/node_modules
+            - ~/project/code/cli/node_modules
+            - ~/project/code/utils/node_modules
           key: app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
 
   combine_package_lock:
-    description: 'Concatenate all package-lock.json files into single file. File
-    is used as checksum source for part of caching key.'
+    description: 'Concatenate all package-lock.json files into single file used as checksum source for part of caching key.'
     parameters:
       filename:
         type: string
