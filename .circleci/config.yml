@@ -13,7 +13,7 @@ commands:
           filename: combined-package-lock.txt
       - restore_cache:
           keys:
-            - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "combined-package-lock.txt" }}
+            - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
             - app-
       - run:
           name: Install root dependencies
@@ -26,7 +26,7 @@ commands:
       - save_cache:
           paths:
             - ~/project/code/node_modules
-          key: app-{{ checksum "./code/package-lock.json" }}
+          key: app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
 
   combine_package_lock:
     description: 'Concatenate all package-lock.json files into single file. File
