@@ -19,9 +19,9 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.29.3",
-    "@zzavidd/eslint-config": "^0.2.12",
-    "@zzavidd/prettier-config": "^0.2.12",
-    "@zzavidd/stylelint-config": "^0.2.12",
+    "@zzavidd/eslint-config": "^0.2.13",
+    "@zzavidd/prettier-config": "^0.2.13",
+    "@zzavidd/stylelint-config": "^0.2.13",
     "eslint": "^7.24.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",
