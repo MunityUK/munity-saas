@@ -7,8 +7,7 @@
     "clean": "rm -rf ./dist",
     "check": "tsc --noEmit",
     "prebuild": "npm run clean",
-    "build": "tsc",
-    "eslint": "eslint --ext .ts ."
+    "build": "tsc"
   },
   "dependencies": {
     "capital-case": "^1.0.4",
@@ -17,6 +16,7 @@
     "knex": "^0.95.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.21",
     "@types/faker": "^5.5.8",
     "@types/node": "^15.6.1",
     "chai": "^4.3.4",

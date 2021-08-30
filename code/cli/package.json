@@ -1,6 +1,7 @@
 {
   "name": "@munity/cli",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "cli": "ts-node .",
     "test": "ts-mocha --recursive --exit --no-timeout test/index.ts"

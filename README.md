@@ -26,14 +26,26 @@ In the `code` directory:
    simply called `.env`.
 2. Fill in the empty environment variables with whatever values you choose.
 
+Then run the following command to create hard links of the `.env` in the subpackages.
+
+```
+npm run env
+```
+
 Remain in this `code` directory for the subsequent steps.
 
 ### 2. Install project dependencies
 
-Run the following to install project dependencies:
+Run the following to install project root dependencies:
 
 ```
 npm install
+```
+
+And then run the following to install all the subpackage dependencies:
+
+```
+npm run bootstrap
 ```
 
 ### 3. Set up database:
@@ -41,7 +53,7 @@ npm install
 To launch the database initialisation scripts, run:
 
 ```
-npm run db:init
+npm run cli -- init-db
 ```
 
 You should have a new Docker container named `munity-db` started. Wait a few
@@ -52,18 +64,18 @@ seconds for it to bootstrap MySQL before running the next command.
 Run the command to ingest example data:
 
 ```
-npm run db:ingest
+npm run cli -- ingest
 ```
 
 > Note: The default number of records ingested is 100. You can change this by
 > specifying a number preceded by two dashes e.g.
 > ```
-> npm run db:ingest -- 50
+> npm run cli -- ingest 50
 > ```
 
-## Running the app:
+## Running the application:
 
-Back in the `code` directory, run the app with the following:
+Run the app with the following:
 
 ```
 npm run dev

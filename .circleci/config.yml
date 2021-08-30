@@ -24,11 +24,16 @@ commands:
           name: Install packages dependencies
           command: npm run bootstrap
           working_directory: ./code
+      - run:
+          name: Build utility library
+          command: npm run build
+          working_directory: ./code/utils
       - save_cache:
           paths:
             - ~/project/code/node_modules
             - ~/project/code/app/node_modules
             - ~/project/code/cli/node_modules
+            - ~/project/code/utils/dist
             - ~/project/code/utils/node_modules
           key: app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
 
