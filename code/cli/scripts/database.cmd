@@ -1,8 +1,0 @@
-@ECHO OFF
-SETLOCAL
-
-IF NOT DEFINED SHELL_PATH (
-    SET SHELL_PATH=%PROGRAMFILES%\Git\bin\sh.exe
-)
-
-"%SHELL_PATH%" "%~dp0database.sh" %*

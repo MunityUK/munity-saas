@@ -2,9 +2,7 @@
   "name": "@munity/cli",
   "private": true,
   "scripts": {
-    "cli": "ts-node .",
-    "db:init": "node scripts/database.js",
-    "db:ingest": "ts-node src/ingestion.main"
+    "cli": "ts-node ."
   },
   "dependencies": {
     "@munity/utils": "file:../utils",

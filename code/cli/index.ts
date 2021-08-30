@@ -1,12 +1,18 @@
+import { MunityTest } from '@munity/utils';
 import { Command } from 'commander';
 
 import Comrank from './src/comrank';
 import * as Database from './src/database';
 
-main();
+MunityTest.run(main);
 
 async function main() {
   const program = new Command();
+
+  program
+    .command('init-db')
+    .description('Initialises the MySQL database on Docker')
+    .action(Database.initialiseDatabase);
 
   program
     .command('ingest')
@@ -26,5 +32,4 @@ async function main() {
 
   program.addHelpCommand(false);
   await program.parseAsync();
-  process.exit(0);
 }
