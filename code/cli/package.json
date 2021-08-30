@@ -2,7 +2,8 @@
   "name": "@munity/cli",
   "private": true,
   "scripts": {
-    "cli": "ts-node ."
+    "cli": "ts-node .",
+    "test": "ts-mocha --recursive --exit --no-timeout test/index.ts"
   },
   "dependencies": {
     "@munity/utils": "file:../utils",
@@ -15,6 +16,11 @@
     "@types/node": "^15.6.1",
     "dotenv": "^8.2.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.3.4"
+    "chai": "^4.3.4",
+    "mocha": "^8.4.0",
+    "ts-mocha": "^8.0.0",
+    "typescript": "^4.3.4",
+    "@types/chai": "^4.2.18",
+    "@types/mocha": "^8.2.2"
   }
 }

@@ -2,6 +2,9 @@ import { Complaint, DB_TABLE, StationScores } from '@munity/utils';
 
 import { conn } from '../config';
 
+/**
+ * Comrank main method.
+ */
 export default async function main() {
   const complaints = await conn.getAllComplaints(DB_TABLE);
   const scores = Complaint.calculateStationScores(complaints);
