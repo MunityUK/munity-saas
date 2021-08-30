@@ -81,7 +81,7 @@ jobs:
       - run:
           name: Run tests
           command: npm test
-          working_directory: ./code/app
+          working_directory: ./code
 
 workflows:
   build-inspect-test:
