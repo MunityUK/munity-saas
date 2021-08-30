@@ -38,6 +38,7 @@ commands:
       - run:
           name: Combine package-lock.json files to single file
           command: npx lerna la -a | awk -F packages '{printf "\".%s/package-lock.json\" ", $2}' | xargs cat > << parameters.filename >>
+          working_directory: ./code
 
 jobs:
   build:
