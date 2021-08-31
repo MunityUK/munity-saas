@@ -3,12 +3,13 @@ div.map-page {
 }
 
 main.map-page-main {
+  display: grid;
+  grid-template-rows: auto 1fr;
   height: 100%;
 }
 
 main.map-page-content {
   display: flex;
-  height: 100%;
 }
 
 aside.map-filters {
@@ -224,7 +225,8 @@ table.people-grid {
   width: 100%;
 
   thead {
-    background-color: #e6e6e6;
+    background-color: $color-primary;
+    color: #fff;
   }
 
   tr {
@@ -233,7 +235,7 @@ table.people-grid {
 
   th,
   td {
-    border: 1px solid #a0a0a0;
+    border: 1px solid darken($color-primary, 5%);
     padding: 0.4em;
   }
 }
