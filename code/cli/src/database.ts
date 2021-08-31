@@ -56,9 +56,17 @@ export function initialiseDatabase() {
 /**
  * Creates the database tables.
  */
-export async function createTables() {
-  await conn.createTables(DB_TABLE);
-  console.info('Table (re)created.');
+export async function createTable() {
+  await conn.createTable(DB_TABLE);
+  console.info(`(Re)created the '${DB_TABLE}' table.`);
+}
+
+/**
+ * Clears all data from the database table.
+ */
+export async function truncateTable() {
+  await conn.truncateTable(DB_TABLE);
+  console.info(`Cleared all data from '${DB_TABLE}' table.`);
 }
 
 /**
@@ -66,7 +74,15 @@ export async function createTables() {
  * @param quantity The quantity of complaints to ingest. Defaults to 1.
  * @param status An optional {@link ComplaintStatus} assigned to all complaints.
  */
-export async function ingest(quantity = 1, status?: ComplaintStatus) {
+export async function ingest(
+  quantity = 1,
+  status?: ComplaintStatus,
+  options?: IngestOptions
+) {
+  if (options?.clearData) {
+    await truncateTable();
+  }
+
   const complaints: Complaint[] = [];
 
   for (let i = 1; i <= quantity; i++) {
@@ -75,7 +91,7 @@ export async function ingest(quantity = 1, status?: ComplaintStatus) {
     complaints.push(complaint);
   }
 
-  await conn.insertComplaints(DB_TABLE, complaints);
+  await conn.insertRecords(DB_TABLE, complaints);
   console.info(`${quantity} record(s) ingested.`);
 }
 
@@ -87,3 +103,7 @@ export async function ingest(quantity = 1, status?: ComplaintStatus) {
 function run(command: string) {
   return execSync(command, { encoding: 'utf8' });
 }
+
+type IngestOptions = {
+  clearData?: boolean;
+};

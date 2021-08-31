@@ -6,7 +6,7 @@ import { conn } from '../config';
  * Comrank main method.
  */
 export default async function main() {
-  const complaints = await conn.getAllComplaints(DB_TABLE);
+  const complaints = await conn.getAllRecords<Complaint>(DB_TABLE);
   const scores = Complaint.calculateStationScores(complaints);
   printScores(scores);
 }

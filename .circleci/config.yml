@@ -55,6 +55,10 @@ jobs:
     steps:
       - install_dependencies
       - run:
+          name: Run TypeScript checks
+          command: npm run check
+          working_directory: ./code
+      - run:
           name: Run ESLint
           command: npm run eslint -- --max-warnings 0
           working_directory: ./code

@@ -24,5 +24,5 @@ export default async function (_: NextApiRequest, res: NextApiResponse) {
 }
 
 export function getComplaints() {
-  return conn.getAllComplaints(DB_TABLE);
+  return conn.getAllRecords<unknown>(DB_TABLE);
 }

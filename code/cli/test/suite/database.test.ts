@@ -14,7 +14,7 @@ describe('Database Tests', function () {
   it(
     'Create test table',
     MunityTest.tryCatch(async () => {
-      await conn.createTables(DB_TABLE_TEST);
+      await conn.createTable(DB_TABLE_TEST);
       const tableExists = await conn.conn.schema
         .withSchema(DB_SCHEMA)
         .hasTable(DB_TABLE_TEST);
@@ -25,7 +25,7 @@ describe('Database Tests', function () {
   it(
     'Ingest data into test table',
     MunityTest.tryCatch(async () => {
-      await conn.insertComplaints(DB_TABLE_TEST, [
+      await conn.insertRecords(DB_TABLE_TEST, [
         Complaint.random({ status: ComplaintStatus.RESOLVED })
       ]);
       const res = await conn.conn(DB_TABLE_TEST).count();

@@ -17,6 +17,7 @@ async function main() {
   program
     .command('ingest')
     .arguments('[quantity] [status]')
+    .option('--clear-data', 'Clears all data from the table before ingestion')
     .description('Ingests random complaints into the database.')
     .action(Database.ingest);
 
@@ -28,7 +29,7 @@ async function main() {
   program
     .command('create-tables')
     .description('Creates the tables in the database.')
-    .action(Database.createTables);
+    .action(Database.createTable);
 
   program.addHelpCommand(false);
   await program.parseAsync();

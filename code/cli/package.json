@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "check": "tsc --noEmit",
     "cli": "ts-node .",
     "test": "ts-mocha --recursive --exit --no-timeout test/index.ts"
   },

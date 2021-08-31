@@ -4,10 +4,9 @@
   "private": true,
   "main": "./dist/index.js",
   "scripts": {
+    "build": "tsc",
     "clean": "rm -rf ./dist",
-    "check": "tsc --noEmit",
-    "prebuild": "npm run clean",
-    "build": "tsc"
+    "prebuild": "npm run clean"
   },
   "dependencies": {
     "capital-case": "^1.0.4",

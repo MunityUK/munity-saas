@@ -1,7 +1,5 @@
 import { Knex } from 'knex';
 
-import { Complaint } from './types/classes/Complaint';
-
 export const DB_SCHEMA = process.env.MYSQL_DATABASE!;
 export const DB_TABLE = 'complaints';
 export const DB_TABLE_TEST = 'complaints_test';
@@ -18,7 +16,7 @@ export class MunityDB {
    * @param tableName The name of the table to create.
    * @returns A promise.
    */
-  createTables(tableName: string) {
+  createTable(tableName: string) {
     return this.conn.schema
       .withSchema(DB_SCHEMA)
       .dropTableIfExists(tableName)
@@ -45,21 +43,30 @@ export class MunityDB {
   }
 
   /**
-   * Retrieves all complaints from the table.
-   * @param tableName The name of the table to query.
+   * Clears all data from a specified table.
+   * @param tableName The name of the table to truncate.
    * @returns A promise.
    */
-  getAllComplaints(tableName: string): Promise<Complaint[]> {
-    return this.conn(tableName).select<Array<Complaint>>();
+  truncateTable(tableName: string){
+    return this.conn(tableName).truncate();
   }
 
   /**
-   * Inserts complaints into the specified table.
-   * @param tableName The name of the table to insert complaints into.
-   * @param complaints The list of complaints to insert.
+   * Retrieves all records from the table.
+   * @param tableName The name of the table to query.
    * @returns A promise.
    */
-  insertComplaints(tableName: string, complaints: Complaint[]) {
-    return this.conn(tableName).insert(complaints);
+  getAllRecords<T>(tableName: string): Promise<T[]> {
+    return this.conn(tableName).select();
+  }
+
+  /**
+   * Inserts records into the specified table.
+   * @param tableName The name of the table to insert records into.
+   * @param records The list of records to insert.
+   * @returns A promise.
+   */
+  insertRecords<T>(tableName: string, records: T[]) {
+    return this.conn(tableName).insert(records);
   }
 }
