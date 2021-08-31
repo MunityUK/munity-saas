@@ -5,6 +5,7 @@ import Head from 'next/head';
 import React, { useState } from 'react';
 
 import MapFiltersBar from 'fragments/map/filters';
+import Header from 'fragments/partials/header';
 import { getComplaints } from 'pages/api/complaints';
 
 const MunityMap = Dynamic(() => import('fragments/map'), {
@@ -18,15 +19,18 @@ export default function Home({ allComplaints }: HomeProps) {
     <div className={'map-page'}>
       <Head>
         <title>Munity</title>
-        {/* <link rel={'icon'} href={'/favicon.ico'} /> */}
+        <link rel={'icon'} href={'/logos/munity-short.svg'} />
       </Head>
 
-      <main className={'map-main'}>
-        <MapFiltersBar
-          allComplaints={allComplaints}
-          setComplaints={setComplaints}
-        />
-        <MunityMap complaints={complaints} />
+      <main className={'map-page-main'}>
+        <Header />
+        <main className={'map-page-content'}>
+          <MapFiltersBar
+            allComplaints={allComplaints}
+            setComplaints={setComplaints}
+          />
+          <MunityMap complaints={complaints} />
+        </main>
       </main>
     </div>
   );

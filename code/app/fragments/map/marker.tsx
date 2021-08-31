@@ -6,13 +6,13 @@ import React, { SetStateAction } from 'react';
 import { Marker } from 'react-leaflet';
 
 const DEFAULT_ICON = L.icon({
-  iconUrl: '/marker.svg',
+  iconUrl: '/widgets/marker.svg',
   iconSize: new Point(21, 36),
   className: 'map-marker'
 });
 
 const SELECTED_ICON = L.icon({
-  iconUrl: '/marker-selected.svg',
+  iconUrl: '/widgets/marker-selected.svg',
   iconSize: new Point(21, 36),
   className: classnames('map-marker', 'map-marker--selected')
 });

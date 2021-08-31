@@ -1,11 +1,12 @@
 @import 'react-datepicker/dist/react-datepicker.css';
 
 @import 'Constants';
-@import 'Form';
-@import 'Map';
+@import 'Partials';
 
 @import 'components/Datepicker';
+@import 'components/Form';
 
+@import 'fragments/Map';
 
 * {
   box-sizing: border-box;
@@ -20,10 +21,6 @@ body {
 }
 
 div#__next {
-  height: 100%;
-}
-
-.map-page {
   height: 100%;
 }
 
