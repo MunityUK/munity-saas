@@ -8,7 +8,7 @@ const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
 const DATE_INVESTIGATING = Date.UTC(2000, 0, 15);
 const DATE_RESOLVED = Date.UTC(2000, 0, 31);
 
-describe('ComRank Tests', function () {
+describe('Station Score Tests', function () {
   it('Given all complaints unaddressed', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
@@ -230,5 +230,5 @@ const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
   finalScore: 'finalScore'
 };
 
-type ScoreAssertions = Array<[keyof StationScore, string | number | null]>;
+type ScoreAssertions = Array<[keyof StationScore, unknown]>;
 type ComplaintOverrides = { [key in keyof Complaint]: unknown };
