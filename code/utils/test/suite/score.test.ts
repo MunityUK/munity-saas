@@ -1,6 +1,7 @@
-import { Complaint, ComplaintStatus, StationScore } from '@munity/utils';
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
+
+import { Complaint, ComplaintStatus, StationScore } from '../../src/index';
 
 const STATION_NAME = 'Station';
 const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
@@ -37,7 +38,7 @@ describe('ComRank Tests', function () {
     runAssertions(score, assertions);
   });
 
-  it('Given all complaints addressed', function () {
+  it('Given all complaints under investigation', function () {
     const complaints = createComplaints(5, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,

@@ -80,8 +80,12 @@ jobs:
     steps:
       - install_dependencies
       - run:
-          name: Run tests
-          command: npm test
+          name: Run utility tests
+          command: npm run test:utils
+          working_directory: ./code
+      - run:
+          name: Run CLI tests
+          command: npm run test:cli
           working_directory: ./code
 
 workflows:

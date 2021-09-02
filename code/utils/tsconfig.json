@@ -8,6 +8,5 @@
     "noEmitOnError": true,
     "outDir": "./dist",
   },
-  "include": ["**/*.ts"],
-  "exclude": ["dist/**/*"]
+  "include": ["src/**/*.ts"]
 }
