@@ -1,13 +1,11 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
     "baseUrl": ".",
     "isolatedModules": true,
     "module": "esnext",
-    "noEmit": true,
+    "noEmit": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["**/*.ts", "**/*.tsx"]
 }

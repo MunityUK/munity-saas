@@ -1,11 +1,15 @@
-import { Complaint, StationScores } from '@munity/utils';
+import {
+  Complaint,
+  MAP_ATTRIBUTION,
+  MAP_URL,
+  StationScores
+} from '@munity/utils';
 import { LatLng } from 'leaflet';
 import React, { SetStateAction, useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import { useDispatch } from 'react-redux';
 
 import { setMapZoom, useAppSelector } from 'reducers/app';
-import { MAP_ATTRIBUTION, MAP_URL } from 'strings';
 
 import MapMarker from './marker';
 import MapMetrics from './metrics';

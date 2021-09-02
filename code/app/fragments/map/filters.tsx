@@ -3,6 +3,7 @@ import {
   ComplaintDateProperty,
   ComplaintFilterFields,
   ComplaintFilters,
+  ListItem,
   ListItemGroups,
   MapFiltersDateValues
 } from '@munity/utils';
@@ -16,7 +17,6 @@ import React, {
 
 import {
   CheckboxGroup,
-  CheckboxGroupProps,
   Collapsible,
   CollapsibleIcon,
   DatePicker,
@@ -79,9 +79,10 @@ export default function MapFiltersBar({
 
   return (
     <aside className={'map-filters'}>
-      {ComplaintFilterFields.map(({ label, name, items, itemGroups }, key) => {
+      {ComplaintFilterFields.map((filterField, key) => {
+        const { label, name } = filterField;
         const filterValues = filters[name];
-        if (ComplaintFilters.isDateProperty(name)) {
+        if (filterField.type === 'date') {
           return (
             <FilterDateField
               label={label}
@@ -92,17 +93,30 @@ export default function MapFiltersBar({
             />
           );
         } else {
-          return (
-            <FilterCheckboxField
-              label={label}
-              name={name}
-              items={items!}
-              itemGroups={itemGroups}
-              checkedValues={Array.from(filterValues as Set<string>)}
-              onChange={onFilterCheck}
-              key={key}
-            />
-          );
+          const checkedValues = Array.from(filterValues as Set<string>);
+          if (filterField.type === 'list') {
+            return (
+              <FilterCheckboxField
+                label={label}
+                name={name}
+                items={filterField.items}
+                checkedValues={checkedValues}
+                onChange={onFilterCheck}
+                key={key}
+              />
+            );
+          } else {
+            return (
+              <FilterCheckboxField
+                label={label}
+                name={name}
+                itemGroups={filterField.itemGroups}
+                checkedValues={checkedValues}
+                onChange={onFilterCheck}
+                key={key}
+              />
+            );
+          }
         }
       })}
     </aside>
@@ -209,10 +223,13 @@ interface MapFiltersProps {
   setComplaints: React.Dispatch<SetStateAction<Array<Complaint>>>;
 }
 
-interface FilterCheckboxFieldProps extends CheckboxGroupProps {
+interface FilterCheckboxFieldProps
+  extends React.InputHTMLAttributes<HTMLDivElement> {
   label: string;
   name: keyof ComplaintFilters;
+  items?: ListItem[];
   itemGroups?: ListItemGroups;
+  checkedValues?: string[];
 }
 
 interface FilterDateFieldProps {
