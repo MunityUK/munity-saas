@@ -8,7 +8,8 @@ const knex = Knex<Complaint, Complaint[]>({
     host: process.env.MYSQL_HOST!,
     user: process.env.MYSQL_USER!,
     password: process.env.MYSQL_PASSWORD!,
-    database: DB_SCHEMA
+    database: DB_SCHEMA,
+    port: parseInt(process.env.MYSQL_PORT!)
   }
 });
 const conn = new MunityDB(knex as any);

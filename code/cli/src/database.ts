@@ -8,20 +8,10 @@ import { conn } from '../config';
  * Initialises the Munity MySQL database.
  */
 export function initialiseDatabase() {
+  ensureEnvironmentVariables();
+
   const CONTAINER = 'munity-db';
   const IMAGE = 'mysql/mysql-server:8.0.26';
-
-  // Ensure environment variables are set.
-  const { MYSQL_ROOT_PASSWORD, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } =
-    process.env;
-  if (
-    !MYSQL_ROOT_PASSWORD ||
-    !MYSQL_USER ||
-    !MYSQL_PASSWORD ||
-    !MYSQL_DATABASE
-  ) {
-    throw new Error('Check that your environment variables are set.');
-  }
 
   // Kill and remove container if it's up and running.
   const containerExists = run(`docker ps -aq -f name="${CONTAINER}"`);
@@ -42,12 +32,12 @@ export function initialiseDatabase() {
   const command = [
     'docker run',
     `--name="${CONTAINER}"`,
-    `--env MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD}"`,
-    `--env MYSQL_USER="${MYSQL_USER}"`,
-    `--env MYSQL_PASSWORD="${MYSQL_PASSWORD}"`,
-    `--env MYSQL_DATABASE="${MYSQL_DATABASE}"`,
+    `--env MYSQL_ROOT_PASSWORD="${process.env.MYSQL_ROOT_PASSWORD}"`,
+    `--env MYSQL_USER="${process.env.MYSQL_USER}"`,
+    `--env MYSQL_PASSWORD="${process.env.MYSQL_PASSWORD}"`,
+    `--env MYSQL_DATABASE="${process.env.MYSQL_DATABASE}"`,
     '--detach',
-    '--publish 3306:3306',
+    `--publish ${process.env.MYSQL_PORT}:3306`,
     `"${IMAGE}"`
   ].join(' ');
   run(command);
@@ -102,6 +92,19 @@ export async function ingest(
  */
 function run(command: string) {
   return execSync(command, { encoding: 'utf8' });
+}
+
+/**
+ * Ensures thats all MYSQL environment variables are set.
+ * @throws An error if any environment variables are not set.
+ */
+function ensureEnvironmentVariables() {
+  const allVariablesSet = Object.entries(process.env)
+    .filter(([key]) => key.startsWith('MYSQL'))
+    .every(([, value]) => value);
+  if (!allVariablesSet) {
+    throw new Error('Ensure that all of your environment variables are set.');
+  }
 }
 
 type IngestOptions = {
