@@ -112,67 +112,91 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
   {
     label: 'Date of Complaint',
     name: 'dateComplaintMade',
-    defaultValue: DefaultDateFilters
+    defaultValue: DefaultDateFilters,
+    type: 'date'
   },
   {
     label: 'Date of Investigation',
     name: 'dateUnderInvestigation',
-    defaultValue: DefaultDateFilters
+    defaultValue: DefaultDateFilters,
+    type: 'date'
   },
   {
     label: 'Date of Resolution',
     name: 'dateResolved',
-    defaultValue: DefaultDateFilters
+    defaultValue: DefaultDateFilters,
+    type: 'date'
   },
   {
     label: 'Incident Type',
     name: 'incidentType',
     items: Object.values(IncidentType),
-    defaultValue: []
+    defaultValue: [],
+    type: 'list'
   },
   {
     label: 'Station',
     name: 'station',
     items: BristolPoliceStations,
-    defaultValue: []
+    defaultValue: [],
+    type: 'list'
   },
   {
     label: 'Status',
     name: 'status',
     items: Object.values(ComplaintStatus),
-    defaultValue: []
+    defaultValue: [],
+    type: 'list'
   },
   {
     label: 'Officer Ethnic Group',
     name: 'officerEthnicGroup',
     itemGroups: EthnicGroupOptions,
-    defaultValue: []
+    defaultValue: [],
+    type: 'grouped-list'
   },
   {
     label: 'Officer Sex',
     name: 'officerSex',
     items: SexOptions,
-    defaultValue: []
+    defaultValue: [],
+    type: 'list'
   },
   {
     label: 'Complainant Ethnic Group',
     name: 'complainantEthnicGroup',
     itemGroups: EthnicGroupOptions,
-    defaultValue: []
+    defaultValue: [],
+    type: 'grouped-list'
   },
   {
     label: 'Complainant Sex',
     name: 'complainantSex',
     items: SexOptions,
-    defaultValue: []
+    defaultValue: [],
+    type: 'list'
   }
 ];
 
 export type ComplaintDateProperty = typeof DatePropertyFilters[number];
-type ComplaintFilterFieldType = {
-  label: string;
-  name: keyof ComplaintFilters;
-  defaultValue: Array<unknown> | MapFiltersDateValues;
-  items?: ListItem[];
-  itemGroups?: ListItemGroups;
-};
+
+type ComplaintFilterFieldType =
+  | {
+      label: string;
+      name: keyof ComplaintFilters;
+    } & (
+      | {
+          type: 'date';
+          defaultValue: MapFiltersDateValues;
+        }
+      | {
+          type: 'list';
+          defaultValue: Array<unknown>;
+          items: ListItem[];
+        }
+      | {
+          type: 'grouped-list';
+          defaultValue: Array<unknown>;
+          itemGroups: ListItemGroups;
+        }
+    );
