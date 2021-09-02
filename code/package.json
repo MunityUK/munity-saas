@@ -15,7 +15,8 @@
     "dev": "npm run dev --prefix app",
     "preenv": "rm -rf app/.env cli/.env",
     "env": "ln .env app/.env && ln .env cli/.env",
-    "test": "npm run test --prefix cli",
+    "test:cli": "npm run test --prefix cli",
+    "test:utils": "npm run test --prefix utils",
     "eslint": "eslint --ext .js,.ts,.tsx .",
     "stylelint": "stylelint **/*.scss"
   },
