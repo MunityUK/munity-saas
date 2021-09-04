@@ -4,12 +4,13 @@
   "version": "1.0.0",
   "scripts": {
     "check": "tsc --noEmit",
-    "cli": "ts-node .",
+    "cli": "ts-node src",
     "test": "ts-mocha --recursive --exit --no-timeout test/index.ts"
   },
   "dependencies": {
     "@munity/utils": "file:../utils",
     "capital-case": "^1.0.4",
+    "chalk": "^4.1.2",
     "date-fns": "^2.21.3",
     "knex": "^0.95.5",
     "mysql2": "^2.2.5"
