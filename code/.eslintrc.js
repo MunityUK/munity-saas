@@ -9,7 +9,7 @@ module.exports = {
   ],
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: ['**/tsconfig.eslint.json','**/tsconfig.json' ]
+    project: ['**/tsconfig.eslint.json', '**/tsconfig.json']
   },
   settings: {
     react: 'latest'

@@ -1,1 +1,1 @@
-import ('./suite/database.test');
+import('./suite/database.test');

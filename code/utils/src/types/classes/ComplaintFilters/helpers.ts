@@ -70,5 +70,6 @@ type PropertyFilterMapType = {
   };
 };
 
-export type MultiValuedPropertyFilterType = typeof MultiValuedPropertyFilters[number];
+export type MultiValuedPropertyFilterType =
+  typeof MultiValuedPropertyFilters[number];
 type MultiValuedPropertyType = 'officers' | 'complainants';

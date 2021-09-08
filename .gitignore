@@ -1,5 +1,4 @@
-node_modules
-.next
 .env
-
+**/.next
 **/dist
+**/node_modules

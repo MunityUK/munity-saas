@@ -16,4 +16,4 @@ export type ListItem =
     };
 export type ListItemGroups = {
   [key in string]: ListItem[];
-}
+};

@@ -1,1 +1,1 @@
-import ('./suite/score.test');
+import('./suite/score.test');
