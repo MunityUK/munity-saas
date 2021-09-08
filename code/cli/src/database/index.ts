@@ -37,7 +37,7 @@ export async function ingest(
   if (options?.clearData) {
     await truncateTable();
   }
-  
+
   Logger.progress(`Ingesting record(s)...`);
   const complaints: Complaint[] = [];
 

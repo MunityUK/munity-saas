@@ -47,7 +47,7 @@ export class MunityDB {
    * @param tableName The name of the table to truncate.
    * @returns A promise.
    */
-  truncateTable(tableName: string){
+  truncateTable(tableName: string) {
     return this.conn(tableName).truncate();
   }
 

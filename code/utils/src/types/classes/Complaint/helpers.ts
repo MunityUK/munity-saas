@@ -51,7 +51,8 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     const resolvedCount = getComplaintCountByStatus(complaints, [
       ComplaintStatus.RESOLVED
     ]);
-    const unaddressedCount = complaints.length - investigatingCount - resolvedCount;
+    const unaddressedCount =
+      complaints.length - investigatingCount - resolvedCount;
 
     // Calculate percentages.
     const percentageUnaddressed = (unaddressedCount / complaintCount) * 100;
@@ -90,10 +91,10 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
 
     const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
     const penaltyUnaddressed = calcUnaddressedPenalty(percentageAttendedTo);
-    const penaltyLongAddressTime = calcLongAddressTimePenalty(avgInvestigationTime);
-    const penaltyLongResolveTime = calcLongResolveTimePenalty(
-      avgResolutionTime
-    );
+    const penaltyLongAddressTime =
+      calcLongAddressTimePenalty(avgInvestigationTime);
+    const penaltyLongResolveTime =
+      calcLongResolveTimePenalty(avgResolutionTime);
 
     score.finalScore = calcFinalScore(
       penaltyUnaddressed,
