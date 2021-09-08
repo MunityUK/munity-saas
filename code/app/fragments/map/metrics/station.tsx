@@ -10,14 +10,12 @@ export default function MetricStationProfile({
   station,
   scores
 }: MetricStationProps) {
-  if (!station) return null;
-
   const [score, setScore] = useState<StationScore>();
 
   useEffect(() => {
     const score = scores[station!];
     setScore(score);
-  }, [station]);
+  }, [station, scores]);
 
   /**
    * Calculates the metrics for the complaint's station.

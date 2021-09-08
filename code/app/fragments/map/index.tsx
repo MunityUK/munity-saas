@@ -23,7 +23,7 @@ export default function MunityMap({ complaints }: MunityMapProps) {
   useEffect(() => {
     const scores = Complaint.calculateStationScores(complaints);
     setScoresByStation(scores);
-  }, []);
+  }, [complaints]);
 
   return (
     <map className={'map-container-wrapper'}>

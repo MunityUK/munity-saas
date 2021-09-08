@@ -1,36 +1,46 @@
 import {
-  MunityCommon,
   Complainant,
   Complaint,
+  MunityCommon,
   Officer,
   Person,
   SexLookup
 } from '@munity/utils';
-import React, { Fragment, ReactNode, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
 
 export default function MetricComplaintInfo({
   complaint
 }: MetricStationProfileProps) {
-  if (!complaint) return null;
   const [fields, setFields] = useState<Array<ComplaintField>>([]);
+  const collateFields = useCallback(_collateFields, [complaint]);
+  const onComplaintSelection = useCallback(_onComplaintSelection, [
+    complaint,
+    collateFields
+  ]);
 
   useEffect(() => {
     onComplaintSelection();
-  }, [complaint.id]);
+  }, [onComplaintSelection]);
 
   /**
    * Function to run on every new complaint selection.
    */
-  const onComplaintSelection = async () => {
+  async function _onComplaintSelection() {
     const { address } = await Complaint.reverseGeocodeCoordinates(complaint);
     collateFields(address);
-  };
+  }
 
   /**
    * Builds the list of fields to display.
    * @param address The address of the complaint.
    */
-  const collateFields = (address: any) => {
+  function _collateFields(address: any) {
     const fields = [
       { label: 'Complaint ID', value: <p>{complaint.complaintId}</p> },
       {
@@ -83,7 +93,7 @@ export default function MetricComplaintInfo({
       { label: 'Notes', value: <p>{complaint.notes}</p> }
     ];
     setFields(fields);
-  };
+  }
 
   return (
     <section className={'map-metrics-content--complaint'}>

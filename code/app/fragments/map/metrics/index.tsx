@@ -5,7 +5,7 @@ import React, { SetStateAction, useState } from 'react';
 import MetricComplaintInfo from './complaint';
 import MetricStationProfile from './station';
 
-const METRIC_TABS = [
+const METRIC_TABS: MetricTabs = [
   {
     title: 'Complaint Info',
     value: 'complaint'
@@ -20,7 +20,9 @@ const METRIC_TABS = [
  * The pane showing metrics for a complaint.
  */
 export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
-  const [selectedTab, setSelectedTab] = useState(METRIC_TABS[0].value);
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>(
+    METRIC_TABS[0].value
+  );
 
   const classes = classnames('map-metrics', {
     'map-metrics--visible': !!complaint
@@ -30,11 +32,11 @@ export default function MapMetrics({ complaint, scores }: MapMetricsProps) {
     <dialog className={classes}>
       <MetricTabs tabHook={[selectedTab, setSelectedTab]} />
       <main className={'map-metrics-content'}>
-        {selectedTab === 'complaint' ? (
-          <MetricComplaintInfo complaint={complaint} />
-        ) : (
-          <MetricStationProfile station={complaint?.station} scores={scores} />
-        )}
+        <MetricSelectedTab
+          selectedTab={selectedTab}
+          complaint={complaint}
+          scores={scores}
+        />
       </main>
     </dialog>
   );
@@ -70,11 +72,35 @@ function MetricTabs({ tabHook }: MetricTabsProps) {
   );
 }
 
+function MetricSelectedTab({
+  complaint,
+  scores,
+  selectedTab
+}: MetricSelectedTabProps) {
+  if (!complaint) return null;
+  
+  if (selectedTab === 'complaint') {
+    return <MetricComplaintInfo complaint={complaint} />;
+  } else {
+    if (!complaint.station) return null;
+    return (
+      <MetricStationProfile station={complaint?.station} scores={scores} />
+    );
+  }
+}
+
 interface MapMetricsProps {
   complaint: Complaint;
   scores: StationScores;
 }
 
-interface MetricTabsProps {
-  tabHook: [string, React.Dispatch<SetStateAction<string>>];
+interface MetricSelectedTabProps extends MapMetricsProps {
+  selectedTab: SelectedTab;
 }
+
+interface MetricTabsProps {
+  tabHook: [string, React.Dispatch<SetStateAction<SelectedTab>>];
+}
+
+type SelectedTab = 'complaint' | 'station';
+type MetricTabs = Array<{ title: string; value: SelectedTab }>;

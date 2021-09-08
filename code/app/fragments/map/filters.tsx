@@ -30,15 +30,11 @@ export default function MapFiltersBar({
 }: MapFiltersProps) {
   const [filters, dispatch] = useReducer(FilterReducer, FilterInitialState);
 
-  useEffect(() => {
-    filterComplaints();
-  }, [filters]);
-
   /** Filter the list of complaints by specified property. */
-  const filterComplaints = () => {
+  useEffect(() => {
     const filteredComplaints = ComplaintFilters.filter(allComplaints, filters);
     setComplaints(filteredComplaints);
-  };
+  }, [filters, allComplaints, setComplaints]);
 
   /**
    * Set a new filter on check.
