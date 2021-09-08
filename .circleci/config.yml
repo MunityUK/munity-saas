@@ -63,6 +63,10 @@ jobs:
           command: npm run eslint -- --max-warnings 0
           working_directory: ./code
       - run:
+          name: Run Prettier
+          command: npm run prettier
+          working_directory: ./code
+      - run:
           name: Run Stylelint
           command: npm run stylelint
           working_directory: ./code
