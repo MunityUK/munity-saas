@@ -8,7 +8,7 @@ import {
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import { conn } from '../../config';
+import { conn } from '../../src/config';
 
 describe('Database Tests', function () {
   it(
