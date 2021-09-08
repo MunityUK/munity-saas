@@ -6,7 +6,7 @@
     "module": "commonjs",
     "noEmit": false,
     "noEmitOnError": true,
-    "outDir": "./dist",
+    "outDir": "./dist"
   },
   "include": ["src/**/*.ts"]
 }
