@@ -1,26 +1,17 @@
-import * as faker from 'faker';
-
 import * as ComplaintHelper from './helpers';
 
-import {
-  isEnumValue,
-  randomElement,
-  randomEnumValue,
-  writeAsList
-} from '../../../functions/common';
+import { ARCGIS_BASE_URL } from '../../../constants';
+import { isEnumValue, writeAsList } from '../../../functions/common';
 import { Complainant, Officer } from '../Person';
-
-const ARCGIS_BASE_URL =
-  'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/';
 
 export class Complaint {
   id?: number;
   complaintId?: string;
   station?: string;
   force?: string;
-  dateComplaintMade?: Date;
-  dateUnderInvestigation?: Date;
-  dateResolved?: Date;
+  dateComplaintMade?: Date | number;
+  dateUnderInvestigation?: Date | number;
+  dateResolved?: Date | number;
   incidentType?: IncidentType;
   incidentDescription?: string;
   status?: ComplaintStatus;
@@ -33,56 +24,30 @@ export class Complaint {
   officers?: Officer[] | string;
 
   /**
-   * Generates a random complaint.
-   * @returns The generated complaint.
+   * @see {ComplaintHelper.createComplaints}
    */
-  static random(options?: RandomComplaintOptions) {
-    const complaintId = faker.datatype
-      .number(10000)
-      .toString()
-      .padStart(5, '0');
+  static create(overrides?: ComplaintPropertyOverrides) {
+    return ComplaintHelper.createComplaints(overrides);
+  }
 
-    const complaint = new Complaint();
-    complaint.complaintId = complaintId;
-    complaint.station = randomElement(BristolPoliceStations, 2);
-    complaint.force = 'Avon and Somerset Constabulary';
-    complaint.incidentType = randomEnumValue(IncidentType);
-    complaint.incidentDescription = faker.lorem.sentence();
-    complaint.status = options?.status ?? randomEnumValue(ComplaintStatus, 2);
-    complaint.notes = faker.lorem.sentence();
-    complaint.city = 'Bristol';
-    complaint.county = 'Avon';
-    complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
-    complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
-    complaint.dateComplaintMade = faker.date.past();
-
-    if (complaint.status !== ComplaintStatus.UNADDRESSED) {
-      complaint.dateUnderInvestigation = faker.date.future(
-        0.2,
-        complaint.dateComplaintMade
-      );
-    }
-
-    if (complaint.status === ComplaintStatus.RESOLVED) {
-      complaint.dateResolved = faker.date.future(
-        0.5,
-        complaint.dateUnderInvestigation
-      );
-    }
-
-    complaint.complainants = JSON.stringify(
-      Complainant.randomSet(faker.datatype.number({ min: 1, max: 3 }))
-    );
-    complaint.officers = JSON.stringify(
-      Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
-    );
-
-    Complaint.validate(complaint);
-    return complaint;
+  /**
+   * Creates a specified number of complaints.
+   * @param quantity The number of complaints to create.
+   * @see {ComplaintHelper.createComplaints}
+   */
+  static createMultiple(
+    quantity: number,
+    overrides?: ComplaintPropertyOverrides
+  ) {
+    return Array(quantity)
+      .fill(null)
+      .map(() => this.create(overrides));
   }
 
   /**
    * Validates the properties of this complaint.
+   * @param complaint The complaint.
+   * @throws If the complaint status is invalid.
    */
   static validate(complaint: Complaint) {
     const { status } = complaint;
@@ -148,6 +113,4 @@ export const BristolPoliceStations = [
   'Trinity Road'
 ];
 
-type RandomComplaintOptions = {
-  status?: ComplaintStatus;
-};
+export type ComplaintPropertyOverrides = Omit<Partial<Complaint>, 'id'>;

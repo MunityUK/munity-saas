@@ -1,6 +1,65 @@
 import { differenceInDays, differenceInMilliseconds } from 'date-fns';
+import faker from 'faker';
 
-import { Complaint, ComplaintStatus, StationScore, StationScores } from '../..';
+import {
+  BristolPoliceStations,
+  Complainant,
+  Complaint,
+  ComplaintPropertyOverrides,
+  ComplaintStatus,
+  IncidentType,
+  Officer,
+  StationScore,
+  StationScores
+} from '../..';
+import { randomElement, randomEnumValue } from '../../../functions/common';
+
+/**
+   * Creates random complaints.
+   * @param overrides The complaint property overrides.
+   * @returns The generated complaint.
+   */
+export function createComplaints(overrides?: ComplaintPropertyOverrides) {
+  const complaint = new Complaint();
+  complaint.complaintId =
+    overrides?.complaintId ??
+    faker.datatype.number(10000).toString().padStart(5, '0');
+  complaint.station =
+    overrides?.station ?? randomElement(BristolPoliceStations, 2);
+  complaint.force = 'Avon and Somerset Constabulary';
+  complaint.incidentType = randomEnumValue(IncidentType);
+  complaint.incidentDescription = faker.lorem.sentence();
+  complaint.status = overrides?.status ?? randomEnumValue(ComplaintStatus, 2);
+  complaint.notes = faker.lorem.sentence();
+  complaint.city = 'Bristol';
+  complaint.county = 'Avon';
+  complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
+  complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
+  complaint.dateComplaintMade =
+    overrides?.dateComplaintMade ?? faker.date.past();
+
+  if (complaint.status !== ComplaintStatus.UNADDRESSED) {
+    complaint.dateUnderInvestigation =
+      overrides?.dateUnderInvestigation ??
+      faker.date.future(0.2, new Date(complaint.dateComplaintMade));
+  }
+
+  if (complaint.status === ComplaintStatus.RESOLVED) {
+    complaint.dateResolved =
+      overrides?.dateResolved ??
+      faker.date.future(0.5, new Date(complaint.dateUnderInvestigation!));
+  }
+
+  complaint.complainants = JSON.stringify(
+    Complainant.randomSet(faker.datatype.number({ min: 1, max: 3 }))
+  );
+  complaint.officers = JSON.stringify(
+    Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
+  );
+
+  Complaint.validate(complaint);
+  return complaint;
+}
 
 /**
  * Calculates the ComRank score for each station among the total list of

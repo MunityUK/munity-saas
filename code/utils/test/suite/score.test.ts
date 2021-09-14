@@ -8,9 +8,24 @@ const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
 const DATE_INVESTIGATING = Date.UTC(2000, 0, 15);
 const DATE_RESOLVED = Date.UTC(2000, 0, 31);
 
+const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
+  totalNumberOfComplaints: 'totalNumberOfComplaints',
+  numberOfComplaintsUnaddressed: 'numberOfComplaintsUnaddressed',
+  numberOfComplaintsInvestigating: 'numberOfComplaintsInvestigating',
+  numberOfComplaintsResolved: 'numberOfComplaintsResolved',
+  percentageUnaddressed: 'percentageUnaddressed',
+  percentageInvestigating: 'percentageInvestigating',
+  percentageResolved: 'percentageResolved',
+  percentageAttendedTo: 'percentageAttendedTo',
+  averageInvestigationTime: 'averageInvestigationTime',
+  averageResolutionTime: 'averageResolutionTime',
+  averageCaseDuration: 'averageCaseDuration',
+  finalScore: 'finalScore'
+};
+
 describe('Station Score Tests', function () {
   it('Given all complaints unaddressed', function () {
-    const complaints = createComplaints(5, {
+    const complaints = Complaint.createMultiple(5, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -39,7 +54,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints under investigation', function () {
-    const complaints = createComplaints(5, {
+    const complaints = Complaint.createMultiple(5, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,
       dateComplaintMade: DATE_COMPLAINT,
@@ -68,7 +83,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints resolved', function () {
-    const complaints = createComplaints(5, {
+    const complaints = Complaint.createMultiple(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -97,12 +112,12 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints resolved with delay', function () {
-    const complaints = createComplaints(5, {
+    const complaints = Complaint.createMultiple(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: Date.UTC(2000, 3, 1),
-      dateResolved: Date.UTC(2000, 5, 1)
+      dateUnderInvestigation: new Date(Date.UTC(2000, 3, 1)),
+      dateResolved: new Date(Date.UTC(2000, 5, 1))
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
@@ -126,7 +141,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given a mix of complaint statuses', function () {
-    const complaintsUnaddressed = createComplaints(1, {
+    const complaintsUnaddressed = Complaint.createMultiple(1, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -134,7 +149,7 @@ describe('Station Score Tests', function () {
       dateResolved: undefined
     });
 
-    const complaintsInvestigating = createComplaints(2, {
+    const complaintsInvestigating = Complaint.createMultiple(2, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,
       dateComplaintMade: DATE_COMPLAINT,
@@ -142,7 +157,7 @@ describe('Station Score Tests', function () {
       dateResolved: undefined
     });
 
-    const complaintsResolved = createComplaints(2, {
+    const complaintsResolved = Complaint.createMultiple(2, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -177,23 +192,6 @@ describe('Station Score Tests', function () {
 });
 
 /**
- * Create a specified number of complaints.
- * @param quantity The quantity of complaints to create.
- * @param overrides The property overrides for each complaint.
- * @returns A list of complaints.
- */
-function createComplaints(quantity: number, overrides: ComplaintOverrides) {
-  const complaints: Complaint[] = [];
-
-  for (let i = 0; i < quantity; i++) {
-    const complaint = Object.assign(Complaint.random(), overrides);
-    complaints.push(complaint);
-  }
-
-  return complaints;
-}
-
-/**
  * Runs the constructed score assertions.
  * @param score The station score.
  * @param assertions The list of assertions.
@@ -215,20 +213,4 @@ function assertThat<T>(actual: T, expected: T, fieldName: string) {
   assert.strictEqual(actual, expected, message);
 }
 
-const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
-  totalNumberOfComplaints: 'totalNumberOfComplaints',
-  numberOfComplaintsUnaddressed: 'numberOfComplaintsUnaddressed',
-  numberOfComplaintsInvestigating: 'numberOfComplaintsInvestigating',
-  numberOfComplaintsResolved: 'numberOfComplaintsResolved',
-  percentageUnaddressed: 'percentageUnaddressed',
-  percentageInvestigating: 'percentageInvestigating',
-  percentageResolved: 'percentageResolved',
-  percentageAttendedTo: 'percentageAttendedTo',
-  averageInvestigationTime: 'averageInvestigationTime',
-  averageResolutionTime: 'averageResolutionTime',
-  averageCaseDuration: 'averageCaseDuration',
-  finalScore: 'finalScore'
-};
-
 type ScoreAssertions = Array<[keyof StationScore, unknown]>;
-type ComplaintOverrides = { [key in keyof Complaint]: unknown };
