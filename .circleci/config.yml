@@ -52,7 +52,6 @@ jobs:
 
   inspect:
     executor: node
-    parallelism: 3
     steps:
       - install_dependencies
       - run:
@@ -78,7 +77,6 @@ jobs:
           MYSQL_USER: munity
           MYSQL_PASSWORD: munity
           MYSQL_DATABASE: munity
-    parallelism: 2
     steps:
       - install_dependencies
       - run:
