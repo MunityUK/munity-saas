@@ -25,7 +25,7 @@ const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
 
 describe('Station Score Tests', function () {
   it('Given all complaints unaddressed', function () {
-    const complaints = Complaint.createMultiple(5, {
+    const complaints = Complaint.create(5, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -54,7 +54,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints under investigation', function () {
-    const complaints = Complaint.createMultiple(5, {
+    const complaints = Complaint.create(5, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,
       dateComplaintMade: DATE_COMPLAINT,
@@ -83,7 +83,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints resolved', function () {
-    const complaints = Complaint.createMultiple(5, {
+    const complaints = Complaint.create(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -112,7 +112,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints resolved with delay', function () {
-    const complaints = Complaint.createMultiple(5, {
+    const complaints = Complaint.create(5, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -141,7 +141,7 @@ describe('Station Score Tests', function () {
   });
 
   it('Given a mix of complaint statuses', function () {
-    const complaintsUnaddressed = Complaint.createMultiple(1, {
+    const complaintsUnaddressed = Complaint.create(1, {
       station: STATION_NAME,
       status: ComplaintStatus.UNADDRESSED,
       dateComplaintMade: DATE_COMPLAINT,
@@ -149,7 +149,7 @@ describe('Station Score Tests', function () {
       dateResolved: undefined
     });
 
-    const complaintsInvestigating = Complaint.createMultiple(2, {
+    const complaintsInvestigating = Complaint.create(2, {
       station: STATION_NAME,
       status: ComplaintStatus.INVESTIGATING,
       dateComplaintMade: DATE_COMPLAINT,
@@ -157,7 +157,7 @@ describe('Station Score Tests', function () {
       dateResolved: undefined
     });
 
-    const complaintsResolved = Complaint.createMultiple(2, {
+    const complaintsResolved = Complaint.create(2, {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,

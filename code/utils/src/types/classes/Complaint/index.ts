@@ -26,22 +26,24 @@ export class Complaint {
   /**
    * @see {ComplaintHelper.createComplaints}
    */
-  static create(overrides?: ComplaintPropertyOverrides) {
-    return ComplaintHelper.createComplaints(overrides);
-  }
-
-  /**
-   * Creates a specified number of complaints.
-   * @param quantity The number of complaints to create.
-   * @see {ComplaintHelper.createComplaints}
-   */
-  static createMultiple(
+  static create(overrides?: ComplaintPropertyOverrides): Complaint;
+  static create(
     quantity: number,
     overrides?: ComplaintPropertyOverrides
-  ) {
-    return Array(quantity)
-      .fill(null)
-      .map(() => this.create(overrides));
+  ): Complaint[];
+  static create(
+    a?: number | ComplaintPropertyOverrides,
+    b?: ComplaintPropertyOverrides
+  ): Complaint | Complaint[] {
+    let quantity = 1;
+    if (typeof a === 'number') {
+      quantity = a;
+      return Array(quantity)
+        .fill(null)
+        .map(() => this.create(b));
+    } else {
+      return ComplaintHelper.createComplaints(a);
+    }
   }
 
   /**
