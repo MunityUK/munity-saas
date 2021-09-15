@@ -15,10 +15,10 @@ import {
 import { randomElement, randomEnumValue } from '../../../functions/common';
 
 /**
-   * Creates random complaints.
-   * @param overrides The complaint property overrides.
-   * @returns The generated complaint.
-   */
+ * Creates random complaints.
+ * @param overrides The complaint property overrides.
+ * @returns The generated complaint.
+ */
 export function createComplaints(overrides?: ComplaintPropertyOverrides) {
   const complaint = new Complaint();
   complaint.complaintId =
