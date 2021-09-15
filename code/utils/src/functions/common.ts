@@ -69,7 +69,7 @@ export function hydrate<T>(json: T): T {
  * @param date The date to transform.
  * @returns The formatted state.
  */
-export function formatDate(date: Date): string {
+export function formatDate(date: Date | number): string {
   if (!date) return 'N/A';
   return format(new Date(date!), 'HH:mm, E do MMMM yyyy');
 }
