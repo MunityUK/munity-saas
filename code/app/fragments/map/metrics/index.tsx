@@ -78,7 +78,7 @@ function MetricSelectedTab({
   selectedTab
 }: MetricSelectedTabProps) {
   if (!complaint) return null;
-  
+
   if (selectedTab === 'complaint') {
     return <MetricComplaintInfo complaint={complaint} />;
   } else {
