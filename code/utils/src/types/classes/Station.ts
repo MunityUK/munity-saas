@@ -1,4 +1,7 @@
-export class StationScore {
+import { Complaint } from './Complaint';
+
+export class Station {
+  complaints?: Complaint[];
   totalNumberOfComplaints?: number;
   numberOfComplaintsResolved?: number;
   numberOfComplaintsInvestigating?: number;
@@ -13,6 +16,4 @@ export class StationScore {
   finalScore?: number;
 }
 
-export type StationScores = {
-  [key: string]: StationScore;
-};
+export type StationScores = Record<string, Station>;

@@ -1,27 +1,12 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import { Complaint, ComplaintStatus, StationScore } from '../../src/index';
+import { Complaint, ComplaintStatus, Station } from '../../src/index';
 
 const STATION_NAME = 'Station';
 const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
 const DATE_INVESTIGATING = Date.UTC(2000, 0, 15);
 const DATE_RESOLVED = Date.UTC(2000, 0, 31);
-
-const ScoreProp: { [key in keyof StationScore]: keyof StationScore } = {
-  totalNumberOfComplaints: 'totalNumberOfComplaints',
-  numberOfComplaintsUnaddressed: 'numberOfComplaintsUnaddressed',
-  numberOfComplaintsInvestigating: 'numberOfComplaintsInvestigating',
-  numberOfComplaintsResolved: 'numberOfComplaintsResolved',
-  percentageUnaddressed: 'percentageUnaddressed',
-  percentageInvestigating: 'percentageInvestigating',
-  percentageResolved: 'percentageResolved',
-  percentageAttendedTo: 'percentageAttendedTo',
-  averageInvestigationTime: 'averageInvestigationTime',
-  averageResolutionTime: 'averageResolutionTime',
-  averageCaseDuration: 'averageCaseDuration',
-  finalScore: 'finalScore'
-};
 
 describe('Station Score Tests', function () {
   it('Given all complaints unaddressed', function () {
@@ -36,18 +21,18 @@ describe('Station Score Tests', function () {
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
-      [ScoreProp.totalNumberOfComplaints!, 5],
-      [ScoreProp.numberOfComplaintsUnaddressed!, 5],
-      [ScoreProp.numberOfComplaintsInvestigating!, 0],
-      [ScoreProp.numberOfComplaintsResolved!, 0],
-      [ScoreProp.percentageUnaddressed!, '100%'],
-      [ScoreProp.percentageInvestigating!, '0%'],
-      [ScoreProp.percentageResolved!, '0%'],
-      [ScoreProp.percentageAttendedTo!, '0%'],
-      [ScoreProp.averageInvestigationTime!, null],
-      [ScoreProp.averageResolutionTime!, null],
-      [ScoreProp.averageCaseDuration!, null],
-      [ScoreProp.finalScore!, 30]
+      [ScoreProp.TNOC!, 5],
+      [ScoreProp.NOCU!, 5],
+      [ScoreProp.NOCI!, 0],
+      [ScoreProp.NOCR!, 0],
+      [ScoreProp.PCTU!, '100%'],
+      [ScoreProp.PCTI!, '0%'],
+      [ScoreProp.PCTR!, '0%'],
+      [ScoreProp.PCTA!, '0%'],
+      [ScoreProp.AVGI!, null],
+      [ScoreProp.AVGR!, null],
+      [ScoreProp.AVGCD!, null],
+      [ScoreProp.FS!, 30]
     ];
 
     runAssertions(score, assertions);
@@ -65,18 +50,18 @@ describe('Station Score Tests', function () {
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
-      [ScoreProp.totalNumberOfComplaints!, 5],
-      [ScoreProp.numberOfComplaintsUnaddressed!, 0],
-      [ScoreProp.numberOfComplaintsInvestigating!, 5],
-      [ScoreProp.numberOfComplaintsResolved!, 0],
-      [ScoreProp.percentageUnaddressed!, '0%'],
-      [ScoreProp.percentageInvestigating!, '100%'],
-      [ScoreProp.percentageResolved!, '0%'],
-      [ScoreProp.percentageAttendedTo!, '100%'],
-      [ScoreProp.averageInvestigationTime!, '14 days'],
-      [ScoreProp.averageResolutionTime!, null],
-      [ScoreProp.averageCaseDuration!, null],
-      [ScoreProp.finalScore!, 80]
+      [ScoreProp.TNOC!, 5],
+      [ScoreProp.NOCU!, 0],
+      [ScoreProp.NOCI!, 5],
+      [ScoreProp.NOCR!, 0],
+      [ScoreProp.PCTU!, '0%'],
+      [ScoreProp.PCTI!, '100%'],
+      [ScoreProp.PCTR!, '0%'],
+      [ScoreProp.PCTA!, '100%'],
+      [ScoreProp.AVGI!, '14 days'],
+      [ScoreProp.AVGR!, null],
+      [ScoreProp.AVGCD!, null],
+      [ScoreProp.FS!, 80]
     ];
 
     runAssertions(score, assertions);
@@ -94,18 +79,18 @@ describe('Station Score Tests', function () {
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
-      [ScoreProp.totalNumberOfComplaints!, 5],
-      [ScoreProp.numberOfComplaintsUnaddressed!, 0],
-      [ScoreProp.numberOfComplaintsInvestigating!, 0],
-      [ScoreProp.numberOfComplaintsResolved!, 5],
-      [ScoreProp.percentageUnaddressed!, '0%'],
-      [ScoreProp.percentageInvestigating!, '0%'],
-      [ScoreProp.percentageResolved!, '100%'],
-      [ScoreProp.percentageAttendedTo!, '100%'],
-      [ScoreProp.averageInvestigationTime!, '14 days'],
-      [ScoreProp.averageResolutionTime!, '16 days'],
-      [ScoreProp.averageCaseDuration!, '30 days'],
-      [ScoreProp.finalScore!, 100]
+      [ScoreProp.TNOC!, 5],
+      [ScoreProp.NOCU!, 0],
+      [ScoreProp.NOCI!, 0],
+      [ScoreProp.NOCR!, 5],
+      [ScoreProp.PCTU!, '0%'],
+      [ScoreProp.PCTI!, '0%'],
+      [ScoreProp.PCTR!, '100%'],
+      [ScoreProp.PCTA!, '100%'],
+      [ScoreProp.AVGI!, '14 days'],
+      [ScoreProp.AVGR!, '16 days'],
+      [ScoreProp.AVGCD!, '30 days'],
+      [ScoreProp.FS!, 100]
     ];
 
     runAssertions(score, assertions);
@@ -116,25 +101,25 @@ describe('Station Score Tests', function () {
       station: STATION_NAME,
       status: ComplaintStatus.RESOLVED,
       dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: new Date(Date.UTC(2000, 3, 1)),
-      dateResolved: new Date(Date.UTC(2000, 5, 1))
+      dateUnderInvestigation: Date.UTC(2000, 3, 1),
+      dateResolved: Date.UTC(2000, 5, 1)
     });
 
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
-      [ScoreProp.totalNumberOfComplaints!, 5],
-      [ScoreProp.numberOfComplaintsUnaddressed!, 0],
-      [ScoreProp.numberOfComplaintsInvestigating!, 0],
-      [ScoreProp.numberOfComplaintsResolved!, 5],
-      [ScoreProp.percentageUnaddressed!, '0%'],
-      [ScoreProp.percentageInvestigating!, '0%'],
-      [ScoreProp.percentageResolved!, '100%'],
-      [ScoreProp.percentageAttendedTo!, '100%'],
-      [ScoreProp.averageInvestigationTime!, '91 days'],
-      [ScoreProp.averageResolutionTime!, '61 days'],
-      [ScoreProp.averageCaseDuration!, '152 days'],
-      [ScoreProp.finalScore!, 75.6]
+      [ScoreProp.TNOC!, 5],
+      [ScoreProp.NOCU!, 0],
+      [ScoreProp.NOCI!, 0],
+      [ScoreProp.NOCR!, 5],
+      [ScoreProp.PCTU!, '0%'],
+      [ScoreProp.PCTI!, '0%'],
+      [ScoreProp.PCTR!, '100%'],
+      [ScoreProp.PCTA!, '100%'],
+      [ScoreProp.AVGI!, '91 days'],
+      [ScoreProp.AVGR!, '61 days'],
+      [ScoreProp.AVGCD!, '152 days'],
+      [ScoreProp.FS!, 75.6]
     ];
 
     runAssertions(score, assertions);
@@ -173,18 +158,18 @@ describe('Station Score Tests', function () {
     const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
-      [ScoreProp.totalNumberOfComplaints!, 5],
-      [ScoreProp.numberOfComplaintsUnaddressed!, 1],
-      [ScoreProp.numberOfComplaintsInvestigating!, 2],
-      [ScoreProp.numberOfComplaintsResolved!, 2],
-      [ScoreProp.percentageUnaddressed!, '20%'],
-      [ScoreProp.percentageInvestigating!, '40%'],
-      [ScoreProp.percentageResolved!, '40%'],
-      [ScoreProp.percentageAttendedTo!, '80%'],
-      [ScoreProp.averageInvestigationTime!, '14 days'],
-      [ScoreProp.averageResolutionTime!, '16 days'],
-      [ScoreProp.averageCaseDuration!, '30 days'],
-      [ScoreProp.finalScore!, 78]
+      [ScoreProp.TNOC!, 5],
+      [ScoreProp.NOCU!, 1],
+      [ScoreProp.NOCI!, 2],
+      [ScoreProp.NOCR!, 2],
+      [ScoreProp.PCTU!, '20%'],
+      [ScoreProp.PCTI!, '40%'],
+      [ScoreProp.PCTR!, '40%'],
+      [ScoreProp.PCTA!, '80%'],
+      [ScoreProp.AVGI!, '14 days'],
+      [ScoreProp.AVGR!, '16 days'],
+      [ScoreProp.AVGCD!, '30 days'],
+      [ScoreProp.FS!, 78]
     ];
 
     runAssertions(score, assertions);
@@ -196,7 +181,7 @@ describe('Station Score Tests', function () {
  * @param score The station score.
  * @param assertions The list of assertions.
  */
-function runAssertions(score: StationScore, assertions: ScoreAssertions) {
+function runAssertions(score: Station, assertions: ScoreAssertions) {
   assertions.forEach(([field, actual]) => {
     assertThat(score[field], actual, field);
   });
@@ -213,4 +198,19 @@ function assertThat<T>(actual: T, expected: T, fieldName: string) {
   assert.strictEqual(actual, expected, message);
 }
 
-type ScoreAssertions = Array<[keyof StationScore, unknown]>;
+const ScoreProp: Record<string, keyof Station> = {
+  TNOC: 'totalNumberOfComplaints',
+  NOCU: 'numberOfComplaintsUnaddressed',
+  NOCI: 'numberOfComplaintsInvestigating',
+  NOCR: 'numberOfComplaintsResolved',
+  PCTU: 'percentageUnaddressed',
+  PCTI: 'percentageInvestigating',
+  PCTR: 'percentageResolved',
+  PCTA: 'percentageAttendedTo',
+  AVGI: 'averageInvestigationTime',
+  AVGR: 'averageResolutionTime',
+  AVGCD: 'averageCaseDuration',
+  FS: 'finalScore'
+};
+
+type ScoreAssertions = Array<[keyof Station, unknown]>;

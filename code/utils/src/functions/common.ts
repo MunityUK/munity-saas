@@ -67,11 +67,15 @@ export function hydrate<T>(json: T): T {
 /**
  * Transforms a date to a user-friendly format.
  * @param date The date to transform.
+ * @param dateFormat The date-fns format.
  * @returns The formatted state.
  */
-export function formatDate(date: Date | number): string {
+export function formatDate(
+  date: Date | number,
+  dateFormat = 'HH:mm, E do MMMM yyyy'
+): string {
   if (!date) return 'N/A';
-  return format(new Date(date!), 'HH:mm, E do MMMM yyyy');
+  return format(new Date(date!), dateFormat);
 }
 
 /**

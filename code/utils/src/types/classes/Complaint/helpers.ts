@@ -9,7 +9,7 @@ import {
   ComplaintStatus,
   IncidentType,
   Officer,
-  StationScore,
+  Station,
   StationScores
 } from '../..';
 import { randomElement, randomEnumValue } from '../../../functions/common';
@@ -68,19 +68,20 @@ export function createComplaints(overrides?: ComplaintPropertyOverrides) {
  * @returns The mapping of scores to station.
  */
 export function calculateStationScores(complaints: Complaint[]): StationScores {
-  const complaintsByStation: StationComplaints = {};
+  const complaintsByStation: ComplaintsByStation = {};
   const stationScores: StationScores = {};
 
-  const investigationTimeByComplaint: { [key: number]: number } = {};
-  const resolutionTimeByComplaint: { [key: number]: number } = {};
-  const caseDurationByComplaint: { [key: number]: number } = {};
+  const investigationTimeByComplaint: TimeByComplaint = {};
+  const resolutionTimeByComplaint: TimeByComplaint = {};
+  const caseDurationByComplaint: TimeByComplaint = {};
 
   // Accumulate times by complaint.
   complaints.forEach((complaint) => {
     const { station } = complaint;
-    const listOfComplaints = complaintsByStation[station!] ?? [];
-    listOfComplaints.push(complaint);
-    complaintsByStation[station!] = listOfComplaints;
+    const currentComplaints = complaintsByStation[station!];
+    complaintsByStation[station!] = currentComplaints
+      ? [...currentComplaints, complaint]
+      : [complaint];
 
     if (complaint.dateUnderInvestigation) {
       investigationTimeByComplaint[complaint.id!] = differenceInMilliseconds(
@@ -101,7 +102,7 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     }
   });
 
-  Object.entries(complaintsByStation).forEach(([station, complaints]) => {
+  Object.entries(complaintsByStation).forEach(([stationName, complaints]) => {
     // Calculate counts.
     const complaintCount = complaints.length;
     const investigatingCount = getComplaintCountByStatus(complaints, [
@@ -134,12 +135,12 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     );
 
     // Marshal values to score object.
-    const score = new StationScore();
+    const score = new Station();
+    score.complaints = complaints;
     score.totalNumberOfComplaints = complaintCount;
     score.numberOfComplaintsResolved = resolvedCount;
     score.numberOfComplaintsInvestigating = investigatingCount;
     score.numberOfComplaintsUnaddressed = unaddressedCount;
-
     score.percentageUnaddressed = round(percentageUnaddressed) + '%';
     score.percentageInvestigating = round(percentageInvestigating) + '%';
     score.percentageResolved = round(percentageResolved) + '%';
@@ -162,7 +163,7 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
       penaltyLongResolveTime
     );
 
-    stationScores[station] = score;
+    stationScores[stationName] = score;
   });
 
   return stationScores;
@@ -278,7 +279,5 @@ function getComplaintCountByStatus(
   return complaints.filter((c) => statuses.includes(c.status!)).length;
 }
 
-type StationComplaints = {
-  [key: string]: Complaint[];
-};
-type TimeByComplaint = { [key: number]: number };
+type ComplaintsByStation = Record<string, Complaint[]>;
+type TimeByComplaint = Record<number, number>;

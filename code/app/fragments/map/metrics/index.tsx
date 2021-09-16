@@ -84,7 +84,7 @@ function MetricSelectedTab({
   } else {
     if (!complaint.station) return null;
     return (
-      <MetricStationProfile station={complaint?.station} scores={scores} />
+      <MetricStationProfile stationName={complaint?.station} scores={scores} />
     );
   }
 }
