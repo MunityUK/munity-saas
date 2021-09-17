@@ -18,7 +18,7 @@ describe('Station Score Tests', function () {
       dateResolved: undefined
     });
 
-    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
+    const score = Station.calculateScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
       [ScoreProp.TNOC!, 5],
@@ -47,7 +47,7 @@ describe('Station Score Tests', function () {
       dateResolved: undefined
     });
 
-    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
+    const score = Station.calculateScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
       [ScoreProp.TNOC!, 5],
@@ -76,7 +76,7 @@ describe('Station Score Tests', function () {
       dateResolved: DATE_RESOLVED
     });
 
-    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
+    const score = Station.calculateScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
       [ScoreProp.TNOC!, 5],
@@ -105,7 +105,7 @@ describe('Station Score Tests', function () {
       dateResolved: Date.UTC(2000, 5, 1)
     });
 
-    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
+    const score = Station.calculateScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
       [ScoreProp.TNOC!, 5],
@@ -155,7 +155,7 @@ describe('Station Score Tests', function () {
       complaintsResolved
     );
 
-    const score = Complaint.calculateStationScores(complaints)[STATION_NAME];
+    const score = Station.calculateScores(complaints)[STATION_NAME];
 
     const assertions: ScoreAssertions = [
       [ScoreProp.TNOC!, 5],
