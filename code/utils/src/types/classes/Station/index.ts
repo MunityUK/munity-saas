@@ -20,14 +20,14 @@ export class Station {
   /**
    * @see {StationHelper.groupComplaintsByStation}
    */
-   static groupComplaints(complaints: Complaint[]) {
+  static groupComplaints(complaints: Complaint[]) {
     return StationHelper.groupComplaintsByStation(complaints);
   }
 
   /**
    * @see {StationHelper.calculateStationScores}
    */
-   static calculateScores(complaints: Complaint[]) {
+  static calculateScores(complaints: Complaint[]) {
     return StationHelper.calculateStationScores(complaints);
   }
 }
