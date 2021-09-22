@@ -42,7 +42,7 @@ export async function ingest(
   const complaints: Complaint[] = [];
 
   for (let i = 1; i <= quantity; i++) {
-    const complaint = Complaint.create({ status });
+    const complaint = Complaint.create(() => ({ status }));
     complaint.complaintId = 'COM' + i.toString().padStart(4, '0');
     complaints.push(complaint);
   }

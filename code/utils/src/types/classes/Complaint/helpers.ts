@@ -4,7 +4,7 @@ import {
   BristolPoliceStations,
   Complainant,
   Complaint,
-  ComplaintPropertyOverrides,
+  ComplaintPropOverridesFactory,
   ComplaintStatus,
   IncidentType,
   Officer
@@ -18,11 +18,13 @@ import {
 } from '../../../functions/common';
 
 /**
- * Creates random complaints.
- * @param overrides The complaint property overrides.
+ * Creates a random complaint.
+ * @param factory The complaint property overrides factory function.
  * @returns The generated complaint.
  */
-export function createComplaints(overrides?: ComplaintPropertyOverrides) {
+export function createComplaint(factory?: ComplaintPropOverridesFactory) {
+  const overrides = factory ? factory() : {};
+
   const complaint = new Complaint();
   complaint.complaintId =
     overrides?.complaintId ??

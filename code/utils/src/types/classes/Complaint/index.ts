@@ -22,23 +22,23 @@ export class Complaint {
   officers?: Officer[] | string;
 
   /**
-   * @see {ComplaintHelper.createComplaints}
+   * @see {ComplaintHelper.createComplaint}
    */
-  static create(overrides?: ComplaintPropertyOverrides): Complaint;
+  static create(overrides?: ComplaintPropOverridesFactory): Complaint;
   static create(
     quantity: number,
-    overrides?: ComplaintPropertyOverrides
+    overrides?: ComplaintPropOverridesFactory
   ): Complaint[];
   static create(
-    a?: number | ComplaintPropertyOverrides,
-    b?: ComplaintPropertyOverrides
+    a?: number | ComplaintPropOverridesFactory,
+    b?: ComplaintPropOverridesFactory
   ): Complaint | Complaint[] {
     if (typeof a === 'number') {
       return Array(a)
         .fill(null)
-        .map(() => ComplaintHelper.createComplaints(b));
+        .map(() => ComplaintHelper.createComplaint(b));
     } else {
-      return ComplaintHelper.createComplaints(a);
+      return ComplaintHelper.createComplaint(a);
     }
   }
 
@@ -81,4 +81,7 @@ export const BristolPoliceStations = [
   'Trinity Road'
 ];
 
-export type ComplaintPropertyOverrides = Omit<Partial<Complaint>, 'id'>;
+export type ComplaintPropOverridesFactory = () => Omit<
+  Partial<Complaint>,
+  'id'
+>;
