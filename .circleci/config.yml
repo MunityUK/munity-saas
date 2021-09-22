@@ -82,11 +82,8 @@ jobs:
       - run: mkdir ~/junit
       - run:
           name: Run utility tests
-          command: npm run test -- --reporter mocha-junit-reporter
+          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/junit/test-results.xml
           working_directory: ./code/utils
-          environment:
-            MOCHA_FILE: ~/junit/test-results.xml
-          when: always
       - store_test_results:
           path: ~/junit
       - run:
