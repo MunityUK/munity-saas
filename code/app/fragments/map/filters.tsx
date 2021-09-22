@@ -5,7 +5,7 @@ import {
   ComplaintFilters,
   ListItem,
   ListItemGroups,
-  MapFiltersDateValues
+  DateRangeValues
 } from '@munity/utils';
 import React, {
   Fragment,
@@ -83,7 +83,7 @@ export default function MapFiltersBar({
             <FilterDateField
               label={label}
               name={name}
-              dates={filterValues as MapFiltersDateValues}
+              dates={filterValues as DateRangeValues}
               onChange={onDateChange}
               key={key}
             />
@@ -231,6 +231,6 @@ interface FilterCheckboxFieldProps
 interface FilterDateFieldProps {
   label: string;
   name: keyof ComplaintFilters;
-  dates: MapFiltersDateValues;
+  dates: DateRangeValues;
   onChange: (date: Date, name: string) => void;
 }

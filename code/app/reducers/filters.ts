@@ -1,4 +1,4 @@
-import { ComplaintFilters, MapFiltersDateValues } from '@munity/utils';
+import { ComplaintFilters, DateRangeValues } from '@munity/utils';
 
 export const FilterInitialState = new ComplaintFilters();
 
@@ -11,6 +11,6 @@ export const FilterReducer: Reducer<State, Action> = (state, action) => {
 type State = ComplaintFilters;
 type Action = {
   name: keyof ComplaintFilters;
-  payload: MapFiltersDateValues | Set<string>;
+  payload: DateRangeValues | Set<string>;
 };
 type Reducer<State, Action> = (state: State, action: Action) => State;
