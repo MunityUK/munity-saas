@@ -19,7 +19,9 @@
     "test:cli": "npm run test --prefix cli",
     "test:utils": "npm run test --prefix utils",
     "eslint": "eslint --ext .js,.ts,.tsx .",
+    "eslint:fix": "npm run eslint -- --fix",
     "prettier": "prettier --ignore-path ../.gitignore --check \"**/*.{js,ts,tsx,scss,json}\"",
+    "prettier:fix": "npm run prettier -- --write",
     "stylelint": "stylelint **/*.scss"
   },
   "devDependencies": {

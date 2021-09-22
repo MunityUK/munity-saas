@@ -5,7 +5,7 @@ import {
 } from 'date-fns';
 
 import { Complaint, ComplaintStatus, Station, StationScores } from '../..';
-import { formatDate, isDateInRange } from '../../../functions/common';
+import { formatDate, isDateInRange } from '../../functions/common';
 
 /**
  * Groups the list of complaints by their stations.
