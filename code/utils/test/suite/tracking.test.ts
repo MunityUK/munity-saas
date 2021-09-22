@@ -11,17 +11,20 @@ const END_DATE = addDays(START_DATE, COMPLAINT_COUNT);
 
 describe('Score Tracking Tests', function () {
   it('Given five complaints a day apart', function () {
-    const complaints = Complaint.create(COMPLAINT_COUNT, (_, i) => {
-      const overrides: Complaint = {};
-      overrides.station = STATION_NAME;
-      overrides.status = ComplaintStatus.RESOLVED;
-      overrides.dateComplaintMade = addDays(START_DATE, i);
-      overrides.dateUnderInvestigation = addDays(
-        overrides.dateComplaintMade,
-        1
-      );
-      overrides.dateResolved = addDays(overrides.dateUnderInvestigation, 1);
-      return overrides;
+    const complaints = Complaint.create({
+      quantity: COMPLAINT_COUNT,
+      overrider: (_, i) => {
+        const overrides: Complaint = {};
+        overrides.station = STATION_NAME;
+        overrides.status = ComplaintStatus.RESOLVED;
+        overrides.dateComplaintMade = addDays(START_DATE, i);
+        overrides.dateUnderInvestigation = addDays(
+          overrides.dateComplaintMade,
+          1
+        );
+        overrides.dateResolved = addDays(overrides.dateUnderInvestigation, 1);
+        return overrides;
+      }
     });
 
     const stationScoresByMonth = Station.trackScores(
