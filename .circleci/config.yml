@@ -79,10 +79,14 @@ jobs:
           MYSQL_DATABASE: munity
     steps:
       - install_dependencies
+      - run: mkdir ~/junit
       - run:
           name: Run utility tests
-          command: npm run test:utils
+          command: npm run test:utils -- --reporter mocha-junit-reporter
           working_directory: ./code
+          environment:
+            MOCHA_FILE: ~/junit/test-results.xml
+          when: always
       - store_test_results:
           path: ~/junit
       - run:
