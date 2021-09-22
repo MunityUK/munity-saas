@@ -4,8 +4,8 @@ import {
   MultiValuedPropertyFilterType
 } from './helpers';
 
-import { ListItemGroups, ListItem, DateRangeValues } from '../..';
-import { isDateInRange } from '../../../functions/common';
+import { isDateInRange } from '../../functions/common';
+import { ListItemGroups, ListItem, DateRangeValues } from '../../types';
 import {
   BristolPoliceStations,
   Complaint,

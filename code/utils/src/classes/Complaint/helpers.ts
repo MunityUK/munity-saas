@@ -10,13 +10,13 @@ import {
   IncidentType,
   Officer
 } from '../..';
-import { ARCGIS_BASE_URL } from '../../../constants';
+import { ARCGIS_BASE_URL } from '../../constants';
 import {
   isEnumMember,
   randomElement,
   randomEnumValue,
   writeAsList
-} from '../../../functions/common';
+} from '../../functions/common';
 
 /**
  * Creates a random complaint.
