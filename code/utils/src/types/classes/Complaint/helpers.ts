@@ -24,7 +24,7 @@ import {
  * @returns The generated complaint.
  */
 export function createComplaint(options: CreateComplaintOptions) {
-  const { overrider, currentIndex } = options;
+  const { overrider, currentIndex, status } = options;
 
   let complaint = new Complaint();
   complaint.complaintId = faker.datatype
@@ -35,7 +35,7 @@ export function createComplaint(options: CreateComplaintOptions) {
   complaint.force = 'Avon and Somerset Constabulary';
   complaint.incidentType = randomEnumValue(IncidentType);
   complaint.incidentDescription = faker.lorem.sentence();
-  complaint.status = randomEnumValue(ComplaintStatus, 2);
+  complaint.status = status ?? randomEnumValue(ComplaintStatus, 2);
   complaint.notes = faker.lorem.sentence();
   complaint.city = 'Bristol';
   complaint.county = 'Avon';
@@ -160,5 +160,6 @@ export async function reverseGeocodeCoordinates(complaint: Complaint) {
 
 type CreateComplaintOptions = {
   overrider?: ComplaintPropertyOverrider;
+  status?: ComplaintStatus;
   currentIndex?: number;
 };

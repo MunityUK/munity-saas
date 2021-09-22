@@ -24,27 +24,17 @@ export class Complaint {
   /**
    * @see {ComplaintHelper.createComplaint}
    */
-  static create(overrider?: ComplaintPropertyOverrider): Complaint;
-  static create(
-    quantity: number,
-    overrider?: ComplaintPropertyOverrider
-  ): Complaint[];
-  static create(
-    a?: number | ComplaintPropertyOverrider,
-    b?: ComplaintPropertyOverrider
-  ): Complaint | Complaint[] {
-    if (typeof a === 'number') {
-      return Array(a)
-        .fill(null)
-        .map((_, i) => {
-          return ComplaintHelper.createComplaint({
-            overrider: b,
-            currentIndex: i
-          });
+  static create(options: CreateComplaintOptions = {}): Complaint[] {
+    const { overrider, quantity = 1, status } = options;
+    return Array(quantity)
+      .fill(null)
+      .map((_, i) => {
+        return ComplaintHelper.createComplaint({
+          overrider,
+          status,
+          currentIndex: i
         });
-    } else {
-      return ComplaintHelper.createComplaint({ overrider: a });
-    }
+      });
   }
 
   /**
@@ -90,3 +80,9 @@ export type ComplaintPropertyOverrider = (
   complaint: Complaint,
   index: number
 ) => Omit<Partial<Complaint>, 'id'>;
+
+export type CreateComplaintOptions = {
+  quantity?: number;
+  status?: ComplaintStatus;
+  overrider?: ComplaintPropertyOverrider;
+};

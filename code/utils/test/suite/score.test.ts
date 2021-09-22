@@ -10,13 +10,14 @@ const DATE_RESOLVED = Date.UTC(2000, 0, 31);
 
 describe('Station Score Tests', function () {
   it('Given all complaints unaddressed', function () {
-    const complaints = Complaint.create(5, () => ({
-      station: STATION_NAME,
+    const complaints = Complaint.create({
+      quantity: 5,
       status: ComplaintStatus.UNADDRESSED,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: undefined,
-      dateResolved: undefined
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT
+      })
+    });
 
     const score = Station.calculateScores(complaints)[STATION_NAME];
 
@@ -39,13 +40,15 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints under investigation', function () {
-    const complaints = Complaint.create(5, () => ({
-      station: STATION_NAME,
+    const complaints = Complaint.create({
+      quantity: 5,
       status: ComplaintStatus.INVESTIGATING,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: DATE_INVESTIGATING,
-      dateResolved: undefined
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT,
+        dateUnderInvestigation: DATE_INVESTIGATING
+      })
+    });
 
     const score = Station.calculateScores(complaints)[STATION_NAME];
 
@@ -68,13 +71,16 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints resolved', function () {
-    const complaints = Complaint.create(5, () => ({
-      station: STATION_NAME,
+    const complaints = Complaint.create({
+      quantity: 5,
       status: ComplaintStatus.RESOLVED,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: DATE_INVESTIGATING,
-      dateResolved: DATE_RESOLVED
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT,
+        dateUnderInvestigation: DATE_INVESTIGATING,
+        dateResolved: DATE_RESOLVED
+      })
+    });
 
     const score = Station.calculateScores(complaints)[STATION_NAME];
 
@@ -97,13 +103,16 @@ describe('Station Score Tests', function () {
   });
 
   it('Given all complaints resolved with delay', function () {
-    const complaints = Complaint.create(5, () => ({
-      station: STATION_NAME,
+    const complaints = Complaint.create({
+      quantity: 5,
       status: ComplaintStatus.RESOLVED,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: Date.UTC(2000, 3, 1),
-      dateResolved: Date.UTC(2000, 5, 1)
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT,
+        dateUnderInvestigation: Date.UTC(2000, 3, 1),
+        dateResolved: Date.UTC(2000, 5, 1)
+      })
+    });
 
     const score = Station.calculateScores(complaints)[STATION_NAME];
 
@@ -126,29 +135,34 @@ describe('Station Score Tests', function () {
   });
 
   it('Given a mix of complaint statuses', function () {
-    const complaintsUnaddressed = Complaint.create(1, () => ({
-      station: STATION_NAME,
+    const complaintsUnaddressed = Complaint.create({
       status: ComplaintStatus.UNADDRESSED,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: undefined,
-      dateResolved: undefined
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT
+      })
+    });
 
-    const complaintsInvestigating = Complaint.create(2, () => ({
-      station: STATION_NAME,
+    const complaintsInvestigating = Complaint.create({
+      quantity: 2,
       status: ComplaintStatus.INVESTIGATING,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: DATE_INVESTIGATING,
-      dateResolved: undefined
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT,
+        dateUnderInvestigation: DATE_INVESTIGATING
+      })
+    });
 
-    const complaintsResolved = Complaint.create(2, () => ({
-      station: STATION_NAME,
+    const complaintsResolved = Complaint.create({
+      quantity: 2,
       status: ComplaintStatus.RESOLVED,
-      dateComplaintMade: DATE_COMPLAINT,
-      dateUnderInvestigation: DATE_INVESTIGATING,
-      dateResolved: DATE_RESOLVED
-    }));
+      overrider: () => ({
+        station: STATION_NAME,
+        dateComplaintMade: DATE_COMPLAINT,
+        dateUnderInvestigation: DATE_INVESTIGATING,
+        dateResolved: DATE_RESOLVED
+      })
+    });
 
     const complaints = complaintsUnaddressed.concat(
       complaintsInvestigating,
