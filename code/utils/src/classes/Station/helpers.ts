@@ -4,12 +4,7 @@ import {
   differenceInMilliseconds
 } from 'date-fns';
 
-import {
-  Complaint,
-  ComplaintStatus,
-  Station,
-  StationScores
-} from '../..';
+import { Complaint, ComplaintStatus, Station, StationScores } from '../..';
 import { formatDate, isDateInRange } from '../../functions/common';
 
 /**
