@@ -1,24 +1,5 @@
-import { compareAsc } from 'date-fns';
-
-import { Complaint, MapFiltersDateValues } from '../..';
+import { Complaint } from '../..';
 import { Person } from '../Person';
-
-/**
- * Determines if a specified date is within a range of values.
- * @param dateValue The specified date.
- * @param values The range of values.
- * @returns True if the date is within range.
- */
-export function isDateInRange(
-  dateValue: Date | number,
-  values: MapFiltersDateValues
-) {
-  const { startDate, endDate } = values;
-  const date = new Date(dateValue);
-  const isAfterStart = !startDate || compareAsc(date, startDate!) === 1;
-  const isBeforeEnd = !endDate || compareAsc(date, endDate!) === -1;
-  return isAfterStart && isBeforeEnd;
-}
 
 /**
  * Determines if a complaint's property matches selected values.
