@@ -82,8 +82,8 @@ jobs:
       - run: mkdir ~/junit
       - run:
           name: Run utility tests
-          command: npm run test:utils -- "--reporter mocha-junit-reporter"
-          working_directory: ./code
+          command: npm run test -- --reporter mocha-junit-reporter
+          working_directory: ./code/utils
           environment:
             MOCHA_FILE: ~/junit/test-results.xml
           when: always
@@ -97,6 +97,6 @@ jobs:
 workflows:
   build-inspect-test:
     jobs:
-      - build
-      - inspect
+      # - build
+      # - inspect
       - test
