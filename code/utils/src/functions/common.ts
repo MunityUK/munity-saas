@@ -1,6 +1,26 @@
-import { format } from 'date-fns';
+import { compareAsc, format } from 'date-fns';
 
-import { ListItem } from '../types';
+import { DateRangeValues, ListItem } from '../types';
+
+/**
+ * Determines if a specified date is within a range of values.
+ * @param dateValue The specified date.
+ * @param values The range of values.
+ * @param options Options for the date ranges.
+ * @returns True if the date is within range.
+ */
+export function isDateInRange(
+  dateValue: Date | number,
+  values: DateRangeValues,
+  options?: DateRangeVerificationOptions
+) {
+  const { startDate, endDate } = values;
+  const date = new Date(dateValue);
+
+  const isWithinStartBound = isWithinBound(date, startDate, 'start', options);
+  const isWithinEndBound = isWithinBound(date, endDate, 'end', options);
+  return isWithinStartBound && isWithinEndBound;
+}
 
 /**
  * Write a list of strings out as a comma-separated string.
@@ -28,7 +48,7 @@ export function writeAsList(items: string[]): string {
  * @param value The value to validate.
  * @returns True if value is part of enum.
  */
-export function isEnumValue<T>(enumeration: T, value: unknown): boolean {
+export function isEnumMember<T>(enumeration: T, value: unknown): boolean {
   return Object.values(enumeration).includes(value);
 }
 
@@ -67,11 +87,15 @@ export function hydrate<T>(json: T): T {
 /**
  * Transforms a date to a user-friendly format.
  * @param date The date to transform.
+ * @param dateFormat The date-fns format.
  * @returns The formatted state.
  */
-export function formatDate(date: Date | number): string {
+export function formatDate(
+  date: Date | number,
+  dateFormat = 'HH:mm, E do MMMM yyyy'
+): string {
   if (!date) return 'N/A';
-  return format(new Date(date!), 'HH:mm, E do MMMM yyyy');
+  return format(new Date(date!), dateFormat);
 }
 
 /**
@@ -90,3 +114,38 @@ export function extractLabelValue(item: ListItem) {
 
   return { label, value };
 }
+
+/**
+ * Helper function for {@link isDateInRange}.
+ * @param date The date to check.
+ * @param boundDate The upper or lower bound date.
+ * @param boundType Literal for start or end.
+ * @param options The {@link DateRangeVerificationOptions}.
+ * @returns True if date is within bounds.
+ */
+function isWithinBound(
+  date: Date,
+  boundDate: Date | undefined,
+  boundType: 'start' | 'end',
+  options?: DateRangeVerificationOptions
+) {
+  const comparisonResult = compareAsc(date, boundDate!);
+  const isStartBound = boundType === 'start';
+
+  if (!options?.strict) {
+    if (!boundDate) {
+      return true;
+    }
+  }
+
+  if (options?.inclusive) {
+    return isStartBound ? comparisonResult > -1 : comparisonResult < 1;
+  } else {
+    return isStartBound ? comparisonResult === 1 : comparisonResult === -1;
+  }
+}
+
+type DateRangeVerificationOptions = {
+  inclusive?: boolean;
+  strict?: boolean;
+};

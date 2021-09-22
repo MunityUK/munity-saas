@@ -1,4 +1,4 @@
-import { ComplaintStatus, StationScore, StationScores } from '@munity/utils';
+import { ComplaintStatus, Station, StationScores } from '@munity/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { DoughnutChart } from 'components/chart/doughnut';
@@ -7,39 +7,39 @@ import { DoughnutChart } from 'components/chart/doughnut';
  * The content of the station metric tab.
  */
 export default function MetricStationProfile({
-  station,
+  stationName,
   scores
 }: MetricStationProps) {
-  const [score, setScore] = useState<StationScore>();
+  const [station, setStation] = useState<Station>();
 
   useEffect(() => {
-    const score = scores[station!];
-    setScore(score);
-  }, [station, scores]);
+    const station = scores[stationName!];
+    setStation(station);
+  }, [stationName, scores]);
 
   /**
    * Calculates the metrics for the complaint's station.
    */
   const metrics = useMemo(() => {
-    if (!score) return [];
+    if (!station) return [];
     return [
       {
         color: '#13b835',
         label: ComplaintStatus.RESOLVED,
-        number: score.numberOfComplaintsResolved!
+        number: station.numberOfComplaintsResolved!
       },
       {
         color: '#d2d200',
         label: ComplaintStatus.INVESTIGATING,
-        number: score.numberOfComplaintsInvestigating!
+        number: station.numberOfComplaintsInvestigating!
       },
       {
         color: '#ce1e1e',
         label: ComplaintStatus.UNADDRESSED,
-        number: score.numberOfComplaintsUnaddressed!
+        number: station.numberOfComplaintsUnaddressed!
       }
     ];
-  }, [score]);
+  }, [station]);
 
   /**
    * Sets the chart data using built metrics.
@@ -55,32 +55,32 @@ export default function MetricStationProfile({
    * Builds the list of fields to display.
    */
   const fields = useMemo(() => {
-    if (!score) return [];
+    if (!station) return [];
     return [
       {
         label: 'Total No. of Complaints',
-        value: score.totalNumberOfComplaints
+        value: station.totalNumberOfComplaints
       },
       {
         label: 'Avg. Investigation Time',
-        value: score.averageInvestigationTime ?? 'N/A'
+        value: station.averageInvestigationTime ?? 'N/A'
       },
       {
         label: 'Avg. Resolution Time',
-        value: score.averageResolutionTime ?? 'N/A'
+        value: station.averageResolutionTime ?? 'N/A'
       },
       {
         label: 'Avg. Case Duration',
-        value: score.averageCaseDuration ?? 'N/A'
+        value: station.averageCaseDuration ?? 'N/A'
       }
     ];
-  }, [score]);
+  }, [station]);
 
   return (
     <section className={'map-metrics-content--station'}>
-      <h1>{station}</h1>
+      <h1>{stationName}</h1>
       <figure>
-        <DoughnutChart data={chartData} score={score?.finalScore} />
+        <DoughnutChart data={chartData} score={station?.finalScore} />
         <figcaption>
           <ChartLegend metrics={metrics} />
         </figcaption>
@@ -133,7 +133,7 @@ interface MapMetric {
 }
 
 interface MetricStationProps {
-  station?: string;
+  stationName?: string;
   scores: StationScores;
 }
 

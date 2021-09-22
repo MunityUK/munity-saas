@@ -1,11 +1,11 @@
 import {
   filterMultiValuedProperty,
-  isDateInRange,
   MultiValuedPropertyFilters,
   MultiValuedPropertyFilterType
 } from './helpers';
 
-import { ListItemGroups, ListItem, MapFiltersDateValues } from '../..';
+import { ListItemGroups, ListItem, DateRangeValues } from '../..';
+import { isDateInRange } from '../../../functions/common';
 import {
   BristolPoliceStations,
   Complaint,
@@ -15,9 +15,9 @@ import {
 import { EthnicGroupOptions, SexOptions } from '../Person';
 
 export class ComplaintFilters {
-  dateComplaintMade?: MapFiltersDateValues;
-  dateUnderInvestigation?: MapFiltersDateValues;
-  dateResolved?: MapFiltersDateValues;
+  dateComplaintMade?: DateRangeValues;
+  dateUnderInvestigation?: DateRangeValues;
+  dateResolved?: DateRangeValues;
   incidentType?: Set<string>;
   station?: Set<string>;
   status?: Set<string>;
@@ -97,7 +97,7 @@ export class ComplaintFilters {
   }
 }
 
-const DefaultDateFilters: MapFiltersDateValues = {
+const DefaultDateFilters: DateRangeValues = {
   startDate: undefined,
   endDate: undefined
 };
@@ -187,7 +187,7 @@ type ComplaintFilterFieldType =
     } & (
       | {
           type: 'date';
-          defaultValue: MapFiltersDateValues;
+          defaultValue: DateRangeValues;
         }
       | {
           type: 'list';

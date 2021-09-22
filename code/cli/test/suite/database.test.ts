@@ -25,9 +25,10 @@ describe('Database Tests', function () {
   it(
     'Ingest data into test table',
     MunityTest.tryCatch(async () => {
-      await conn.insertRecords(DB_TABLE_TEST, [
+      await conn.insertRecords(
+        DB_TABLE_TEST,
         Complaint.create({ status: ComplaintStatus.RESOLVED })
-      ]);
+      );
       const res = await conn.conn(DB_TABLE_TEST).count();
       const size = res[0]['count(*)'];
       assert.equal(size, 1);

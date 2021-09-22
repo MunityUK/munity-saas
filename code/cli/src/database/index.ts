@@ -39,15 +39,16 @@ export async function ingest(
   }
 
   Logger.progress(`Ingesting record(s)...`);
-  const complaints: Complaint[] = [];
-
-  for (let i = 1; i <= quantity; i++) {
-    const complaint = Complaint.create({ status });
-    complaint.complaintId = 'COM' + i.toString().padStart(4, '0');
-    complaints.push(complaint);
-  }
-
-  await conn.insertRecords(DB_TABLE, complaints);
+  await conn.insertRecords(
+    DB_TABLE,
+    Complaint.create({
+      quantity,
+      status,
+      overrider: (_, i) => ({
+        complaintId: 'COM' + i.toString().padStart(4, '0')
+      })
+    })
+  );
   Logger.outcome(`${quantity} record(s) ingested.`);
 }
 

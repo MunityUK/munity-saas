@@ -1,4 +1,4 @@
-import { Complaint, DB_TABLE, StationScores } from '@munity/utils';
+import { Complaint, Station, DB_TABLE, StationScores } from '@munity/utils';
 
 import { conn } from '../config';
 
@@ -7,7 +7,7 @@ import { conn } from '../config';
  */
 export default async function main() {
   const complaints = await conn.getAllRecords<Complaint>(DB_TABLE);
-  const scores = Complaint.calculateStationScores(complaints);
+  const scores = Station.calculateScores(complaints);
   printScores(scores);
 }
 

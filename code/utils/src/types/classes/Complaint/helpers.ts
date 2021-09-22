@@ -1,53 +1,60 @@
-import { differenceInDays, differenceInMilliseconds } from 'date-fns';
+import { compareDesc } from 'date-fns';
 import faker from 'faker';
 
 import {
   BristolPoliceStations,
   Complainant,
   Complaint,
-  ComplaintPropertyOverrides,
+  ComplaintPropertyOverrider,
   ComplaintStatus,
   IncidentType,
-  Officer,
-  StationScore,
-  StationScores
+  Officer
 } from '../..';
-import { randomElement, randomEnumValue } from '../../../functions/common';
+import { ARCGIS_BASE_URL } from '../../../constants';
+import {
+  isEnumMember,
+  randomElement,
+  randomEnumValue,
+  writeAsList
+} from '../../../functions/common';
 
 /**
- * Creates random complaints.
- * @param overrides The complaint property overrides.
+ * Creates a random complaint.
+ * @param options The complaint creation options.
  * @returns The generated complaint.
  */
-export function createComplaints(overrides?: ComplaintPropertyOverrides) {
-  const complaint = new Complaint();
-  complaint.complaintId =
-    overrides?.complaintId ??
-    faker.datatype.number(10000).toString().padStart(5, '0');
-  complaint.station =
-    overrides?.station ?? randomElement(BristolPoliceStations, 2);
+export function createComplaint(options: CreateComplaintOptions) {
+  const { overrider, currentIndex, status } = options;
+
+  let complaint = new Complaint();
+  complaint.complaintId = faker.datatype
+    .number(10000)
+    .toString()
+    .padStart(5, '0');
+  complaint.station = randomElement(BristolPoliceStations, 2);
   complaint.force = 'Avon and Somerset Constabulary';
   complaint.incidentType = randomEnumValue(IncidentType);
   complaint.incidentDescription = faker.lorem.sentence();
-  complaint.status = overrides?.status ?? randomEnumValue(ComplaintStatus, 2);
+  complaint.status = status ?? randomEnumValue(ComplaintStatus, 2);
   complaint.notes = faker.lorem.sentence();
   complaint.city = 'Bristol';
   complaint.county = 'Avon';
   complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
   complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
-  complaint.dateComplaintMade =
-    overrides?.dateComplaintMade ?? faker.date.past();
+  complaint.dateComplaintMade = faker.date.past();
 
   if (complaint.status !== ComplaintStatus.UNADDRESSED) {
-    complaint.dateUnderInvestigation =
-      overrides?.dateUnderInvestigation ??
-      faker.date.future(0.2, new Date(complaint.dateComplaintMade));
+    complaint.dateUnderInvestigation = faker.date.future(
+      0.2,
+      new Date(complaint.dateComplaintMade)
+    );
   }
 
   if (complaint.status === ComplaintStatus.RESOLVED) {
-    complaint.dateResolved =
-      overrides?.dateResolved ??
-      faker.date.future(0.5, new Date(complaint.dateUnderInvestigation!));
+    complaint.dateResolved = faker.date.future(
+      0.5,
+      new Date(complaint.dateUnderInvestigation!)
+    );
   }
 
   complaint.complainants = JSON.stringify(
@@ -57,228 +64,102 @@ export function createComplaints(overrides?: ComplaintPropertyOverrides) {
     Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
   );
 
-  Complaint.validate(complaint);
+  if (overrider) {
+    complaint = { ...complaint, ...overrider(complaint, currentIndex!) };
+  }
+
+  validateComplaint(complaint);
   return complaint;
 }
 
 /**
- * Calculates the ComRank score for each station among the total list of
- * complaints.
- * @param complaints The list of complaints.
- * @returns The mapping of scores to station.
+ * Validates the properties of this complaint.
+ * @param complaint The complaint.
+ * @throws If the complaint status is invalid.
  */
-export function calculateStationScores(complaints: Complaint[]): StationScores {
-  const complaintsByStation: StationComplaints = {};
-  const stationScores: StationScores = {};
+export function validateComplaint(complaint: Complaint) {
+  // TODO: Use invariant package.
+  const { dateComplaintMade, dateUnderInvestigation, dateResolved, status } =
+    complaint;
+  if (!isEnumMember(ComplaintStatus, status)) {
+    const validStatuses = writeAsList(Object.keys(ComplaintStatus));
+    throw new Error(
+      `'${status}' is not a valid complaint status. The valid complaint status options are ${validStatuses}.`
+    );
+  }
 
-  const investigationTimeByComplaint: { [key: number]: number } = {};
-  const resolutionTimeByComplaint: { [key: number]: number } = {};
-  const caseDurationByComplaint: { [key: number]: number } = {};
+  if (!dateComplaintMade) {
+    throw new Error(`Complaints must have a date of creation.`);
+  }
 
-  // Accumulate times by complaint.
-  complaints.forEach((complaint) => {
-    const { station } = complaint;
-    const listOfComplaints = complaintsByStation[station!] ?? [];
-    listOfComplaints.push(complaint);
-    complaintsByStation[station!] = listOfComplaints;
-
-    if (complaint.dateUnderInvestigation) {
-      investigationTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateComplaintMade!),
-        new Date(complaint.dateUnderInvestigation)
+  if (status === ComplaintStatus.UNADDRESSED) {
+    if (dateUnderInvestigation) {
+      throw new Error(
+        `Complaints with status '${status}' cannot have an 'Under Investigation' date.`
+      );
+    } else if (dateResolved) {
+      throw new Error(
+        `Complaints with status '${status}' cannot have a 'Resolved' date.`
+      );
+    }
+  } else {
+    if (!dateUnderInvestigation) {
+      throw new Error(
+        `Complaints with status '${status}' must have an 'Under Investigation' date.`
       );
     }
 
-    if (complaint.dateResolved) {
-      resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateUnderInvestigation!),
-        new Date(complaint.dateResolved)
-      );
-      caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateComplaintMade!),
-        new Date(complaint.dateResolved)
+    if (compareDesc(dateComplaintMade, dateUnderInvestigation) < 1) {
+      throw new Error(
+        `The 'Under Investigation' must be after the complaint creation date.`
       );
     }
-  });
 
-  Object.entries(complaintsByStation).forEach(([station, complaints]) => {
-    // Calculate counts.
-    const complaintCount = complaints.length;
-    const investigatingCount = getComplaintCountByStatus(complaints, [
-      ComplaintStatus.INVESTIGATING
-    ]);
-    const resolvedCount = getComplaintCountByStatus(complaints, [
-      ComplaintStatus.RESOLVED
-    ]);
-    const unaddressedCount =
-      complaints.length - investigatingCount - resolvedCount;
+    if (status === ComplaintStatus.INVESTIGATING) {
+      if (dateResolved) {
+        throw new Error(
+          `Complaints with status '${status}' cannot have a 'Resolved' date.`
+        );
+      }
+    } else if (status === ComplaintStatus.RESOLVED) {
+      if (!dateResolved) {
+        throw new Error(
+          `Complaints with status '${status}' must have a 'Resolved' date.`
+        );
+      }
 
-    // Calculate percentages.
-    const percentageUnaddressed = (unaddressedCount / complaintCount) * 100;
-    const percentageInvestigating = (investigatingCount / complaintCount) * 100;
-    const percentageResolved = (resolvedCount / complaintCount) * 100;
-    const percentageAttendedTo = percentageResolved + percentageInvestigating;
-
-    // Calculate average times.
-    const avgInvestigationTime = calcAverageTime(
-      complaints,
-      investigationTimeByComplaint
-    );
-    const avgResolutionTime = calcAverageTime(
-      complaints,
-      resolutionTimeByComplaint
-    );
-    const avgCaseDuration = calcAverageTime(
-      complaints,
-      caseDurationByComplaint
-    );
-
-    // Marshal values to score object.
-    const score = new StationScore();
-    score.totalNumberOfComplaints = complaintCount;
-    score.numberOfComplaintsResolved = resolvedCount;
-    score.numberOfComplaintsInvestigating = investigatingCount;
-    score.numberOfComplaintsUnaddressed = unaddressedCount;
-
-    score.percentageUnaddressed = round(percentageUnaddressed) + '%';
-    score.percentageInvestigating = round(percentageInvestigating) + '%';
-    score.percentageResolved = round(percentageResolved) + '%';
-    score.percentageAttendedTo = round(percentageAttendedTo) + '%';
-    score.averageInvestigationTime = assignAverageTime(avgInvestigationTime);
-    score.averageResolutionTime = assignAverageTime(avgResolutionTime);
-    score.averageCaseDuration = assignAverageTime(avgCaseDuration);
-
-    const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
-    const penaltyUnaddressed = calcUnaddressedPenalty(percentageAttendedTo);
-    const penaltyLongAddressTime =
-      calcLongAddressTimePenalty(avgInvestigationTime);
-    const penaltyLongResolveTime =
-      calcLongResolveTimePenalty(avgResolutionTime);
-
-    score.finalScore = calcFinalScore(
-      penaltyUnaddressed,
-      penaltyUnresolved,
-      penaltyLongAddressTime,
-      penaltyLongResolveTime
-    );
-
-    stationScores[station] = score;
-  });
-
-  return stationScores;
+      if (compareDesc(dateUnderInvestigation, dateResolved) < 1) {
+        throw new Error(
+          `The 'Resolved' date must be after the 'Under Investigation' date.`
+        );
+      }
+    }
+  }
 }
 
 /**
- * Rounds a float to the specified number of decimal places. Will leave out
- * decimals if the number is an integer.
- * @param number The number to round.
- * @param precision The number of decimal places.
- * @returns The rounded number.
+ * Reverse geocodes a complaint's location using its latitude and longtude.
+ * @param complaint The complaint.
  */
-function round(number: number, precision = 1) {
-  if (!precision) return number;
-  const scale = 10 ** precision;
-  return Math.round(number * scale) / scale;
+export async function reverseGeocodeCoordinates(complaint: Complaint) {
+  const url = new URL(`${ARCGIS_BASE_URL}/reverseGeocode`);
+  url.searchParams.append('f', 'pjson');
+  url.searchParams.append('langCode', 'EN');
+  url.searchParams.append(
+    'location',
+    `${complaint.longitude},${complaint.latitude}`
+  );
+
+  try {
+    const res = await fetch(url.href);
+    return await res.json();
+  } catch (message) {
+    return console.error(message);
+  }
 }
 
-/**
- * Calculates the penalty incurred for unresolved complaints.
- * @param percentageResolved The percentage of resolved complaints.
- * @returns The calculated penalty to deduct from final score.
- */
-function calcUnresolvedPenalty(percentageResolved: number) {
-  return (100 - percentageResolved) * 0.2;
-}
-
-/**
- * Calculates the penalty incurred for unaddressed complaints.
- * @param percentageAttendedTo The percentage of addressed and resolved
- * complaints collectively.
- * @returns The calculated penalty to deduct from final score.
- */
-function calcUnaddressedPenalty(percentageAttendedTo: number) {
-  return (100 - percentageAttendedTo) * 0.5;
-}
-
-/**
- * Calculates the penalty incurred for a long average complaint investigation time.
- * @param avgInvestigationTime The average investigation time.
- * @returns The calculated penalty to deduct from final score.
- */
-function calcLongAddressTimePenalty(avgInvestigationTime: number | null) {
-  if (avgInvestigationTime === null) return 0;
-  const cappedPenalty = Math.min(avgInvestigationTime - 30, 30);
-  return Math.max(cappedPenalty * 0.8, 0);
-}
-
-/**
- * Calculates the penalty incurred for a long average complaint resolution time.
- * @param avgResolutionTime The average resolution time.
- * @returns The calculated penalty to deduct from final score.
- */
-function calcLongResolveTimePenalty(avgResolutionTime: number | null) {
-  if (avgResolutionTime === null) return 0;
-  const cappedPenalty = Math.min(avgResolutionTime - 60, 30);
-  return Math.max(cappedPenalty * 0.4, 0);
-}
-
-/**
- * Calculate the final score using the penalty deductions.
- * @param pua The penalty for unaddressed complaints.
- * @param pur The penalty for unresolved complaints
- * @param plit The penalty for long average complaint investigation times.
- * @param plrt The penalty for long average complaint resolution times.
- * @returns The final score.
- */
-function calcFinalScore(pua: number, pur: number, plit: number, plrt: number) {
-  return round(100 - pua - pur - plit - plrt);
-}
-
-/**
- * Calculates the average time to address or resolve a list of complaints.
- * @param complaints The list of complaints.
- * @param timeByComplaint The mapping for times to complaints.
- * @returns The average time taken in milliseconds.
- */
-function calcAverageTime(
-  complaints: Complaint[],
-  timeByComplaint: TimeByComplaint
-): number {
-  const total = complaints
-    .map((c) => timeByComplaint[c.id!])
-    .filter((e) => e)
-    .reduce((a, b) => a + b, 0);
-
-  const average = total / complaints.length;
-  const averageTime = Math.abs(differenceInDays(average, 0));
-  return averageTime;
-}
-
-/**
- * Assigns a specified average time to a score.
- * @param time The average time to assign.
- * @returns The average time string with the unit suffix. Null if average time
- * is zero.
- */
-function assignAverageTime(time: number): string | null {
-  return time > 0 ? time + ' days' : null;
-}
-
-/**
- * Retrieve the number of complaints which have a status matching the specified
- * statuses.
- * @param complaints The list of complaints.
- * @param statuses The statuses a complaint must match.
- * @returns The number of complaints with the specified statuses.
- */
-function getComplaintCountByStatus(
-  complaints: Complaint[],
-  statuses: ComplaintStatus[]
-) {
-  return complaints.filter((c) => statuses.includes(c.status!)).length;
-}
-
-type StationComplaints = {
-  [key: string]: Complaint[];
+type CreateComplaintOptions = {
+  overrider?: ComplaintPropertyOverrider;
+  status?: ComplaintStatus;
+  currentIndex?: number;
 };
-type TimeByComplaint = { [key: number]: number };

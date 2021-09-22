@@ -1,7 +1,5 @@
 import * as ComplaintHelper from './helpers';
 
-import { ARCGIS_BASE_URL } from '../../../constants';
-import { isEnumValue, writeAsList } from '../../../functions/common';
 import { Complainant, Officer } from '../Person';
 
 export class Complaint {
@@ -24,68 +22,33 @@ export class Complaint {
   officers?: Officer[] | string;
 
   /**
-   * @see {ComplaintHelper.createComplaints}
+   * @see {ComplaintHelper.createComplaint}
    */
-  static create(overrides?: ComplaintPropertyOverrides) {
-    return ComplaintHelper.createComplaints(overrides);
-  }
-
-  /**
-   * Creates a specified number of complaints.
-   * @param quantity The number of complaints to create.
-   * @see {ComplaintHelper.createComplaints}
-   */
-  static createMultiple(
-    quantity: number,
-    overrides?: ComplaintPropertyOverrides
-  ) {
+  static create(options: CreateComplaintOptions = {}): Complaint[] {
+    const { overrider, quantity = 1, status } = options;
     return Array(quantity)
       .fill(null)
-      .map(() => this.create(overrides));
+      .map((_, i) => {
+        return ComplaintHelper.createComplaint({
+          overrider,
+          status,
+          currentIndex: i
+        });
+      });
   }
 
   /**
-   * Validates the properties of this complaint.
-   * @param complaint The complaint.
-   * @throws If the complaint status is invalid.
+   * @see {ComplaintHelper.validateComplaint}
    */
   static validate(complaint: Complaint) {
-    const { status } = complaint;
-    if (!isEnumValue(ComplaintStatus, status)) {
-      const validStatuses = writeAsList(Object.keys(ComplaintStatus));
-      throw new TypeError(
-        `'${status}' is not a valid complaint status. The valid complaint status options are ${validStatuses}.`
-      );
-    }
+    ComplaintHelper.validateComplaint(complaint);
   }
 
   /**
-   * @see {ComplaintHelper.calculateStationScores}
-   */
-  static calculateStationScores(complaints: Complaint[]) {
-    return ComplaintHelper.calculateStationScores(complaints);
-  }
-
-  /**
-   * Reverse geocodes a complaint's location using its latitude and longtude.
-   * @param complaint The complaint.
-   * @returns A promise which resolves to the fetch response data.
+   * @see {ComplaintHelper.reverseGeocodeCoordinates}
    */
   static async reverseGeocodeCoordinates(complaint: Complaint) {
-    const url = new URL(`${ARCGIS_BASE_URL}/reverseGeocode`);
-    url.searchParams.append('f', 'pjson');
-    url.searchParams.append('langCode', 'EN');
-    url.searchParams.append(
-      'location',
-      `${complaint.longitude},${complaint.latitude}`
-    );
-
-    try {
-      const res = await fetch(url.href);
-      return await res.json();
-    } catch (message) {
-      return console.error(message);
-    }
+    return await ComplaintHelper.reverseGeocodeCoordinates(complaint);
   }
 }
 
@@ -113,4 +76,13 @@ export const BristolPoliceStations = [
   'Trinity Road'
 ];
 
-export type ComplaintPropertyOverrides = Omit<Partial<Complaint>, 'id'>;
+export type ComplaintPropertyOverrider = (
+  complaint: Complaint,
+  index: number
+) => Omit<Partial<Complaint>, 'id'>;
+
+export type CreateComplaintOptions = {
+  quantity?: number;
+  status?: ComplaintStatus;
+  overrider?: ComplaintPropertyOverrider;
+};

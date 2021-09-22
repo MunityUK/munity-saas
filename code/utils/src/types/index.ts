@@ -1,9 +1,9 @@
 export * from './classes/Complaint';
 export * from './classes/ComplaintFilters';
 export * from './classes/Person';
-export * from './classes/StationScore';
+export * from './classes/Station';
 
-export type MapFiltersDateValues = {
+export type DateRangeValues = {
   startDate: Date | undefined;
   endDate: Date | undefined;
 };

@@ -2,6 +2,7 @@ import {
   Complaint,
   MAP_ATTRIBUTION,
   MAP_URL,
+  Station,
   StationScores
 } from '@munity/utils';
 import { LatLng } from 'leaflet';
@@ -21,7 +22,7 @@ export default function MunityMap({ complaints }: MunityMapProps) {
   const [scoresByStation, setScoresByStation] = useState<StationScores>();
 
   useEffect(() => {
-    const scores = Complaint.calculateStationScores(complaints);
+    const scores = Station.calculateScores(complaints);
     setScoresByStation(scores);
   }, [complaints]);
 
