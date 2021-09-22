@@ -1,17 +1,18 @@
+import { compareDesc } from 'date-fns';
 import faker from 'faker';
 
 import {
   BristolPoliceStations,
   Complainant,
   Complaint,
-  ComplaintPropOverridesFactory,
+  ComplaintPropertyOverrider,
   ComplaintStatus,
   IncidentType,
   Officer
 } from '../..';
 import { ARCGIS_BASE_URL } from '../../../constants';
 import {
-  isEnumValue,
+  isEnumMember,
   randomElement,
   randomEnumValue,
   writeAsList
@@ -19,40 +20,41 @@ import {
 
 /**
  * Creates a random complaint.
- * @param factory The complaint property overrides factory function.
+ * @param options The complaint creation options.
  * @returns The generated complaint.
  */
-export function createComplaint(factory?: ComplaintPropOverridesFactory) {
-  const overrides = factory ? factory() : {};
+export function createComplaint(options: CreateComplaintOptions) {
+  const { overrider, currentIndex } = options;
 
-  const complaint = new Complaint();
-  complaint.complaintId =
-    overrides?.complaintId ??
-    faker.datatype.number(10000).toString().padStart(5, '0');
-  complaint.station =
-    overrides?.station ?? randomElement(BristolPoliceStations, 2);
+  let complaint = new Complaint();
+  complaint.complaintId = faker.datatype
+    .number(10000)
+    .toString()
+    .padStart(5, '0');
+  complaint.station = randomElement(BristolPoliceStations, 2);
   complaint.force = 'Avon and Somerset Constabulary';
   complaint.incidentType = randomEnumValue(IncidentType);
   complaint.incidentDescription = faker.lorem.sentence();
-  complaint.status = overrides?.status ?? randomEnumValue(ComplaintStatus, 2);
+  complaint.status = randomEnumValue(ComplaintStatus, 2);
   complaint.notes = faker.lorem.sentence();
   complaint.city = 'Bristol';
   complaint.county = 'Avon';
   complaint.latitude = parseFloat(faker.address.latitude(51.475, 51.445, 15));
   complaint.longitude = parseFloat(faker.address.longitude(-2.57, -2.62, 15));
-  complaint.dateComplaintMade =
-    overrides?.dateComplaintMade ?? faker.date.past();
+  complaint.dateComplaintMade = faker.date.past();
 
   if (complaint.status !== ComplaintStatus.UNADDRESSED) {
-    complaint.dateUnderInvestigation =
-      overrides?.dateUnderInvestigation ??
-      faker.date.future(0.2, new Date(complaint.dateComplaintMade));
+    complaint.dateUnderInvestigation = faker.date.future(
+      0.2,
+      new Date(complaint.dateComplaintMade)
+    );
   }
 
   if (complaint.status === ComplaintStatus.RESOLVED) {
-    complaint.dateResolved =
-      overrides?.dateResolved ??
-      faker.date.future(0.5, new Date(complaint.dateUnderInvestigation!));
+    complaint.dateResolved = faker.date.future(
+      0.5,
+      new Date(complaint.dateUnderInvestigation!)
+    );
   }
 
   complaint.complainants = JSON.stringify(
@@ -61,6 +63,10 @@ export function createComplaint(factory?: ComplaintPropOverridesFactory) {
   complaint.officers = JSON.stringify(
     Officer.randomSet(faker.datatype.number({ min: 1, max: 3 }))
   );
+
+  if (overrider) {
+    complaint = { ...complaint, ...overrider(complaint, currentIndex!) };
+  }
 
   validateComplaint(complaint);
   return complaint;
@@ -72,12 +78,62 @@ export function createComplaint(factory?: ComplaintPropOverridesFactory) {
  * @throws If the complaint status is invalid.
  */
 export function validateComplaint(complaint: Complaint) {
-  const { status } = complaint;
-  if (!isEnumValue(ComplaintStatus, status)) {
+  // TODO: Use invariant package.
+  const { dateComplaintMade, dateUnderInvestigation, dateResolved, status } =
+    complaint;
+  if (!isEnumMember(ComplaintStatus, status)) {
     const validStatuses = writeAsList(Object.keys(ComplaintStatus));
-    throw new TypeError(
+    throw new Error(
       `'${status}' is not a valid complaint status. The valid complaint status options are ${validStatuses}.`
     );
+  }
+
+  if (!dateComplaintMade) {
+    throw new Error(`Complaints must have a date of creation.`);
+  }
+
+  if (status === ComplaintStatus.UNADDRESSED) {
+    if (dateUnderInvestigation) {
+      throw new Error(
+        `Complaints with status '${status}' cannot have an 'Under Investigation' date.`
+      );
+    } else if (dateResolved) {
+      throw new Error(
+        `Complaints with status '${status}' cannot have a 'Resolved' date.`
+      );
+    }
+  } else {
+    if (!dateUnderInvestigation) {
+      throw new Error(
+        `Complaints with status '${status}' must have an 'Under Investigation' date.`
+      );
+    }
+
+    if (compareDesc(dateComplaintMade, dateUnderInvestigation) < 1) {
+      throw new Error(
+        `The 'Under Investigation' must be after the complaint creation date.`
+      );
+    }
+
+    if (status === ComplaintStatus.INVESTIGATING) {
+      if (dateResolved) {
+        throw new Error(
+          `Complaints with status '${status}' cannot have a 'Resolved' date.`
+        );
+      }
+    } else if (status === ComplaintStatus.RESOLVED) {
+      if (!dateResolved) {
+        throw new Error(
+          `Complaints with status '${status}' must have a 'Resolved' date.`
+        );
+      }
+
+      if (compareDesc(dateUnderInvestigation, dateResolved) < 1) {
+        throw new Error(
+          `The 'Resolved' date must be after the 'Under Investigation' date.`
+        );
+      }
+    }
   }
 }
 
@@ -101,3 +157,8 @@ export async function reverseGeocodeCoordinates(complaint: Complaint) {
     return console.error(message);
   }
 }
+
+type CreateComplaintOptions = {
+  overrider?: ComplaintPropertyOverrider;
+  currentIndex?: number;
+};

@@ -25,6 +25,17 @@ export class Station {
   }
 
   /**
+   * @see {StationHelper.trackScoresAcrossTimePeriod}
+   */
+  static trackScores(complaints: Complaint[], startDate: Date, endDate: Date) {
+    return StationHelper.trackScoresAcrossTimePeriod(
+      complaints,
+      startDate,
+      endDate
+    );
+  }
+
+  /**
    * @see {StationHelper.calculateStationScores}
    */
   static calculateScores(complaints: Complaint[]) {

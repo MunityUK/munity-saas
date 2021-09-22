@@ -1,6 +1,11 @@
-import { differenceInDays, differenceInMilliseconds } from 'date-fns';
+import {
+  addMonths,
+  differenceInDays,
+  differenceInMilliseconds
+} from 'date-fns';
 
 import { Complaint, ComplaintStatus, Station, StationScores } from '../..';
+import { formatDate, isDateInRange } from '../../../functions/common';
 
 /**
  * Groups the list of complaints by their stations.
@@ -22,6 +27,59 @@ export function groupComplaintsByStation(
     if (consumer) consumer(complaint);
     return acc;
   }, {});
+}
+
+/**
+ * Calculates the station scores for each month across a specified time period
+ * and groups results by station.
+ * @param complaints The list of complaints.
+ * @param startDate The lower bound of the time period.
+ * @param endDate The upper bound of the time period.
+ * @returns The station scores for each month grouped by station.
+ */
+export function trackScoresAcrossTimePeriod(
+  complaints: Complaint[],
+  startDate: Date,
+  endDate: Date
+) {
+  const complaintsByStation = groupComplaintsByStation(complaints);
+  const stationScoreByMonth = Object.keys(complaintsByStation).reduce(
+    (acc: StationScoreByMonth, a) => {
+      acc[a] = {};
+      return acc;
+    },
+    {}
+  );
+
+  Object.entries(complaintsByStation).forEach(
+    ([stationName, stationComplaints]) => {
+      let currentMonth = startDate;
+      while (currentMonth.getTime() <= endDate.getTime()) {
+        const complaintsInDateRange = stationComplaints.filter((c) => {
+          return isDateInRange(
+            c.dateComplaintMade!,
+            {
+              startDate,
+              endDate: currentMonth
+            },
+            { inclusive: true, strict: true }
+          );
+        });
+
+        if (complaintsInDateRange.length) {
+          const monthKey = formatDate(currentMonth, 'yyyy-MM');
+          const stationScore = Station.calculateScores(complaintsInDateRange)[
+            stationName
+          ];
+          stationScoreByMonth[stationName][monthKey] =
+            stationScore?.finalScore ?? 0;
+        }
+        currentMonth = addMonths(currentMonth, 1);
+      }
+    }
+  );
+
+  return stationScoreByMonth;
 }
 
 /**
@@ -239,4 +297,5 @@ function getComplaintCountByStatus(
 }
 
 type ComplaintsByStation = Record<string, Complaint[]>;
+type StationScoreByMonth = Record<string, Record<string, number>>;
 type TimeByComplaint = Record<number, number>;

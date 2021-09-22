@@ -48,7 +48,7 @@ export function writeAsList(items: string[]): string {
  * @param value The value to validate.
  * @returns True if value is part of enum.
  */
-export function isEnumValue<T>(enumeration: T, value: unknown): boolean {
+export function isEnumMember<T>(enumeration: T, value: unknown): boolean {
   return Object.values(enumeration).includes(value);
 }
 
