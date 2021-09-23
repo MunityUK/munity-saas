@@ -82,14 +82,16 @@ jobs:
       - run: mkdir ~/junit
       - run:
           name: Run utility tests
-          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/junit/test-results.xml
+          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/junit/test-results-utils.xml
           working_directory: ./code/utils
       - store_test_results:
           path: ~/junit
       - run:
           name: Run CLI tests
-          command: npm run test:cli
-          working_directory: ./code
+          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/junit/test-results-utils.xml
+          working_directory: ./code/cli
+      - store_test_results:
+          path: ~/junit
 
 workflows:
   build-inspect-test:
