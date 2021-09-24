@@ -8,7 +8,7 @@ const DEFAULT_END_DATE = new Date(2000, 11, 1);
 
 describe('Date Range Tests', function () {
   it('Given date is within range', function () {
-    assertDate(new Date(2000, 3, 1), true);
+    assertDate(new Date(2000, 3, 1), false);
   });
 
   it('Given date is after start date, no end date provided, no strict', function () {
