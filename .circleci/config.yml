@@ -84,8 +84,6 @@ jobs:
           name: Run utility tests
           command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/utils.xml
           working_directory: ./code/utils
-      - store_test_results:
-          path: ~/test-results
       - run:
           name: Run CLI tests
           command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
