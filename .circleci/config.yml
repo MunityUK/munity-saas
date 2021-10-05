@@ -1,5 +1,11 @@
 version: 2.1
 
+# Only run job on main branch.
+main_only: &main_only
+  filters:
+    branches:
+      only: main
+
 executors:
   node:
     docker:
@@ -79,18 +85,23 @@ jobs:
           MYSQL_DATABASE: munity
     steps:
       - install_dependencies
+      - run: mkdir -p ~/test-results
       - run:
           name: Run utility tests
-          command: npm run test:utils
-          working_directory: ./code
+          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/utils.xml
+          working_directory: ./code/utils
       - run:
           name: Run CLI tests
-          command: npm run test:cli
-          working_directory: ./code
+          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
+          working_directory: ./code/cli
+      - store_test_results:
+          path: ~/test-results
 
 workflows:
   build-inspect-test:
     jobs:
-      - build
-      - inspect
+      - build:
+          <<: *main_only
+      - inspect:
+          <<: *main_only
       - test

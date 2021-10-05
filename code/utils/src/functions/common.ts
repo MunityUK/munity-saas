@@ -145,7 +145,9 @@ function isWithinBound(
   }
 }
 
-type DateRangeVerificationOptions = {
+export interface DateRangeVerificationOptions {
+  /** If true, dates at the upper or lower bound pass checks. */
   inclusive?: boolean;
+  /** If true, undefined or null dates will not pass checks. */
   strict?: boolean;
-};
+}

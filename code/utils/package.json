@@ -7,8 +7,8 @@
     "prebuild": "npm run clean",
     "build": "tsc",
     "clean": "rm -rf ./dist",
-    "test": "ts-mocha --recursive --exit --no-timeout test/index.ts",
-    "test:coverage": "nyc ts-mocha --recursive --exit --no-timeout test/index.ts"
+    "test": "ts-mocha --exit --no-timeout test/index.ts",
+    "test:coverage": "nyc ts-mocha --exit --no-timeout test/index.ts"
   },
   "dependencies": {
     "capital-case": "^1.0.4",
@@ -23,6 +23,7 @@
     "@types/node": "^15.6.1",
     "chai": "^4.3.4",
     "mocha": "^9.1.1",
+    "mocha-junit-reporter": "^2.0.0",
     "nyc": "^15.1.0",
     "ts-mocha": "^8.0.0",
     "typescript": "^4.3.4"
