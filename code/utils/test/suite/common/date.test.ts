@@ -94,7 +94,10 @@ function assertDate(
       { inclusive, strict }
     ),
     shouldPass,
-    `The function denies that ${formatDate(date, 'yyyy-MM-dd')} is within range ${clause}`
+    `The function denies that ${formatDate(
+      date,
+      'yyyy-MM-dd'
+    )} is within range ${clause}`
   );
 }
 
