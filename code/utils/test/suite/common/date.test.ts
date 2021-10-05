@@ -14,7 +14,7 @@ describe('Date Range Tests', function () {
   it('Given date is within range', function () {
     const date = new Date(2000, 3, 1);
     const clause = 'when between start date and end date.';
-    assertDate(date, false, clause);
+    assertDate(date, true, clause);
   });
 
   it('Given date is after start date, no end date provided, no strict', function () {
