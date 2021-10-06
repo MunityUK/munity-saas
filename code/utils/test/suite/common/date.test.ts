@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
+import { DateRangeValues } from '../../../src';
 import {
   DateRangeVerificationOptions,
   formatDate,
@@ -101,7 +102,5 @@ function assertDate(
   );
 }
 
-interface DateAssertionOptions extends DateRangeVerificationOptions {
-  startDate?: Date;
-  endDate?: Date;
-}
+type DateAssertionOptions = DateRangeVerificationOptions &
+  Partial<DateRangeValues>;

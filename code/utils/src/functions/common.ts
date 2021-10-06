@@ -68,7 +68,7 @@ export function randomEnumValue<T>(enumeration: T, randSum = 1): T[keyof T] {
  * @param randSum The number of times random is summed.
  * @returns The random element.
  */
-export function randomElement<T>(array: T[], randSum = 1): T {
+export function randomElement<T>(array: readonly T[], randSum = 1): T {
   let r = 0;
   for (let i = randSum; i > 0; i--) r += Math.random();
   const randomness = r / randSum;
@@ -125,7 +125,7 @@ export function extractLabelValue(item: ListItem) {
  */
 function isWithinBound(
   date: Date,
-  boundDate: Date | undefined,
+  boundDate: Date | null | undefined,
   boundType: 'start' | 'end',
   options?: DateRangeVerificationOptions
 ) {
