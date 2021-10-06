@@ -78,7 +78,6 @@ export function createComplaint(options: CreateComplaintOptions) {
  * @throws If the complaint status is invalid.
  */
 export function validateComplaint(complaint: Complaint) {
-  // TODO: Use invariant package.
   const { dateComplaintMade, dateUnderInvestigation, dateResolved, status } =
     complaint;
   if (!isEnumMember(ComplaintStatus, status)) {
