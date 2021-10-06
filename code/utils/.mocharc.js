@@ -2,10 +2,12 @@
 
 const options = {};
 
-// if (process.env.CI) {
-//   options.reporter = 'mocha-junit-reporter';
-//   options.reporterOptions = 'mochaFile=~/test-results/utils.xml';
-// }
+if (process.env.CI) {
+  const path = require('path');
+  console.log(process.env);
+  options.reporter = 'mocha-junit-reporter';
+  options.reporterOptions = 'mochaFile=~/test-results/utils.xml';
+}
 
 /**
  * @type {import('mocha').MochaOptions}
