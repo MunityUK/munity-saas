@@ -88,9 +88,8 @@ jobs:
       - run: mkdir -p ~/test-results
       - run:
           name: Run utility tests
-          command: npm run test
+          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/utils.xml
           working_directory: ./code/utils
-      - run: ls ~/test-results
       - run:
           name: Run CLI tests
           command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
