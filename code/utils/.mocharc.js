@@ -7,6 +7,8 @@ if (process.env.CI) {
   options.reporterOptions = 'mochaFile=~/test-results/utils.xml';
 }
 
+console.log(process.env.CI, options);
+
 /**
  * @type {import('mocha').MochaOptions}
  **/
