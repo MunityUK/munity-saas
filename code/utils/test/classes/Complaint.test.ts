@@ -5,7 +5,7 @@ import {
   Complaint,
   ComplaintStatus,
   CreateComplaintOptions
-} from '../../../src/classes/Complaint';
+} from '../../src/classes/Complaint';
 
 describe('Complaint Validation Tests', function () {
   it('Given valid complaint', function () {
