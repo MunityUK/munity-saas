@@ -1,12 +1,12 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 
-import { DateRangeValues } from '../../../src';
+import { DateRangeValues } from '../../src';
 import {
   DateRangeVerificationOptions,
   formatDate,
   isDateInRange
-} from '../../../src/functions/common';
+} from '../../src/functions/common';
 
 const DEFAULT_START_DATE = new Date(2000, 0, 1);
 const DEFAULT_END_DATE = new Date(2000, 11, 1);

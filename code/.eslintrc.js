@@ -1,5 +1,9 @@
+/**
+ * @type {import('eslint').ESLint.Options}
+ **/
 module.exports = {
   extends: '@zzavidd/eslint-config',
+  extensions: ['js', 'ts', 'tsx'],
   root: true,
   ignorePatterns: [
     '.eslintrc.js',
