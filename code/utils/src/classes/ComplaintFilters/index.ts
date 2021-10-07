@@ -5,12 +5,17 @@ import {
 } from './helpers';
 
 import { isDateInRange } from '../../functions/common';
-import { ListItemGroups, ListItem, DateRangeValues } from '../../types';
+import {
+  DateRangeValues,
+  Elements,
+  ListItem,
+  ListItemGroups
+} from '../../types';
 import {
   BristolPoliceStations,
   Complaint,
   ComplaintStatus,
-  IncidentType
+  IncidentTypes
 } from '../Complaint';
 import { EthnicGroupOptions, SexOptions } from '../Person';
 
@@ -130,7 +135,7 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
   {
     label: 'Incident Type',
     name: 'incidentType',
-    items: Object.values(IncidentType),
+    items: IncidentTypes,
     defaultValue: [],
     type: 'list'
   },
@@ -144,7 +149,7 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
   {
     label: 'Status',
     name: 'status',
-    items: Object.values(ComplaintStatus),
+    items: ComplaintStatus ? Object.values(ComplaintStatus) : [],
     defaultValue: [],
     type: 'list'
   },
@@ -178,7 +183,7 @@ export const ComplaintFilterFields: Array<ComplaintFilterFieldType> = [
   }
 ];
 
-export type ComplaintDateProperty = typeof DatePropertyFilters[number];
+export type ComplaintDateProperty = Elements<typeof DatePropertyFilters>;
 
 type ComplaintFilterFieldType =
   | {
@@ -192,7 +197,7 @@ type ComplaintFilterFieldType =
       | {
           type: 'list';
           defaultValue: Array<unknown>;
-          items: ListItem[];
+          items: readonly ListItem[];
         }
       | {
           type: 'grouped-list';

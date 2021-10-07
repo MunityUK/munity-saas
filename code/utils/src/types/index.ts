@@ -1,7 +1,12 @@
+export type Elements<T extends readonly string[]> = T[number];
+export type Values<T> = T[keyof T];
+
 export type DateRangeValues = {
-  startDate: Date | undefined;
-  endDate: Date | undefined;
+  startDate: DateType;
+  endDate: DateType;
 };
+
+export type DateType = Date | null | undefined;
 
 export type ListItem =
   | string

@@ -1,1 +1,0 @@
-import('./suite/database.test');

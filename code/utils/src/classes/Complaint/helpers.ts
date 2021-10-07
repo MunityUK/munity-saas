@@ -7,7 +7,7 @@ import {
   Complaint,
   ComplaintPropertyOverrider,
   ComplaintStatus,
-  IncidentType,
+  IncidentTypes,
   Officer
 } from '../..';
 import { ARCGIS_BASE_URL } from '../../constants';
@@ -33,7 +33,7 @@ export function createComplaint(options: CreateComplaintOptions) {
     .padStart(5, '0');
   complaint.station = randomElement(BristolPoliceStations, 2);
   complaint.force = 'Avon and Somerset Constabulary';
-  complaint.incidentType = randomEnumValue(IncidentType);
+  complaint.incidentType = randomElement(IncidentTypes);
   complaint.incidentDescription = faker.lorem.sentence();
   complaint.status = status ?? randomEnumValue(ComplaintStatus, 2);
   complaint.notes = faker.lorem.sentence();
@@ -78,7 +78,6 @@ export function createComplaint(options: CreateComplaintOptions) {
  * @throws If the complaint status is invalid.
  */
 export function validateComplaint(complaint: Complaint) {
-  // TODO: Use invariant package.
   const { dateComplaintMade, dateUnderInvestigation, dateResolved, status } =
     complaint;
   if (!isEnumMember(ComplaintStatus, status)) {

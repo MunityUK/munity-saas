@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { addDays } from 'date-fns';
 import { describe, it } from 'mocha';
 
-import { Complaint, ComplaintStatus, Station } from '../../src/classes';
+import { Complaint, ComplaintStatus, Station } from '../src/classes';
 
 const STATION_NAME = 'Station';
 const COMPLAINT_COUNT = 5;

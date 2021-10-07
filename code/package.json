@@ -9,7 +9,7 @@
     "bootstrap": "lerna exec npm install --parallel",
     "build:app": "npm run build --prefix app",
     "build:utils": "npm run build --prefix utils",
-    "check": "npm run check --prefix app && npm run check --prefix cli",
+    "check": "npm run check --prefix app && npm run check --prefix cli && npm run check --prefix utils",
     "cli": "npm run cli --prefix cli",
     "clean": "lerna clean -y",
     "dev": "npm run dev --prefix app",
