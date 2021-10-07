@@ -3,10 +3,8 @@
 const options = {};
 
 if (process.env.CI) {
-  const path = require('path');
-  console.log(process.env);
   options.reporter = 'mocha-junit-reporter';
-  options.reporterOptions = 'mochaFile=~/test-results/utils.xml';
+  options.reporterOptions = `mochaFile=${process.env.HOME}/test-results/utils.xml`;
 }
 
 /**
