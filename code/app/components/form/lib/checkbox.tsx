@@ -46,7 +46,7 @@ const ICheckbox = React.memo(Checkbox);
 export interface CheckboxGroupProps
   extends React.InputHTMLAttributes<HTMLDivElement> {
   name: string;
-  items: ListItem[];
+  items: readonly ListItem[];
   checkedValues?: Array<string>;
 }
 

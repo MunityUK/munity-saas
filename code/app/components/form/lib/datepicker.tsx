@@ -1,3 +1,4 @@
+import { DateType } from '@munity/utils';
 import React from 'react';
 import ReactDatePicker from 'react-datepicker';
 
@@ -33,9 +34,9 @@ export function DatePicker({
 
 interface DatePickerProps {
   name: string;
-  value: Date | undefined;
-  minDate?: Date | undefined;
-  maxDate: Date | undefined;
+  value: DateType;
+  minDate?: DateType;
+  maxDate: DateType;
   placeholderText: string;
   onChange: (date: Date) => void;
   className?: string;

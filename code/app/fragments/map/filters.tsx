@@ -223,7 +223,7 @@ interface FilterCheckboxFieldProps
   extends React.InputHTMLAttributes<HTMLDivElement> {
   label: string;
   name: keyof ComplaintFilters;
-  items?: ListItem[];
+  items?: readonly ListItem[];
   itemGroups?: ListItemGroups;
   checkedValues?: string[];
 }
