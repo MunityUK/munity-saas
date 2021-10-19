@@ -82,7 +82,7 @@ describe('Complaint Validation Tests', function () {
       {
         status: ComplaintStatus.RESOLVED,
         overrider: () => ({
-          dateResolved: new Date(2000)
+          dateResolved: undefined
         })
       }
     ],

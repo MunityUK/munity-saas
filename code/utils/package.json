@@ -15,7 +15,8 @@
     "capital-case": "^1.0.4",
     "date-fns": "^2.21.3",
     "faker": "^5.5.3",
-    "knex": "^0.95.5"
+    "knex": "^0.95.5",
+    "tiny-invariant": "^1.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.21",

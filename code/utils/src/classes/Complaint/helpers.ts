@@ -1,5 +1,6 @@
 import { compareDesc } from 'date-fns';
 import faker from 'faker';
+import invariant from 'tiny-invariant';
 
 import {
   BristolPoliceStations,
@@ -11,11 +12,12 @@ import {
   Officer
 } from '../..';
 import { ARCGIS_BASE_URL } from '../../constants';
+import Messages from '../../constants/messages';
 import {
+  interpolate,
   isEnumMember,
   randomElement,
-  randomEnumValue,
-  writeAsList
+  randomEnumValue
 } from '../../functions/common';
 
 /**
@@ -80,58 +82,47 @@ export function createComplaint(options: CreateComplaintOptions) {
 export function validateComplaint(complaint: Complaint) {
   const { dateComplaintMade, dateUnderInvestigation, dateResolved, status } =
     complaint;
-  if (!isEnumMember(ComplaintStatus, status)) {
-    const validStatuses = writeAsList(Object.keys(ComplaintStatus));
-    throw new Error(
-      `'${status}' is not a valid complaint status. The valid complaint status options are ${validStatuses}.`
-    );
-  }
 
-  if (!dateComplaintMade) {
-    throw new Error(`Complaints must have a date of creation.`);
-  }
+  invariant(
+    isEnumMember(ComplaintStatus, status),
+    interpolate(Messages.INVALID_COMPLAINT_STATUS, status!)
+  );
+  invariant(dateComplaintMade, Messages.MUST_HAVE_CREATION_DATE);
 
   if (status === ComplaintStatus.UNADDRESSED) {
-    if (dateUnderInvestigation) {
-      throw new Error(
-        `Complaints with status '${status}' cannot have an 'Under Investigation' date.`
-      );
-    } else if (dateResolved) {
-      throw new Error(
-        `Complaints with status '${status}' cannot have a 'Resolved' date.`
-      );
-    }
+    invariant(
+      !dateUnderInvestigation,
+      interpolate(Messages.CANNOT_HAVE_INVESTIGATION_DATE, status)
+    );
+    invariant(
+      !dateResolved,
+      interpolate(Messages.CANNOT_HAVE_RESOLVED_DATE, status)
+    );
   } else {
-    if (!dateUnderInvestigation) {
-      throw new Error(
-        `Complaints with status '${status}' must have an 'Under Investigation' date.`
-      );
-    }
-
-    if (compareDesc(dateComplaintMade, dateUnderInvestigation) < 1) {
-      throw new Error(
-        `The 'Under Investigation' must be after the complaint creation date.`
-      );
-    }
+    invariant(
+      dateUnderInvestigation,
+      interpolate(Messages.MUST_HAVE_INVESTIGATION_DATE, status!)
+    );
+    invariant(
+      compareDesc(dateComplaintMade, dateUnderInvestigation) >= 1,
+      Messages.INVESTIGATION_DATE_AFTER_CREATION_DATE
+    );
 
     if (status === ComplaintStatus.INVESTIGATING) {
-      if (dateResolved) {
-        throw new Error(
-          `Complaints with status '${status}' cannot have a 'Resolved' date.`
-        );
-      }
+      invariant(
+        !dateResolved,
+        interpolate(Messages.CANNOT_HAVE_RESOLVED_DATE, status)
+      );
     } else if (status === ComplaintStatus.RESOLVED) {
-      if (!dateResolved) {
-        throw new Error(
-          `Complaints with status '${status}' must have a 'Resolved' date.`
-        );
-      }
+      invariant(
+        dateResolved,
+        interpolate(Messages.MUST_HAVE_RESOLVED_DATE, status!)
+      );
 
-      if (compareDesc(dateUnderInvestigation, dateResolved) < 1) {
-        throw new Error(
-          `The 'Resolved' date must be after the 'Under Investigation' date.`
-        );
-      }
+      invariant(
+        compareDesc(dateComplaintMade, dateUnderInvestigation) >= 1,
+        Messages.INVESTIGATION_DATE_BEFORE_RESOLVED_DATE
+      );
     }
   }
 }

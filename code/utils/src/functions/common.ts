@@ -23,6 +23,18 @@ export function isDateInRange(
 }
 
 /**
+ * Interpolates specified values into a given string with placeholders.
+ * @param template The template string with placeholders.
+ * @param values The string values to substitute in.
+ * @returns The interpolated string.
+ */
+export function interpolate(template: string, ...values: string[]) {
+  return template.replace(/{(\d+)}/g, (match, number) => {
+    return typeof values[number] !== 'undefined' ? values[number] : match;
+  });
+}
+
+/**
  * Write a list of strings out as a comma-separated string.
  * @param items The array of string items.
  * @returns The comma-separated English string.
