@@ -44,8 +44,8 @@ export function trackScoresAcrossTimePeriod(
 ) {
   const complaintsByStation = groupComplaintsByStation(complaints);
   const stationScoreByMonth = Object.keys(complaintsByStation).reduce(
-    (acc: StationScoreByMonth, a) => {
-      acc[a] = {};
+    (acc: StationScoreByMonth, i) => {
+      acc[i] = {};
       return acc;
     },
     {}
