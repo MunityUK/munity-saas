@@ -2,6 +2,7 @@ import { ComplaintStatus, Station, StationScores } from '@munity/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { DoughnutChart } from 'components/chart/doughnut';
+import Timeline from 'components/chart/timeline';
 
 /**
  * The content of the station metric tab.
@@ -79,24 +80,27 @@ export default function MetricStationProfile({
   return (
     <section className={'map-metrics-content--station'}>
       <h1>{stationName}</h1>
-      <figure>
+      <figure className={'doughnut'}>
         <DoughnutChart data={chartData} score={station?.finalScore} />
         <figcaption>
           <ChartLegend metrics={metrics} />
         </figcaption>
       </figure>
-      <table className={'station-stats'}>
-        <tbody>
-          {fields.map(({ label, value }, key) => {
-            return (
-              <tr key={key}>
-                <td className={'station-stats--label'}>{label}:</td>
-                <td className={'station-stats--values'}>{value}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Timeline station={station!} stationName={stationName!} />
+      <section className={'station-stats'}>
+        <table>
+          <tbody>
+            {fields.map(({ label, value }, key) => {
+              return (
+                <tr key={key}>
+                  <td className={'station-stats--label'}>{label}:</td>
+                  <td className={'station-stats--values'}>{value}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </section>
     </section>
   );
 }
