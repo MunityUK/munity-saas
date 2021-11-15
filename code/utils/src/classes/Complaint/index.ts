@@ -27,15 +27,17 @@ export class Complaint {
    */
   static create(options: CreateComplaintOptions = {}): Complaint[] {
     const { overrider, quantity = 1, status } = options;
-    return Array(quantity)
-      .fill(null)
-      .map((_, i) => {
-        return ComplaintHelper.createComplaint({
-          overrider,
-          status,
-          currentIndex: i
-        });
+
+    const complaints = [];
+    for (let i = 1; i <= quantity; i++) {
+      const complaint = ComplaintHelper.createComplaint({
+        overrider,
+        status,
+        currentIndex: i
       });
+      complaints.push(complaint);
+    }
+    return complaints;
   }
 
   /**
@@ -59,7 +61,13 @@ export enum ComplaintStatus {
   RESOLVED = 'Resolved'
 }
 
-export const IncidentTypes = ['Assault', 'Felony', 'Misconduct'] as const;
+export const IncidentTypes = [
+  'Verbal Abuse',
+  'Brutality',
+  'Harassment',
+  'Refusal To Give ID',
+  'Excessive Force'
+] as const;
 export type IncidentType = Elements<typeof IncidentTypes>;
 
 export const BristolPoliceStations = [

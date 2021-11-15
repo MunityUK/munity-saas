@@ -1,4 +1,9 @@
-import { Complaint, ComplaintStatus, DB_TABLE } from '@munity/utils';
+import {
+  Complaint,
+  ComplaintStatus,
+  DB_TABLE,
+  MunityTest
+} from '@munity/utils';
 
 import { conn } from '../config';
 import { Logger } from '../helpers';
@@ -34,22 +39,24 @@ export async function ingest(
   status?: ComplaintStatus,
   options?: IngestOptions
 ) {
-  if (options?.clearData) {
-    await truncateTable();
-  }
+  await MunityTest.run(async () => {
+    if (options?.clearData) {
+      await truncateTable();
+    }
 
-  Logger.progress(`Ingesting record(s)...`);
-  await conn.insertRecords(
-    DB_TABLE,
-    Complaint.create({
-      quantity,
-      status,
-      overrider: (_, i) => ({
-        complaintId: 'COM' + i.toString().padStart(4, '0')
+    Logger.progress(`Ingesting record(s)...`);
+    await conn.insertRecords(
+      DB_TABLE,
+      Complaint.create({
+        quantity,
+        status,
+        overrider: (_, i) => ({
+          complaintId: 'COM' + i.toString().padStart(4, '0')
+        })
       })
-    })
-  );
-  Logger.outcome(`${quantity} record(s) ingested.`);
+    );
+    Logger.outcome(`${quantity} record(s) ingested.`);
+  });
 }
 
 type IngestOptions = {

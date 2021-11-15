@@ -1,20 +1,22 @@
 import { assert } from 'chai';
 
 /**
- * Executes a specified function on call.
+ * Executes a specified function and exits the program.
  * @param main The function to execute.
  * @returns A promise.
  */
-export function run(main: () => Promise<void>) {
-  return (async () => {
-    try {
-      await main();
-    } catch (err: any) {
-      console.error(`${err.name}: ${err.message}`);
-    } finally {
-      process.exit(0);
-    }
-  })();
+export async function run(
+  main: () => Promise<void>,
+  options: RunOptions = {}
+): Promise<void | never> {
+  const { exit = false } = options;
+  try {
+    await main();
+  } catch (err: any) {
+    console.error(`${err.name}: ${err.message}`);
+  } finally {
+    if (exit) process.exit(0);
+  }
 }
 
 /**
@@ -31,3 +33,7 @@ export function tryCatch(runnable: () => Promise<void>) {
     }
   };
 }
+
+type RunOptions = {
+  exit?: boolean;
+};

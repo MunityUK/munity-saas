@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import Comrank from './comrank';
 import * as Database from './database';
 
-MunityTest.run(main);
+main();
 
 async function main() {
   const program = new Command();
@@ -34,5 +34,11 @@ async function main() {
 
   program.addHelpCommand(false);
   program.exitOverride(() => process.exit(0));
-  await program.parseAsync();
+
+  await MunityTest.run(
+    async () => {
+      await program.parseAsync();
+    },
+    { exit: true }
+  );
 }

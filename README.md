@@ -59,7 +59,7 @@ npm run build:utils
 To launch the database initialisation scripts, run:
 
 ```
-npm run cli -- init-db
+npm run cli -- init
 ```
 
 You should have a new Docker container named `munity-db` started. Wait a few
@@ -75,6 +75,7 @@ npm run cli -- ingest
 
 > Note: The default number of records ingested is 1. You can change this by
 > specifying a number preceded by two dashes e.g.
+>
 > ```
 > npm run cli -- ingest 50
 > ```
