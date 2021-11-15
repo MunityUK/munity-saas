@@ -2,7 +2,7 @@ import { ComplaintStatus, Station, StationScores } from '@munity/utils';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { DoughnutChart } from 'components/chart/doughnut';
-import Timeline from 'components/chart/timeline';
+import ScoreTimeline from 'components/chart/linechart';
 
 /**
  * The content of the station metric tab.
@@ -86,7 +86,7 @@ export default function MetricStationProfile({
           <ChartLegend metrics={metrics} />
         </figcaption>
       </figure>
-      <Timeline station={station!} stationName={stationName!} />
+      <ScoreTimeline station={station} stationName={stationName} />
       <section className={'station-stats'}>
         <table>
           <tbody>

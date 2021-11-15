@@ -168,7 +168,7 @@ section.map-metrics-content--station {
 
 figure.linechart {
   background: #fff;
-  margin: 1em 0 0;
+  margin: 1em 0 0 -5px;
   width: 100%;
 }
 
@@ -202,13 +202,12 @@ fieldset.complaint-field {
 }
 
 section.station-stats {
-  margin: 1em;
+  margin: 0 1em;
 
   table {
     border-collapse: collapse;
     border-spacing: 0;
     font-size: 80%;
-    margin-top: 1em;
     width: 100%;
 
     tr {
