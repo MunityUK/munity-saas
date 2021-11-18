@@ -12,6 +12,7 @@
     "test:coverage": "nyc mocha"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "capital-case": "^1.0.4",
     "date-fns": "^2.21.3",
     "faker": "^5.5.3",

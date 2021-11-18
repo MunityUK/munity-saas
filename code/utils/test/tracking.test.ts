@@ -17,7 +17,7 @@ describe('Score Tracking Tests', function () {
         const overrides: Complaint = {};
         overrides.station = STATION_NAME;
         overrides.status = ComplaintStatus.RESOLVED;
-        overrides.dateComplaintMade = addDays(START_DATE, i);
+        overrides.dateComplaintMade = addDays(START_DATE, i - 1);
         overrides.dateUnderInvestigation = addDays(
           overrides.dateComplaintMade,
           1

@@ -1,5 +1,5 @@
 import { Complaint, MunityDB } from '@munity/utils';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import Knex from 'knex';
 
 dotenv.config();

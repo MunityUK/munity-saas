@@ -1,6 +1,9 @@
+import axios from 'axios';
 import { compareDesc } from 'date-fns';
 import faker from 'faker';
 import invariant from 'tiny-invariant';
+
+import { URL } from 'url';
 
 import {
   BristolPoliceStations,
@@ -141,8 +144,8 @@ export async function reverseGeocodeCoordinates(complaint: Complaint) {
   );
 
   try {
-    const res = await fetch(url.href);
-    return await res.json();
+    const res = await axios(url.href);
+    return res.data();
   } catch (message) {
     return console.error(message);
   }

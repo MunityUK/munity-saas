@@ -1,6 +1,5 @@
 import * as ComplaintHelper from './helpers';
 
-import { Elements } from '../../types';
 import { Complainant, Officer } from '../Person';
 
 export class Complaint {
@@ -61,14 +60,23 @@ export enum ComplaintStatus {
   RESOLVED = 'Resolved'
 }
 
-export const IncidentTypes = [
-  'Verbal Abuse',
-  'Brutality',
-  'Harassment',
-  'Refusal To Give ID',
-  'Excessive Force'
-] as const;
-export type IncidentType = Elements<typeof IncidentTypes>;
+export enum IncidentType {
+  VERBAL_ABUSE = 'Verbal Abuse',
+  BRUTALITY = 'Brutality',
+  HARASSMENT = 'Harassment',
+  ID_REFUSAL = 'Refusal To Give ID',
+  EXCESSIVE_FORCE = 'Excessive Force'
+}
+
+export const IncidentTypes = Object.values(IncidentType);
+
+export const IncidentTypeSeverities = {
+  [IncidentType.VERBAL_ABUSE]: 'LOW',
+  [IncidentType.ID_REFUSAL]: 'LOW',
+  [IncidentType.HARASSMENT]: 'MEDIUM',
+  [IncidentType.EXCESSIVE_FORCE]: 'MEDIUM',
+  [IncidentType.BRUTALITY]: 'HIGH'
+} as const;
 
 export const BristolPoliceStations = [
   'Avonmouth',
