@@ -1,0 +1,9 @@
+{
+  "all": true,
+  "extension": [".ts"],
+  "include": ["src/*"],
+  "exclude": ["dist/*"],
+  "reporter": ["lcov", "text"],
+  "report-dir": "./.coverage",
+  "temp-dir": "./.coverage"
+}
