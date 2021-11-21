@@ -10,23 +10,20 @@ import { formatDate, isDateInRange } from '../../functions/common';
 /**
  * Groups the list of complaints by their stations.
  * @param complaints The list of complaints.
- * @param consumer A function to be called on the current complaint iteration.
  * @returns The grouped complaints by station.
  */
 export function groupComplaintsByStation(
-  complaints: Complaint[],
-  consumer?: (complaint: Complaint) => void
+  complaints: Complaint[]
 ): ComplaintsByStation {
-  return complaints.reduce((acc: ComplaintsByStation, complaint) => {
+  const complaintsByStation: ComplaintsByStation = {};
+  complaints.forEach((complaint) => {
     const { station } = complaint;
-    const currentComplaints = acc[station!];
-    acc[station!] = currentComplaints
+    const currentComplaints = complaintsByStation[station!];
+    complaintsByStation[station!] = currentComplaints
       ? [...currentComplaints, complaint]
       : [complaint];
-
-    if (consumer) consumer(complaint);
-    return acc;
-  }, {});
+  });
+  return complaintsByStation;
 }
 
 /**
@@ -93,96 +90,91 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
   const resolutionTimeByComplaint: TimeByComplaint = {};
   const caseDurationByComplaint: TimeByComplaint = {};
 
-  const complaintsByStation = groupComplaintsByStation(
-    complaints,
-    (complaint) => {
-      if (complaint.dateUnderInvestigation) {
-        investigationTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-          new Date(complaint.dateComplaintMade!),
-          new Date(complaint.dateUnderInvestigation)
-        );
-      }
-      if (complaint.dateResolved) {
-        resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-          new Date(complaint.dateUnderInvestigation!),
-          new Date(complaint.dateResolved)
-        );
-        caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
-          new Date(complaint.dateComplaintMade!),
-          new Date(complaint.dateResolved)
-        );
-      }
+  complaints.forEach((complaint) => {
+    if (complaint.dateUnderInvestigation) {
+      investigationTimeByComplaint[complaint.id!] = differenceInMilliseconds(
+        new Date(complaint.dateComplaintMade!),
+        new Date(complaint.dateUnderInvestigation)
+      );
     }
-  );
-
-  const stationScores = Object.entries(complaintsByStation).reduce(
-    (acc: StationScores, [stationName, complaints]) => {
-      // Calculate counts.
-      const complaintCount = complaints.length;
-      const investigatingCount = getComplaintCountByStatus(complaints, [
-        ComplaintStatus.INVESTIGATING
-      ]);
-      const resolvedCount = getComplaintCountByStatus(complaints, [
-        ComplaintStatus.RESOLVED
-      ]);
-      const unaddressedCount =
-        complaints.length - investigatingCount - resolvedCount;
-
-      // Calculate percentages.
-      const percentageUnaddressed = (unaddressedCount / complaintCount) * 100;
-      const percentageInvestigating =
-        (investigatingCount / complaintCount) * 100;
-      const percentageResolved = (resolvedCount / complaintCount) * 100;
-      const percentageAttendedTo = percentageResolved + percentageInvestigating;
-
-      // Calculate average times.
-      const avgInvestigationTime = calcAverageTime(
-        complaints,
-        investigationTimeByComplaint
+    if (complaint.dateResolved) {
+      resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
+        new Date(complaint.dateUnderInvestigation!),
+        new Date(complaint.dateResolved)
       );
-      const avgResolutionTime = calcAverageTime(
-        complaints,
-        resolutionTimeByComplaint
+      caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
+        new Date(complaint.dateComplaintMade!),
+        new Date(complaint.dateResolved)
       );
-      const avgCaseDuration = calcAverageTime(
-        complaints,
-        caseDurationByComplaint
-      );
+    }
+  });
 
-      // Marshal values to score object.
-      const score = new Station();
-      score.complaints = complaints;
-      score.totalNumberOfComplaints = complaintCount;
-      score.numberOfComplaintsResolved = resolvedCount;
-      score.numberOfComplaintsInvestigating = investigatingCount;
-      score.numberOfComplaintsUnaddressed = unaddressedCount;
-      score.percentageUnaddressed = round(percentageUnaddressed) + '%';
-      score.percentageInvestigating = round(percentageInvestigating) + '%';
-      score.percentageResolved = round(percentageResolved) + '%';
-      score.percentageAttendedTo = round(percentageAttendedTo) + '%';
-      score.averageInvestigationTime = assignAverageTime(avgInvestigationTime);
-      score.averageResolutionTime = assignAverageTime(avgResolutionTime);
-      score.averageCaseDuration = assignAverageTime(avgCaseDuration);
+  const complaintsByStation = groupComplaintsByStation(complaints);
+  const stationScores: StationScores = {};
 
-      const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
-      const penaltyUnaddressed = calcUnaddressedPenalty(percentageAttendedTo);
-      const penaltyLongAddressTime =
-        calcLongAddressTimePenalty(avgInvestigationTime);
-      const penaltyLongResolveTime =
-        calcLongResolveTimePenalty(avgResolutionTime);
+  Object.entries(complaintsByStation).forEach(([stationName, complaints]) => {
+    // Calculate counts.
+    const complaintCount = complaints.length;
+    const investigatingCount = getComplaintCountByStatus(complaints, [
+      ComplaintStatus.INVESTIGATING
+    ]);
+    const resolvedCount = getComplaintCountByStatus(complaints, [
+      ComplaintStatus.RESOLVED
+    ]);
+    const unaddressedCount =
+      complaints.length - investigatingCount - resolvedCount;
 
-      score.finalScore = calcFinalScore(
-        penaltyUnaddressed,
-        penaltyUnresolved,
-        penaltyLongAddressTime,
-        penaltyLongResolveTime
-      );
+    // Calculate percentages.
+    const percentageUnaddressed = (unaddressedCount / complaintCount) * 100;
+    const percentageInvestigating = (investigatingCount / complaintCount) * 100;
+    const percentageResolved = (resolvedCount / complaintCount) * 100;
+    const percentageAttendedTo = percentageResolved + percentageInvestigating;
 
-      acc[stationName] = score;
-      return acc;
-    },
-    {}
-  );
+    // Calculate average times.
+    const avgInvestigationTime = calcAverageTime(
+      complaints,
+      investigationTimeByComplaint
+    );
+    const avgResolutionTime = calcAverageTime(
+      complaints,
+      resolutionTimeByComplaint
+    );
+    const avgCaseDuration = calcAverageTime(
+      complaints,
+      caseDurationByComplaint
+    );
+
+    // Marshal values to score object.
+    const score = new Station();
+    score.complaints = complaints;
+    score.totalNumberOfComplaints = complaintCount;
+    score.numberOfComplaintsResolved = resolvedCount;
+    score.numberOfComplaintsInvestigating = investigatingCount;
+    score.numberOfComplaintsUnaddressed = unaddressedCount;
+    score.percentageUnaddressed = round(percentageUnaddressed) + '%';
+    score.percentageInvestigating = round(percentageInvestigating) + '%';
+    score.percentageResolved = round(percentageResolved) + '%';
+    score.percentageAttendedTo = round(percentageAttendedTo) + '%';
+    score.averageInvestigationTime = assignAverageTime(avgInvestigationTime);
+    score.averageResolutionTime = assignAverageTime(avgResolutionTime);
+    score.averageCaseDuration = assignAverageTime(avgCaseDuration);
+
+    const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
+    const penaltyUnaddressed = calcUnaddressedPenalty(percentageAttendedTo);
+    const penaltyLongAddressTime =
+      calcLongAddressTimePenalty(avgInvestigationTime);
+    const penaltyLongResolveTime =
+      calcLongResolveTimePenalty(avgResolutionTime);
+
+    score.finalScore = calcFinalScore(
+      penaltyUnaddressed,
+      penaltyUnresolved,
+      penaltyLongAddressTime,
+      penaltyLongResolveTime
+    );
+
+    stationScores[stationName] = score;
+  });
   return stationScores;
 }
 
