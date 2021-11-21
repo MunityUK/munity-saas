@@ -92,20 +92,23 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
 
   complaints.forEach((complaint) => {
     if (complaint.dateUnderInvestigation) {
-      investigationTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateComplaintMade!),
-        new Date(complaint.dateUnderInvestigation)
-      );
+      investigationTimeByComplaint[complaint.complaintId!] =
+        differenceInMilliseconds(
+          new Date(complaint.dateComplaintMade!),
+          new Date(complaint.dateUnderInvestigation)
+        );
     }
     if (complaint.dateResolved) {
-      resolutionTimeByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateUnderInvestigation!),
-        new Date(complaint.dateResolved)
-      );
-      caseDurationByComplaint[complaint.id!] = differenceInMilliseconds(
-        new Date(complaint.dateComplaintMade!),
-        new Date(complaint.dateResolved)
-      );
+      resolutionTimeByComplaint[complaint.complaintId!] =
+        differenceInMilliseconds(
+          new Date(complaint.dateUnderInvestigation!),
+          new Date(complaint.dateResolved)
+        );
+      caseDurationByComplaint[complaint.complaintId!] =
+        differenceInMilliseconds(
+          new Date(complaint.dateComplaintMade!),
+          new Date(complaint.dateResolved)
+        );
     }
   });
 
@@ -255,11 +258,13 @@ function calcAverageTime(
   timeByComplaint: TimeByComplaint
 ): number {
   const total = complaints
-    .map((c) => timeByComplaint[c.id!])
+    .map((c) => timeByComplaint[c.complaintId!])
     .filter((e) => e)
     .reduce((a, b) => a + b, 0);
 
-  const average = total / complaints.length;
+  if (total === 0) return total;
+
+  const average = total / Object.keys(timeByComplaint).length;
   const averageTime = Math.abs(differenceInDays(average, 0));
   return averageTime;
 }
@@ -290,4 +295,4 @@ function getComplaintCountByStatus(
 
 type ComplaintsByStation = Record<string, Complaint[]>;
 type StationScoreByMonth = Record<string, Record<string, number>>;
-type TimeByComplaint = Record<number, number>;
+type TimeByComplaint = Record<string, number>;
