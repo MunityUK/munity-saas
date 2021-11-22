@@ -4,6 +4,15 @@ import {
   differenceInMilliseconds
 } from 'date-fns';
 
+import { ExtendedTimePenaltyFactors, PenaltyFactors } from './constants';
+import {
+  ComplaintsByStation,
+  ExtendedTimeType,
+  PenaltyStatus,
+  StationScoreByMonth,
+  TimeByComplaint
+} from './types';
+
 import { Complaint, ComplaintStatus, Station, StationScores } from '../..';
 import { formatDate, isDateInRange } from '../../functions/common';
 
@@ -116,7 +125,7 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
   const stationScores: StationScores = {};
 
   Object.entries(complaintsByStation).forEach(([stationName, complaints]) => {
-    // Calculate counts.
+    // Calculate counts by status.
     const complaintCount = complaints.length;
     const investigatingCount = getComplaintCountByStatus(complaints, [
       ComplaintStatus.INVESTIGATING
@@ -134,42 +143,52 @@ export function calculateStationScores(complaints: Complaint[]): StationScores {
     const percentageAttendedTo = percentageResolved + percentageInvestigating;
 
     // Calculate average times.
-    const avgInvestigationTime = calcAverageTime(
+    const avgInvestigationTime = calculateAverageTime(
       complaints,
       investigationTimeByComplaint
     );
-    const avgResolutionTime = calcAverageTime(
+    const avgResolutionTime = calculateAverageTime(
       complaints,
       resolutionTimeByComplaint
     );
-    const avgCaseDuration = calcAverageTime(
+    const avgCaseDuration = calculateAverageTime(
       complaints,
       caseDurationByComplaint
     );
 
-    // Marshal values to score object.
-    const score = new Station();
-    score.complaints = complaints;
-    score.totalNumberOfComplaints = complaintCount;
-    score.numberOfComplaintsResolved = resolvedCount;
-    score.numberOfComplaintsInvestigating = investigatingCount;
-    score.numberOfComplaintsUnaddressed = unaddressedCount;
-    score.percentageUnaddressed = round(percentageUnaddressed) + '%';
-    score.percentageInvestigating = round(percentageInvestigating) + '%';
-    score.percentageResolved = round(percentageResolved) + '%';
-    score.percentageAttendedTo = round(percentageAttendedTo) + '%';
-    score.averageInvestigationTime = assignAverageTime(avgInvestigationTime);
-    score.averageResolutionTime = assignAverageTime(avgResolutionTime);
-    score.averageCaseDuration = assignAverageTime(avgCaseDuration);
+    const score: Station = {
+      complaints,
+      totalNumberOfComplaints: complaintCount,
+      numberOfComplaintsResolved: resolvedCount,
+      numberOfComplaintsInvestigating: investigatingCount,
+      numberOfComplaintsUnaddressed: unaddressedCount,
+      percentageUnaddressed: round(percentageUnaddressed) + '%',
+      percentageInvestigating: round(percentageInvestigating) + '%',
+      percentageResolved: round(percentageResolved) + '%',
+      percentageAttendedTo: round(percentageAttendedTo) + '%',
+      averageInvestigationTime: assignAverageTime(avgInvestigationTime),
+      averageResolutionTime: assignAverageTime(avgResolutionTime),
+      averageCaseDuration: assignAverageTime(avgCaseDuration)
+    };
 
-    const penaltyUnresolved = calcUnresolvedPenalty(percentageResolved);
-    const penaltyUnaddressed = calcUnaddressedPenalty(percentageAttendedTo);
-    const penaltyLongAddressTime =
-      calcLongAddressTimePenalty(avgInvestigationTime);
-    const penaltyLongResolveTime =
-      calcLongResolveTimePenalty(avgResolutionTime);
+    const penaltyUnresolved = calculateStatusPenalty(
+      percentageResolved,
+      'Unresolved'
+    );
+    const penaltyUnaddressed = calculateStatusPenalty(
+      percentageAttendedTo,
+      'Unaddressed'
+    );
+    const penaltyLongAddressTime = calculateExtendedTimePenalty(
+      avgInvestigationTime,
+      'Investigation'
+    );
+    const penaltyLongResolveTime = calculateExtendedTimePenalty(
+      avgResolutionTime,
+      'Resolution'
+    );
 
-    score.finalScore = calcFinalScore(
+    score.finalScore = calculateFinalScore(
       penaltyUnaddressed,
       penaltyUnresolved,
       penaltyLongAddressTime,
@@ -195,44 +214,30 @@ function round(number: number, precision = 1) {
 }
 
 /**
- * Calculates the penalty incurred for unresolved complaints.
+ * Calculates the penalty incurred for complaints with a certain status.
  * @param percentageResolved The percentage of resolved complaints.
+ * @param status The status to calculate penalties for.
  * @returns The calculated penalty to deduct from final score.
  */
-function calcUnresolvedPenalty(percentageResolved: number) {
-  return (100 - percentageResolved) * 0.2;
+function calculateStatusPenalty(percentage: number, status: PenaltyStatus) {
+  const factor = PenaltyFactors[status];
+  return (100 - percentage) * factor;
 }
 
 /**
- * Calculates the penalty incurred for unaddressed complaints.
- * @param percentageAttendedTo The percentage of addressed and resolved
- * complaints collectively.
+ * Calculates the penalty incurred for a long average time.
+ * @param averageTime The average time.
+ * @param type The type of time measured.
  * @returns The calculated penalty to deduct from final score.
  */
-function calcUnaddressedPenalty(percentageAttendedTo: number) {
-  return (100 - percentageAttendedTo) * 0.5;
-}
-
-/**
- * Calculates the penalty incurred for a long average complaint investigation time.
- * @param avgInvestigationTime The average investigation time.
- * @returns The calculated penalty to deduct from final score.
- */
-function calcLongAddressTimePenalty(avgInvestigationTime: number | null) {
-  if (avgInvestigationTime === null) return 0;
-  const cappedPenalty = Math.min(avgInvestigationTime - 30, 30);
-  return Math.max(cappedPenalty * 0.8, 0);
-}
-
-/**
- * Calculates the penalty incurred for a long average complaint resolution time.
- * @param avgResolutionTime The average resolution time.
- * @returns The calculated penalty to deduct from final score.
- */
-function calcLongResolveTimePenalty(avgResolutionTime: number | null) {
-  if (avgResolutionTime === null) return 0;
-  const cappedPenalty = Math.min(avgResolutionTime - 60, 30);
-  return Math.max(cappedPenalty * 0.4, 0);
+function calculateExtendedTimePenalty(
+  averageTime: number | null,
+  type: ExtendedTimeType
+) {
+  if (averageTime === null) return 0;
+  const { maxPenalty, penaltyFactor } = ExtendedTimePenaltyFactors[type];
+  const cappedPenalty = Math.min(averageTime - maxPenalty, 30);
+  return Math.max(cappedPenalty * penaltyFactor, 0);
 }
 
 /**
@@ -243,7 +248,12 @@ function calcLongResolveTimePenalty(avgResolutionTime: number | null) {
  * @param plrt The penalty for long average complaint resolution times.
  * @returns The final score.
  */
-function calcFinalScore(pua: number, pur: number, plit: number, plrt: number) {
+function calculateFinalScore(
+  pua: number,
+  pur: number,
+  plit: number,
+  plrt: number
+) {
   return round(100 - pua - pur - plit - plrt);
 }
 
@@ -253,7 +263,7 @@ function calcFinalScore(pua: number, pur: number, plit: number, plrt: number) {
  * @param timeByComplaint The mapping for times to complaints.
  * @returns The average time taken in milliseconds.
  */
-function calcAverageTime(
+function calculateAverageTime(
   complaints: Complaint[],
   timeByComplaint: TimeByComplaint
 ): number {
@@ -292,7 +302,3 @@ function getComplaintCountByStatus(
 ) {
   return complaints.filter((c) => statuses.includes(c.status!)).length;
 }
-
-type ComplaintsByStation = Record<string, Complaint[]>;
-type StationScoreByMonth = Record<string, Record<string, number>>;
-type TimeByComplaint = Record<string, number>;
