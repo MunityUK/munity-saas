@@ -13,7 +13,7 @@ import {
 } from '../Complaint';
 
 export class Station {
-  public complaints: Complaint[] = [];
+  public readonly complaints: Complaint[] = [];
   public totalNumberOfComplaints = 0;
   public numberOfComplaintsResolved = 0;
   public numberOfComplaintsInvestigating = 0;
@@ -25,11 +25,13 @@ export class Station {
   public averageInvestigationTime: string | null = null;
   public averageResolutionTime: string | null = null;
   public averageCaseDuration: string | null = null;
-  public finalScore = 100;
 
-  private avgInvTimeInMs = 0;
-  private avgResTimeInMs = 0;
-  private avgCasDurInMs = 0;
+  private totalInvTimeInMs = 0;
+  private totalResTimeInMs = 0;
+  private totalCasDurInMs = 0;
+
+  private baseScoreUnit = 0;
+  private _finalScore = 100;
 
   /**
    * Groups the list of complaints by their stations.
@@ -116,7 +118,8 @@ export class Station {
 
       const stationName = complaint.station;
       const station = stationScores[stationName] ?? new Station();
-      station.totalNumberOfComplaints = complaintsByStation[stationName].length;
+      const quantity = complaintsByStation[stationName].length;
+      station.setTotalNumberOfComplaints(quantity);
       station.addComplaint(complaint);
       stationScores[stationName] = station;
     });
@@ -127,25 +130,26 @@ export class Station {
   /**
    * Add and process a complaint.
    * @param complaint The complaint to add.
-   * @param numOfComplaintsToStation The total number of complaints for the station.
-   * @param options Extra options.
    */
-  public addComplaint(complaint: Complaint, options: AddComplaintOptions = {}) {
+  public addComplaint(complaint: Complaint) {
     this.complaints.push(complaint);
-
-    const params = {
-      baseScoreUnit: 1 / this.totalNumberOfComplaints,
-      severityPenalty: getSeverityPenalty(complaint.incidentType!),
-      endDate: options.endDate ?? new Date()
-    };
 
     if (complaint.status === ComplaintStatus.RESOLVED) {
       this.processResolvedComplaint(complaint);
     } else if (complaint.status === ComplaintStatus.INVESTIGATING) {
-      this.processInvestigatingComplaint(complaint, params);
+      this.processInvestigatingComplaint(complaint);
     } else {
-      this.processUnaddressedComplaint(complaint, params);
+      this.processUnaddressedComplaint(complaint);
     }
+  }
+
+  /**
+   * Set the total number of complaints for your station.
+   * @param quantity The number to set.
+   */
+  public setTotalNumberOfComplaints(quantity: number) {
+    this.totalNumberOfComplaints = quantity;
+    this.baseScoreUnit = 1 / quantity;
   }
 
   /**
@@ -163,29 +167,29 @@ export class Station {
       this.totalNumberOfComplaints
     );
 
-    this.avgInvTimeInMs += diffInMs(
+    this.totalInvTimeInMs += diffInMs(
       complaint.dateUnderInvestigation!,
       complaint.dateComplaintMade!
     );
-    this.avgResTimeInMs += diffInMs(
+    this.totalResTimeInMs += diffInMs(
       complaint.dateResolved!,
       complaint.dateUnderInvestigation!
     );
-    this.avgCasDurInMs += diffInMs(
+    this.totalCasDurInMs += diffInMs(
       complaint.dateResolved!,
       complaint.dateComplaintMade!
     );
 
     this.averageInvestigationTime = calculateAverageTimeInDays(
-      this.avgInvTimeInMs,
+      this.totalInvTimeInMs,
       this.numberOfComplaintsInvestigating + this.numberOfComplaintsResolved
     );
     this.averageResolutionTime = calculateAverageTimeInDays(
-      this.avgResTimeInMs,
+      this.totalResTimeInMs,
       this.numberOfComplaintsResolved
     );
     this.averageCaseDuration = calculateAverageTimeInDays(
-      this.avgCasDurInMs,
+      this.totalCasDurInMs,
       this.numberOfComplaintsResolved
     );
   }
@@ -193,12 +197,8 @@ export class Station {
   /**
    * Process a complaint under investigation.
    * @param complaint The complaint to process.
-   * @param params Parameters for processing.
    */
-  private processInvestigatingComplaint(
-    complaint: Complaint,
-    params: AddParams
-  ) {
+  private processInvestigatingComplaint(complaint: Complaint) {
     this.numberOfComplaintsInvestigating++;
     this.percentageInvestigating = percent(
       this.numberOfComplaintsInvestigating,
@@ -209,12 +209,12 @@ export class Station {
       this.totalNumberOfComplaints
     );
 
-    this.avgInvTimeInMs += diffInMs(
+    this.totalInvTimeInMs += diffInMs(
       complaint.dateUnderInvestigation!,
       complaint.dateComplaintMade!
     );
     this.averageInvestigationTime = calculateAverageTimeInDays(
-      this.avgInvTimeInMs,
+      this.totalInvTimeInMs,
       this.numberOfComplaintsInvestigating + this.numberOfComplaintsResolved
     );
 
@@ -226,30 +226,33 @@ export class Station {
       30
     );
 
-    const { baseScoreUnit, endDate, severityPenalty } = params;
-    const penalty = baseScoreUnit * (2 + severityPenalty) * daysDeltaPen;
-    const daysDeltaRec = diffInDays(endDate, complaint.dateUnderInvestigation!);
+    const severityPenalty = getSeverityPenalty(complaint.incidentType!);
+    const totalPenalty =
+      this.baseScoreUnit * (2 + severityPenalty) * daysDeltaPen;
+    const daysDeltaRec = diffInDays(
+      new Date(),
+      complaint.dateUnderInvestigation!
+    );
     const recompense =
-      baseScoreUnit * (1 + severityPenalty) * Math.min(daysDeltaRec, 30);
-    this.decreaseFinalScore(penalty);
+      this.baseScoreUnit * (1 + severityPenalty) * Math.min(daysDeltaRec, 30);
+    this.decreaseFinalScore(totalPenalty);
     this.increaseFinalScore(recompense);
   }
 
   /**
    * Process an unaddressed complaint.
    * @param complaint The complaint to process.
-   * @param params Parameters for processing.
    */
-  private processUnaddressedComplaint(complaint: Complaint, params: AddParams) {
+  private processUnaddressedComplaint(complaint: Complaint) {
     this.numberOfComplaintsUnaddressed++;
     this.percentageUnaddressed = percent(
       this.numberOfComplaintsUnaddressed,
       this.totalNumberOfComplaints
     );
 
-    const { baseScoreUnit, endDate, severityPenalty } = params;
-    const daysDelta = diffInDays(endDate, complaint.dateComplaintMade!);
-    const penalty = baseScoreUnit * (2 + severityPenalty) * daysDelta;
+    const severityPenalty = getSeverityPenalty(complaint.incidentType!);
+    const daysDelta = diffInDays(new Date(), complaint.dateComplaintMade!);
+    const penalty = this.baseScoreUnit * (2 + severityPenalty) * daysDelta;
     this.decreaseFinalScore(penalty);
   }
 
@@ -259,7 +262,7 @@ export class Station {
    * @param value The value to increase the score by.
    */
   private increaseFinalScore(value: number) {
-    this.finalScore = Math.min(this.finalScore + value, 100);
+    this._finalScore = Math.min(this.finalScore + value, 100);
   }
 
   /**
@@ -268,10 +271,23 @@ export class Station {
    * @param value The value to decrease the score by.
    */
   private decreaseFinalScore(value: number) {
-    this.finalScore = Math.max(this.finalScore - value, 0);
+    this._finalScore = Math.max(this.finalScore - value, 0);
+  }
+
+  /**
+   * Retrieves the final score to a maximum of 2 decimal places.
+   * @returns The final score value.
+   */
+  public get finalScore(): number {
+    return Math.round(this._finalScore * 100) / 100;
   }
 }
 
+/**
+ * Retrieves the penalty factor based on the incident type severity.
+ * @param incidentType The incident type.
+ * @returns The penalty factor.
+ */
 function getSeverityPenalty(incidentType: IncidentType) {
   switch (IncidentTypeSeverities[incidentType]) {
     case 'HIGH':
@@ -284,7 +300,13 @@ function getSeverityPenalty(incidentType: IncidentType) {
   }
 }
 
-function percent(numerator: number, denominator: number) {
+/**
+ * Transforms a fraction into a percentage string.
+ * @param numerator The fraction numerator.
+ * @param denominator The fraction denominator.
+ * @returns The number as a percentage.
+ */
+function percent(numerator: number, denominator: number): string {
   return round((numerator / denominator) * 100) + '%';
 }
 
@@ -311,27 +333,31 @@ function diffInMs(lDate: number | Date, eDate: number | Date) {
   return differenceInMilliseconds(new Date(lDate), new Date(eDate));
 }
 
+/**
+ * Calculates the difference between two dates in days.
+ * @param lDate The first date.
+ * @param eDate The second date.
+ * @returns The difference in days.
+ */
 function diffInDays(lDate: number | Date, eDate: number | Date) {
   return differenceInDays(new Date(lDate), new Date(eDate));
 }
 
+/**
+ * Calculates the average number of days complaints have spanned for a particular
+ * status.
+ * @param totalTimeInMs The total number of milliseconds of complaints for a
+ * particular status.
+ * @param numberOfStatus The number of complaints of a particular status.
+ * @returns The average time in days.
+ */
 function calculateAverageTimeInDays(
-  timeInMs: number,
+  totalTimeInMs: number,
   numberOfStatus: number
 ): string {
-  const average = timeInMs / numberOfStatus;
+  const average = totalTimeInMs / numberOfStatus;
   const averageTime = diffInDays(average, 0);
   return averageTime + ' days';
 }
 
 type StationScores = Record<string, Station>;
-
-interface AddComplaintOptions {
-  endDate?: Date;
-}
-
-interface AddParams {
-  baseScoreUnit: number;
-  severityPenalty: number;
-  endDate: Date;
-}
