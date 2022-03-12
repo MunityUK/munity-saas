@@ -26,6 +26,8 @@ export class Station {
   public averageResolutionTime: string | null = null;
   public averageCaseDuration: string | null = null;
 
+  private static SLACK_DAYS = 5;
+
   private totalInvTimeInMs = 0;
   private totalResTimeInMs = 0;
   private totalCasDurInMs = 0;
@@ -192,6 +194,8 @@ export class Station {
       this.totalCasDurInMs,
       this.numberOfComplaintsResolved
     );
+
+    this.incurPenalty(complaint);
   }
 
   /**
@@ -218,25 +222,7 @@ export class Station {
       this.numberOfComplaintsInvestigating + this.numberOfComplaintsResolved
     );
 
-    const daysDeltaPen = Math.max(
-      diffInDays(
-        complaint.dateUnderInvestigation!,
-        complaint.dateComplaintMade!
-      ),
-      30
-    );
-
-    const severityPenalty = getSeverityPenalty(complaint.incidentType!);
-    const totalPenalty =
-      this.baseScoreUnit * (2 + severityPenalty) * daysDeltaPen;
-    const daysDeltaRec = diffInDays(
-      new Date(),
-      complaint.dateUnderInvestigation!
-    );
-    const recompense =
-      this.baseScoreUnit * (1 + severityPenalty) * Math.min(daysDeltaRec, 30);
-    this.decreaseFinalScore(totalPenalty);
-    this.increaseFinalScore(recompense);
+    this.incurPenalty(complaint);
   }
 
   /**
@@ -249,29 +235,46 @@ export class Station {
       this.numberOfComplaintsUnaddressed,
       this.totalNumberOfComplaints
     );
+    this.incurPenalty(complaint);
+  }
 
+  /**
+   * Incur a penalty based on complaint severity and delays.
+   * @param complaint The reference complaint.
+   */
+  private incurPenalty(complaint: Complaint) {
     const severityPenalty = getSeverityPenalty(complaint.incidentType!);
-    const daysDelta = diffInDays(new Date(), complaint.dateComplaintMade!);
-    const penalty = this.baseScoreUnit * (2 + severityPenalty) * daysDelta;
-    this.decreaseFinalScore(penalty);
-  }
+    const lowerBoundDate =
+      complaint.status === ComplaintStatus.UNADDRESSED
+        ? Date.now()
+        : complaint.dateUnderInvestigation!;
+    const differenceInDays = diffInDays(
+      lowerBoundDate,
+      complaint.dateComplaintMade!
+    );
 
-  /**
-   * Increase the final score by a specified value. Ensures the final score
-   * never surpasses 100.
-   * @param value The value to increase the score by.
-   */
-  private increaseFinalScore(value: number) {
-    this._finalScore = Math.min(this.finalScore + value, 100);
-  }
+    const numOfPenalUnaddressedDays = Math.min(
+      Math.max(differenceInDays - Station.SLACK_DAYS, 0),
+      90
+    );
+    const penaltyFactor = this.baseScoreUnit * (2 + severityPenalty);
+    const penalty = penaltyFactor * numOfPenalUnaddressedDays;
 
-  /**
-   * Decrease the final score by a specified value. Ensures the final score
-   * never falls below 0.
-   * @param value The value to decrease the score by.
-   */
-  private decreaseFinalScore(value: number) {
-    this._finalScore = Math.max(this.finalScore - value, 0);
+    if (complaint.status !== ComplaintStatus.UNADDRESSED) {
+      const dateResolved =
+        complaint.status === ComplaintStatus.RESOLVED
+          ? complaint.dateResolved!
+          : Date.now();
+      const numOfRecompenseInvestigationDays = Math.min(
+        diffInDays(dateResolved, complaint.dateUnderInvestigation!),
+        30
+      );
+      const recompense =
+        penaltyFactor * numOfRecompenseInvestigationDays * 0.55;
+      this._finalScore += recompense;
+    }
+
+    this._finalScore -= penalty;
   }
 
   /**
@@ -279,6 +282,11 @@ export class Station {
    * @returns The final score value.
    */
   public get finalScore(): number {
+    if (this._finalScore > 100) {
+      this._finalScore = 100;
+    } else if (this._finalScore < 0) {
+      this._finalScore = 0;
+    }
     return Math.round(this._finalScore * 100) / 100;
   }
 }
@@ -291,9 +299,9 @@ export class Station {
 function getSeverityPenalty(incidentType: IncidentType) {
   switch (IncidentTypeSeverities[incidentType]) {
     case 'HIGH':
-      return 2;
+      return 5;
     case 'MEDIUM':
-      return 1;
+      return 2;
     case 'LOW':
     default:
       return 0;
