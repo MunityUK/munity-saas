@@ -14,7 +14,7 @@ module.exports = {
   exit: true,
   extension: ['ts'],
   require: 'ts-node/register',
-  spec: './test/**/*.test.ts',
+  // spec: './test/**/score.test.ts',
   timeout: false,
   ...options
 };

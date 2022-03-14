@@ -50,7 +50,7 @@ export class Complaint {
    * @see {ComplaintHelper.reverseGeocodeCoordinates}
    */
   static async reverseGeocodeCoordinates(complaint: Complaint) {
-    return await ComplaintHelper.reverseGeocodeCoordinates(complaint);
+    return ComplaintHelper.reverseGeocodeCoordinates(complaint);
   }
 }
 
