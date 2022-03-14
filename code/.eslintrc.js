@@ -15,6 +15,8 @@ module.exports = {
     project: ['**/tsconfig.eslint.json', '**/tsconfig.json']
   },
   settings: {
-    react: 'latest'
+    react: {
+      version: 'detect'
+    }
   }
 };
