@@ -4,6 +4,7 @@ import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 
 import { ComplaintsByStation, StationScoreByMonth } from './types';
 
+import { StationScores } from '../..';
 import { formatDate, isDateInRange } from '../../functions/common';
 import {
   Complaint,
@@ -195,6 +196,7 @@ export class Station {
       this.numberOfComplaintsResolved
     );
 
+    // TODO: Should a penalty be incurred for resolved complaints?
     this.incurPenalty(complaint);
   }
 
@@ -367,5 +369,3 @@ function calculateAverageTimeInDays(
   const averageTime = diffInDays(average, 0);
   return averageTime + ' days';
 }
-
-type StationScores = Record<string, Station>;

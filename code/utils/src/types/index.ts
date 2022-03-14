@@ -1,3 +1,5 @@
+import { Station } from '..';
+
 export type Elements<T extends readonly string[]> = T[number];
 export type Values<T> = T[keyof T];
 
@@ -17,3 +19,5 @@ export type ListItem =
 export type ListItemGroups = {
   [key in string]: ListItem[];
 };
+
+export type StationScores = Record<string, Station>;
