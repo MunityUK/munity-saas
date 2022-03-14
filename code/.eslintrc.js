@@ -12,7 +12,7 @@ module.exports = {
   ],
   parserOptions: {
     tsconfigRootDir: __dirname,
-    project: ['**/tsconfig.eslint.json', '**/tsconfig.json']
+    project: ['**/tsconfig.json']
   },
   settings: {
     react: {

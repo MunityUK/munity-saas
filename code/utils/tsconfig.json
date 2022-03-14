@@ -6,7 +6,8 @@
     "module": "commonjs",
     "noEmit": false,
     "noEmitOnError": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": ["mocha"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["**/*.ts"]
 }
