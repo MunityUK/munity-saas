@@ -9,32 +9,30 @@ main_only: &main_only
 executors:
   node:
     docker:
-      - image: cimg/node:14.0
+      - image: cimg/node:16.0
 
 commands:
   install_dependencies:
     description: 'Installs all project dependencies.'
     steps:
       - checkout
-      - run:
-          name: Consolidate package-lock.json files
-          command: packages=(. app cli utils) && printf '%s\n' "${packages[@]}" | awk -F packages '{printf "\"%s/package-lock.json\" ", $1}' | xargs cat > combined-package-lock.txt
-          working_directory: ./code
       - restore_cache:
+          name: Restore yarn cache
           keys:
-            - app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
-            - app-
+            - yarn-packages-{{ checksum "./code/yarn.lock" }}
       - run:
           name: Install root dependencies
-          command: npm install
+          command: yarn install --immutable
           working_directory: ./code
-      - run:
-          name: Install subpackage dependencies
-          command: npm run bootstrap
-          working_directory: ./code
+      - save_cache:
+          name: Save yarn cache
+          key: yarn-packages-{{ checksum "./code/yarn.lock" }}
+          paths:
+            - .yarn/cache
+            - .yarn/unplugged
       - run:
           name: Build utility library
-          command: npm run build:utils
+          command: yarn run build:utils
           working_directory: ./code
 
 jobs:
@@ -44,17 +42,8 @@ jobs:
       - install_dependencies
       - run:
           name: Build application
-          command: npm run build:app
+          command: yarn run build:app
           working_directory: ./code
-      - save_cache:
-          paths:
-            - ~/project/code/node_modules
-            - ~/project/code/app/.next/cache
-            - ~/project/code/app/node_modules
-            - ~/project/code/cli/node_modules
-            - ~/project/code/utils/dist
-            - ~/project/code/utils/node_modules
-          key: app-{{ checksum "./code/package-lock.json" }}-{{ checksum "./code/combined-package-lock.txt" }}
 
   inspect:
     executor: node
@@ -62,20 +51,20 @@ jobs:
       - install_dependencies
       - run:
           name: Run TypeScript checks
-          command: npm run check
+          command: yarn run check
           working_directory: ./code
       - run:
           name: Run ESLint
-          command: npm run eslint -- --max-warnings 0
+          command: yarn run eslint -- --max-warnings 0
           working_directory: ./code
       - run:
           name: Run Stylelint
-          command: npm run stylelint
+          command: yarn run stylelint
           working_directory: ./code
 
   test:
     docker:
-      - image: cimg/node:14.0
+      - image: cimg/node:16.0
       - image: mysql/mysql-server:8.0
         environment:
           MYSQL_ROOT_PASSWORD: root
@@ -88,11 +77,11 @@ jobs:
       - run: mkdir -p ~/test-results
       - run:
           name: Run utility tests
-          command: npm run test
+          command: yarn run test
           working_directory: ./code/utils
       - run:
           name: Run CLI tests
-          command: npm run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
+          command: yarn run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
           working_directory: ./code/cli
       - store_test_results:
           path: ~/test-results

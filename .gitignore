@@ -1,5 +1,8 @@
-.env
+**/.env
 **/.next
 **/dist
 **/node_modules
 **/.coverage
+
+**/.yarn/*
+!**/.yarn/releases

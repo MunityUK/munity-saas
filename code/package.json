@@ -1,27 +1,30 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "app",
+    "cli",
+    "utils"
+  ],
   "stylelint": {
     "extends": "@zzavidd/stylelint-config"
   },
   "prettier": "@zzavidd/prettier-config",
   "scripts": {
-    "bootstrap": "lerna exec npm install --parallel",
-    "build:app": "npm run build --prefix app",
-    "build:utils": "npm run build --prefix utils",
-    "check": "npm run check --prefix app && npm run check --prefix cli && npm run check --prefix utils",
-    "cli": "npm run cli --prefix cli",
+    "build:app": "yarn run build --prefix app",
+    "build:utils": "yarn run build --prefix utils",
+    "check": "yarn run check --prefix app && yarn run check --prefix cli && yarn run check --prefix utils",
+    "cli": "yarn run cli --prefix cli",
     "clean": "lerna clean -y",
-    "dev": "npm run dev --prefix app",
+    "dev": "yarn run dev --prefix app",
     "preenv": "rm -rf app/.env cli/.env",
     "env": "ln .env app/.env && ln .env cli/.env",
-    "prepare": "cd .. && husky install .husky",
-    "test:cli": "npm run test --prefix cli",
-    "test:utils": "npm run test --prefix utils",
+    "test:cli": "yarn run test --prefix cli",
+    "test:utils": "yarn run test --prefix utils",
     "eslint": "eslint --ext .js,.ts,.tsx .",
-    "eslint:fix": "npm run eslint -- --fix",
+    "eslint:fix": "yarn run eslint -- --fix",
     "prettier": "prettier --ignore-path ../.gitignore --check \"**/*.{js,ts,tsx,scss,json}\"",
-    "prettier:fix": "npm run prettier -- --write",
+    "prettier:fix": "yarn run prettier -- --write",
     "stylelint": "stylelint **/*.scss"
   },
   "devDependencies": {
@@ -34,11 +37,11 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^7.0.2",
     "lerna": "^4.0.0",
     "prettier": "^2.2.1",
     "stylelint": "^13.12.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
     "typescript": "^4.3.5"
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }
