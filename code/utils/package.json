@@ -4,8 +4,7 @@
   "private": true,
   "main": "./dist/index.js",
   "scripts": {
-    "prebuild": "npm run clean",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "yarn run clean && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit",
     "clean": "rm -rf ./dist",
     "test": "mocha",
