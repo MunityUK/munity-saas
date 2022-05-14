@@ -1,6 +1,7 @@
 {
-  "name": "root",
+  "name": "munity-saas",
   "private": true,
+  "packageManager": "yarn@3.2.1",
   "workspaces": [
     "app",
     "cli",
@@ -38,6 +39,5 @@
     "stylelint": "^13.12.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
     "typescript": "^4.3.5"
-  },
-  "packageManager": "yarn@3.2.1"
+  }
 }
