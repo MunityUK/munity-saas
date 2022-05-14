@@ -1,5 +1,6 @@
 import FakeTimers from '@sinonjs/fake-timers';
 import { assert } from 'chai';
+import addDays from 'date-fns/addDays';
 
 import {
   Complaint,
@@ -10,19 +11,21 @@ import {
 } from '../src';
 
 const STATION_NAME = 'Station';
-const DATE_COMPLAINT = Date.UTC(2000, 0, 1);
-const DATE_INVESTIGATING = Date.UTC(2000, 0, 15);
-const DATE_RESOLVED = Date.UTC(2000, 0, 31);
+const START_DATE = Date.UTC(2000, 0, 1);
 
 describe('Station Score Tests', function () {
   let clock: FakeTimers.InstalledClock;
 
-  function mockTodaysDate(year: number, month: number, day: number) {
-    clock = FakeTimers.install({ now: Date.UTC(year, month, day) });
+  /**
+   * Mocks today's date with a specified date throughout a test.
+   * @param date The date.
+   */
+  function mockTodaysDate(date: number | Date) {
+    clock = FakeTimers.install({ now: date });
   }
 
   describe('Given all complaints unaddressed, within slack period', function () {
-    before(() => mockTodaysDate(2000, 0, 3));
+    before(() => mockTodaysDate(day(3)));
     after(() => clock.reset());
 
     const tests: Record<Severity, number> = {
@@ -66,7 +69,7 @@ describe('Station Score Tests', function () {
   });
 
   describe('Given all complaints unaddressed, beyond slack period', function () {
-    before(() => mockTodaysDate(2000, 0, 15));
+    before(() => mockTodaysDate(day(14)));
     after(() => clock.reset());
 
     const tests: Record<Severity, number> = {
@@ -82,7 +85,7 @@ describe('Station Score Tests', function () {
           overrider: () => ({
             incidentType: incidentTypeFromSeverity(severity),
             station: STATION_NAME,
-            dateComplaintMade: Date.UTC(2000, 0, 1)
+            dateComplaintMade: START_DATE
           })
         });
 
@@ -110,7 +113,7 @@ describe('Station Score Tests', function () {
   });
 
   describe('Given all complaints under investigation, within slack period', function () {
-    before(() => mockTodaysDate(2000, 0, 29));
+    before(() => mockTodaysDate(day(28)));
     after(() => clock.reset());
 
     const tests: Record<Severity, number> = {
@@ -126,8 +129,8 @@ describe('Station Score Tests', function () {
           overrider: () => ({
             station: STATION_NAME,
             incidentType: incidentTypeFromSeverity(severity),
-            dateComplaintMade: DATE_COMPLAINT,
-            dateUnderInvestigation: DATE_INVESTIGATING
+            dateComplaintMade: START_DATE,
+            dateUnderInvestigation: day(14)
           })
         });
 
@@ -168,9 +171,9 @@ describe('Station Score Tests', function () {
           overrider: () => ({
             station: STATION_NAME,
             incidentType: incidentTypeFromSeverity(severity),
-            dateComplaintMade: DATE_COMPLAINT,
-            dateUnderInvestigation: Date.UTC(2000, 0, 5),
-            dateResolved: Date.UTC(2000, 0, 15)
+            dateComplaintMade: START_DATE,
+            dateUnderInvestigation: day(4),
+            dateResolved: day(14)
           })
         });
 
@@ -198,7 +201,7 @@ describe('Station Score Tests', function () {
   });
 
   describe('Given all complaints resolved beyond slack period', function () {
-    before(() => mockTodaysDate(2000, 2, 1));
+    before(() => mockTodaysDate(day(60)));
     after(() => clock.reset());
 
     it('With severity low', function () {
@@ -208,9 +211,9 @@ describe('Station Score Tests', function () {
         overrider: () => ({
           station: STATION_NAME,
           incidentType: incidentTypeFromSeverity('low'),
-          dateComplaintMade: DATE_COMPLAINT,
-          dateUnderInvestigation: Date.UTC(2000, 1, 1),
-          dateResolved: Date.UTC(2000, 2, 1)
+          dateComplaintMade: START_DATE,
+          dateUnderInvestigation: day(31),
+          dateResolved: day(60)
         })
       });
 
@@ -250,7 +253,7 @@ describe('Station Score Tests', function () {
           overrider: () => ({
             station: STATION_NAME,
             incidentType,
-            dateComplaintMade: DATE_COMPLAINT
+            dateComplaintMade: START_DATE
           })
         });
 
@@ -260,8 +263,8 @@ describe('Station Score Tests', function () {
           overrider: () => ({
             station: STATION_NAME,
             incidentType,
-            dateComplaintMade: DATE_COMPLAINT,
-            dateUnderInvestigation: DATE_INVESTIGATING
+            dateComplaintMade: START_DATE,
+            dateUnderInvestigation: day(14)
           })
         });
 
@@ -271,9 +274,9 @@ describe('Station Score Tests', function () {
           overrider: () => ({
             station: STATION_NAME,
             incidentType,
-            dateComplaintMade: DATE_COMPLAINT,
-            dateUnderInvestigation: DATE_INVESTIGATING,
-            dateResolved: DATE_RESOLVED
+            dateComplaintMade: START_DATE,
+            dateUnderInvestigation: day(14),
+            dateResolved: day(30)
           })
         });
 
@@ -340,6 +343,10 @@ function incidentTypeFromSeverity(severity: string): IncidentType {
   } else {
     return IncidentType.BRUTALITY;
   }
+}
+
+function day(daysToAdd: number) {
+  return addDays(START_DATE, daysToAdd);
 }
 
 type Severity = 'low' | 'medium' | 'high';
