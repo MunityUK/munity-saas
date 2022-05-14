@@ -32,7 +32,7 @@ commands:
             - .yarn/unplugged
       - run:
           name: Build utility library
-          command: yarn run build:utils
+          command: yarn workspace @munity/utils build
           working_directory: ./code
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
       - install_dependencies
       - run:
           name: Build application
-          command: yarn run build:app
+          command: yarn workspace @munity/app build
           working_directory: ./code
 
   inspect:
@@ -55,7 +55,7 @@ jobs:
           working_directory: ./code
       - run:
           name: Run ESLint
-          command: yarn run eslint -- --max-warnings 0
+          command: yarn run eslint --max-warnings 0
           working_directory: ./code
       - run:
           name: Run Stylelint
@@ -77,12 +77,12 @@ jobs:
       - run: mkdir -p ~/test-results
       - run:
           name: Run utility tests
-          command: yarn run test
-          working_directory: ./code/utils
+          command: yarn workspace @munity/utils test
+          working_directory: ./code
       - run:
           name: Run CLI tests
-          command: yarn run test -- --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
-          working_directory: ./code/cli
+          command: yarn workspace @munity/cli test --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
+          working_directory: ./code
       - store_test_results:
           path: ~/test-results
 
