@@ -32,8 +32,8 @@ commands:
             - .yarn/unplugged
       - run:
           name: Build utility library
-          command: yarn workspace @munity/utils build
-          working_directory: ./code
+          command: yarn run build
+          working_directory: ./code/utils
 
 jobs:
   build:
@@ -42,8 +42,8 @@ jobs:
       - install_dependencies
       - run:
           name: Build application
-          command: yarn workspace @munity/app build
-          working_directory: ./code
+          command: yarn run build
+          working_directory: ./code/app
 
   inspect:
     executor: node
@@ -77,12 +77,12 @@ jobs:
       - run: mkdir -p ~/test-results
       - run:
           name: Run utility tests
-          command: yarn workspace @munity/utils test
-          working_directory: ./code
+          command: yarn run test
+          working_directory: ./code/utils
       - run:
           name: Run CLI tests
-          command: yarn workspace @munity/cli test --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
-          working_directory: ./code
+          command: yarn run test --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
+          working_directory: ./code/cli
       - store_test_results:
           path: ~/test-results
 
