@@ -81,7 +81,8 @@ jobs:
           working_directory: ./code/utils
       - run:
           name: Run CLI tests
-          command: yarn run test --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
+          # command: yarn run test --reporter mocha-junit-reporter --reporter-options mochaFile=~/test-results/cli.xml
+          command: yarn run test
           working_directory: ./code/cli
       - store_test_results:
           path: ~/test-results
