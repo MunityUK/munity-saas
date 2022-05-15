@@ -1,7 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-cd code || exit 1
-npm run eslint -- --max-warnings 0
-npm run stylelint
-npm run check

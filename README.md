@@ -29,7 +29,7 @@ In the `code` directory:
 Then run the following command to create hard links of the `.env` in the subpackages.
 
 ```
-npm run env
+yarn run env
 ```
 
 Remain in the `code` directory for the subsequent steps.
@@ -39,19 +39,19 @@ Remain in the `code` directory for the subsequent steps.
 Run the following to install project root dependencies:
 
 ```
-npm install
+yarn install
 ```
 
 And then run the following to install all the subpackage dependencies:
 
 ```
-npm run bootstrap
+yarn run bootstrap
 ```
 
 Finally, build the project's local utility library by running the following:
 
 ```
-npm run build:utils
+yarn run build:utils
 ```
 
 ### 3. Set up database:
@@ -59,7 +59,7 @@ npm run build:utils
 To launch the database initialisation scripts, run:
 
 ```
-npm run cli -- init
+yarn run cli -- init
 ```
 
 You should have a new Docker container named `munity-db` started. Wait a few
@@ -70,14 +70,14 @@ seconds for it to bootstrap MySQL before running the next command.
 Run the command to ingest example data:
 
 ```
-npm run cli -- ingest
+yarn run cli -- ingest
 ```
 
 > Note: The default number of records ingested is 1. You can change this by
 > specifying a number preceded by two dashes e.g.
 >
 > ```
-> npm run cli -- ingest 50
+> yarn run cli -- ingest 50
 > ```
 
 ## Running the application:
@@ -85,7 +85,7 @@ npm run cli -- ingest
 Run the app with the following:
 
 ```
-npm run dev
+yarn run dev
 ```
 
 In your browser, go to `http://localhost:3000` to view the app.

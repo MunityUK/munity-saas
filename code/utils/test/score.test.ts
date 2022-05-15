@@ -26,7 +26,7 @@ describe('Station Score Tests', function () {
 
   describe('Given all complaints unaddressed, within slack period', function () {
     before(() => mockTodaysDate(day(3)));
-    after(() => clock.reset());
+    after(() => clock.uninstall());
 
     const tests: Record<Severity, number> = {
       low: 100,
@@ -70,7 +70,7 @@ describe('Station Score Tests', function () {
 
   describe('Given all complaints unaddressed, beyond slack period', function () {
     before(() => mockTodaysDate(day(14)));
-    after(() => clock.reset());
+    after(() => clock.uninstall());
 
     const tests: Record<Severity, number> = {
       low: 82,
@@ -114,7 +114,7 @@ describe('Station Score Tests', function () {
 
   describe('Given all complaints under investigation, within slack period', function () {
     before(() => mockTodaysDate(day(28)));
-    after(() => clock.reset());
+    after(() => clock.uninstall());
 
     const tests: Record<Severity, number> = {
       low: 97.4,
@@ -202,7 +202,7 @@ describe('Station Score Tests', function () {
 
   describe('Given all complaints resolved beyond slack period', function () {
     before(() => mockTodaysDate(day(60)));
-    after(() => clock.reset());
+    after(() => clock.uninstall());
 
     it('With severity low', function () {
       const complaints = Complaint.create({
